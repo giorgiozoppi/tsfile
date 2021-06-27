@@ -36,7 +36,7 @@
 #include <iotdb.h>
 #include <tsfile/encoding/endian_type.h>
 
-namespace iotdb { namespace util {
+namespace iotdb::util {
 
 template <typename T> class basic_bytebuffer {
     std::vector<T> _bytes;
@@ -173,6 +173,6 @@ public:
 
 typedef basic_bytebuffer<iotdb::value_type> bytebuffer;
 
-}}
+}
 
 #endif // IOTDB__UTIL__BYTEBUFFER

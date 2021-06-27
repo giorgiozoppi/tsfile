@@ -49,7 +49,6 @@ template<>
 std::string to(const util::buffer_window& bytes) {
     return std::string(bytes.begin(), bytes.end());
 }
-
-}}
+} }
 
 #endif // IOTDB__BCONV__H
