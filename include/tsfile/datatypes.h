@@ -17,23 +17,19 @@
  * under the License.
  */
 
-#ifndef IOTDB_NATIVE_CHUNK_GROUP_FOOTER_H
-#define IOTDB_NATIVE_CHUNK_GROUP_FOOTER_H
-#include <tsfile/file/markers.h>
-#include <tsfile/file/footer/chunk_group_footer.h>
-#include <util/bytebuffer.h>
-namespace iotdb::tsfile::file {
-            class chunk_group_footer {
-            public:
-                chunk_group_footer(const std::string &device_id, long data_size, int number_of_chunks);
-                std::string get_device_id() const;
-                int get_data_size() const;
-                int get_number_of_chunks() const;
-            private:
-                std::string _device_id;
-                long _data_size;
-                int _number_of_chunks;
-                int _serialized_size;
-            };
+#ifndef IOTDB_NATIVE_METADATA_H
+#define IOTDB_NATIVE_METADATA_H
+namespace iotdb::tsfile {
+                enum class compression_type {
+                    UNCOMPRESSED, SNAPPY, GZIP, LZO, SDT, PAA, PLA
+                };
+                enum class ts_datatype {
+                    BOOLEAN, INT32, INT64, FLOAT, DOUBLE, TEXT
+                };
+                enum class ts_encoding {
+                    PLAIN, PLAIN_DICTIONARY, RLE, DIFF, TS_2DIFF, BITMAP, GORILLA, REGULAR
+                };
+            }
 }
-#endif //IOTDB_NATIVE_CHUNK_GROUP_FOOTER_H
+
+#endif //IOTDB_NATIVE_METADATA_H
