@@ -117,16 +117,22 @@ int siphash(const void *in, const size_t inlen, const void *k, uint8_t *out,
     switch (left) {
     case 7:
         b |= ((uint64_t)ni[6]) << 48;
+        [[fallthrough]];
     case 6:
         b |= ((uint64_t)ni[5]) << 40;
+        [[fallthrough]];
     case 5:
         b |= ((uint64_t)ni[4]) << 32;
+        [[fallthrough]];
     case 4:
         b |= ((uint64_t)ni[3]) << 24;
+        [[fallthrough]];
     case 3:
         b |= ((uint64_t)ni[2]) << 16;
+        [[fallthrough]];
     case 2:
         b |= ((uint64_t)ni[1]) << 8;
+        [[fallthrough]];
     case 1:
         b |= ((uint64_t)ni[0]);
         break;

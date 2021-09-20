@@ -18,28 +18,40 @@ na*/
 
 #include "tsfile/chunk.h"
 
+#include "tsfile/hasher.h"
 #include "tsfile/util.h"
 
 namespace iotdb::tsfile {
-chunk::chunk(const iotdb::tsfile::chunk_header& header, const std::byte& marker)
+ chunk::chunk(const iotdb::tsfile::chunk_header& header, const std::byte& marker)
     : _header(header), _marker(marker) {}
 
 chunk_header chunk::header() const noexcept { return _header; }
 std::byte chunk::marker() const noexcept { return _marker; }
-void chunk::add_page(iotdb::tsfile::page&& source) { _pages.push_back(std::move(source)); }
+void chunk::add_page(iotdb::tsfile::page&& source) {
+    _pages.push_back(std::move(source));
+    hasher hasher;
+    hasher.add(_header.hash_code());
+    hasher.add(_marker);
+    for (auto page : _pages) {
+        hasher.add(page.hash_code());
+    }
+    _hash_code = hasher.compute();
+}
 bool chunk::remove_page(const iotdb::tsfile::page& page) {
-    return iotdb::util::hashed_remove(_pages, page);
+    auto ret = iotdb::util::hashed_remove(_pages, page);
+    if (ret) {
+        hasher hasher;
+        hasher.add(_header.hash_code());
+        hasher.add(_marker);
+        for (auto page : _pages) {
+            hasher.add(page.hash_code());
+        }
+        _hash_code = hasher.compute();
+    }
+    return ret;
 }
-bool chunk::operator==(const chunk& source) const noexcept {
-    return hash_code() == source.hash_code();
-}
-bool chunk::operator<(const chunk& source) const noexcept { return hash_code() < source.hash_code(); }
-bool chunk::operator<=(const chunk& source) const noexcept { return hash_code() <= source.hash_code(); }
-bool chunk::operator>(const chunk& source) const noexcept { return hash_code() > source.hash_code(); }
-bool chunk::operator>=(const chunk& source) const noexcept { return hash_code() >= source.hash_code(); }
 
 page_iterator chunk::begin() { return _pages.begin(); }
-
 page_iterator chunk::end() { return _pages.end(); }
 const_page_iterator chunk::cbegin() const { return _pages.cbegin(); }
 const_page_iterator chunk::cend() const { return _pages.cend(); }

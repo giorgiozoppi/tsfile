@@ -110,14 +110,20 @@ namespace iotdb::tsfile {
          * @param num_of_pages
          */
         void set_num_of_pages(const int &num_of_pages);
+        
+        uint64_t hash_code() const;
+
 
     private:
+
+        uint64_t compute_hash();
         std::string _measurement_id;
         int _data_size;
         ts_datatype _datatype;
         compression_type _compression_type;
         ts_encoding _encoding_type;
         int _num_of_pages;
+        uint64_t _hashcode;
     };
 }
 #endif //IOTDB_NATIVE_CHUNK_HEADER_H

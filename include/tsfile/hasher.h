@@ -12,11 +12,14 @@ class hasher {
     void add(int data);
     void add(unsigned int data);
     void add(float data);
-    uint64_t compute() const;
+    void add(unsigned long data);
+    void add(std::byte data);
+    uint64_t compute();
 
    private:
-    void add_data(uint64_t data);
-    std::vector<std::byte> _data;
+    void add_data(uint64_t data, std::vector<uint8_t>& value);
+    uint64_t gen_key_part();
+    std::vector<uint8_t> _data;
 };
 }  // namespace iotdb::tsfile
 #endif

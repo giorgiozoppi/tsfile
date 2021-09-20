@@ -23,6 +23,7 @@ na*/
 #include <memory>
 #include <numeric>
 #include <vector>
+#include <compare>
 
 #include "chunk_header.h"
 #include "page.h"
@@ -31,6 +32,8 @@ using page_iterator = std::vector<iotdb::tsfile::page>::iterator;
 using const_page_iterator = std::vector<iotdb::tsfile::page>::const_iterator;
 using reverse_page_iterator = std::vector<iotdb::tsfile::page>::reverse_iterator;
 using const_reverse_page_iterator = std::vector<iotdb::tsfile::page>::const_reverse_iterator;
+
+   
 
 class chunk {
     iotdb::tsfile::chunk_header _header;
@@ -42,13 +45,15 @@ class chunk {
         
     chunk(const iotdb::tsfile::chunk_header& header, const std::byte& marker);
 
-    // comparision between chunks
-
+    /*
     bool operator==(const chunk& source) const noexcept;
     bool operator<(const chunk& source) const noexcept;
     bool operator<=(const chunk& source) const noexcept;
     bool operator>(const chunk& source) const noexcept;
-    bool operator>=(const chunk& source) const noexcept;
+    bool operator>=(const chunk& source) const noexcept */
+    auto operator<=>(const chunk& source) const {
+        return hash_code() <=> source.hash_code();
+    }
     // getter
     chunk_header header() const noexcept;
     std::byte marker() const noexcept;
