@@ -1,20 +1,58 @@
+dist: focal 
 language: cpp
 
-compiler:
-  - clang
-  - gcc
+cache:
+  ccache: true
+  directories:
+    - $HOME/Library/Caches/Homebrew
+    - ${TRAVIS_BUILD_DIR}/clang
+    - ${TRAVIS_BUILD_DIR}/clang-windows
+    - ${TRAVIS_BUILD_DIR}/llvm-utils
+    - ${TRAVIS_BUILD_DIR}/upload-tool
+    - $HOME/AppData/Local/Temp/chocolatey
 
 matrix:
   include:
     - os: linux
-      dist: focal 
-    - os: osx
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-9
+      env:
+        - MATRIX_EVAL="CC=gcc-9 && CXX=g++-9"
+    - os: linux
+      compiler: clang
+      before_install:
+        - sudo apt-get -y install clang-9 libc++-9-dev libc++abi-9-dev lcov
+        - eval "${MATRIX_EVAL}"
+      addons:
+        apt:
+          update: true
+      #    sources:
+      #      - llvm-toolchain-xenial-10.0
+      #    packages:
+      #      - clang-10.0
+      env:
+        - MATRIX_EVAL="CC=clang-9 && CXX=clang++-9"
 
-script:
+before_install:
+    - eval "${MATRIX_EVAL}"
+
+before_script:
+  - git clone https://github.com/catchorg/Catch2.git
+  - cd Catch2
+  - cmake -Bbuild -H. -DBUILD_TESTING=OFF
+  - sudo /usr/local/cmake-3.12.4/bin/cmake --build build/ --target install
+  - cd ..
+  - mkdir build
   - cd build
   - cmake ..
-  - make
-  - ./unit_test
 
-notifications:
-    false
+script: VERBOSE=1 make && ctest -V
+addons:
+  apt:
+    packages: lcov
+
