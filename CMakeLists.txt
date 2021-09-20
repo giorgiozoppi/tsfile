@@ -1,55 +1,26 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 file(STRINGS "VERSION" VERSION_STRING)
 project(tsfile VERSION "${VERSION_STRING}" LANGUAGES CXX)
 set(CMAKE_VERBOSE_MAKEFILE 0)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS ON)
-include(CMakeDependentOption)
-include(CTest)
-#if (DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-#    set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-#            CACHE STRING "")
-#endif ()
-set(VCPKG $ENV{HOME}/vcpkg/scripts/buildsystems/vcpkg.cmake)
-if (EXISTS ${VCPKG})
-    set(CMAKE_TOOLCHAIN_FILE "${VCPKG}/scripts/buildsystems/vcpkg.cmake"
-            CACHE STRING "")
-endif ()
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-set(tsfile_version ${PROJECT_VERSION})
-set(tsfile_MAJOR ${PROJECT_VERSION_MAJOR})
-set(tsfile_MINOR ${PROJECT_VERSION_MINOR})
-set(tsfile_PATCH ${PROJECT_VERSION_PATCH})
-set(tsfile_SOVERSION ${iotdb-native_MAJOR})
-set(VCPKG_HOME $ENV{HOME}/scripts/buildsystems/vcpkg.cmake)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 include_directories(include)
-
-# Use globbing to find source files.
-# Any source files added to include/ or src/ will automatically be added to the project.
-file(GLOB_RECURSE INCLUDE_FILES ${CMAKE_SOURCE_DIR}/include/*.h)
-file(GLOB_RECURSE SOURCE_FILES_NO_MAIN ${CMAKE_SOURCE_DIR}/src/*.cpp)
-#list(REMOVE_ITEM SOURCE_FILES_NO_MAIN ${CMAKE_SOURCE_DIR}/src/main.cpp)
-#set(SOURCE_FILES ${SOURCE_FILES_NO_MAIN} ${CMAKE_SOURCE_DIR}/src/main.cpp)
-add_library(tsfile STATIC ${INCLUDE_FILES} ${SOURCE_FILES_NO_MAIN} ${SOURCE_FILES} include/tsfile/tsfile.cpp include/tsfile/tsfile.h include/tsfile/chunk_group.cpp include/tsfile/chunk_group.h include/tsfile/chunk.cpp include/tsfile/chunk.h)
-
-# If external libraries are needed, use find_library() and target_link_libraries()
-# to dynamically link them to your executable. Generally, you'll want to install
-# them onto the host using your OS's package manager.
-# Example:
-#   find_library(LIB_FMT fmt)
-#   target_link_libraries(clang-blueprint ${LIB_FMT})
-
-# Include extra CMake files that are used for testing and linting.
+include_directories(include/tsfile)
+file(GLOB_RECURSE INCLUDE_FILES ${CMAKE_SOURCE_DIR}/include/tsfile/*.h)
+file(GLOB_RECURSE SOURCE_FILES_NO_MAIN ${CMAKE_SOURCE_DIR}/src/tsfile/*.cpp)
+# for using catch we don't need the main
+list(FILTER SOURCE_FILES_NO_MAIN EXCLUDE REGEX ".*main.cpp$")
+file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/src/tsfile/*.cpp)
+add_library(tsfile STATIC ${SOURCES})
 include(${CMAKE_SOURCE_DIR}/cmake/unit_test.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/clang_tools.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/cppcheck.cmake)
-
-# Enable all warnings except for no-sign-compare, which Clang disables
-# by default.
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-sign-compare -fcoroutines -std=c++20")
-option(WERROR "Turn warnings into errors" OFF)
-if (WERROR)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
-endif ()
+# TODO: Run -Werror in CI.
+target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror)

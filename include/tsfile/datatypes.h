@@ -20,16 +20,9 @@
 #ifndef IOTDB_NATIVE_METADATA_H
 #define IOTDB_NATIVE_METADATA_H
 namespace iotdb::tsfile {
-                enum class compression_type {
-                    UNCOMPRESSED, SNAPPY, GZIP, LZO, SDT, PAA, PLA
-                };
-                enum class ts_datatype {
-                    BOOLEAN, INT32, INT64, FLOAT, DOUBLE, TEXT
-                };
-                enum class ts_encoding {
-                    PLAIN, PLAIN_DICTIONARY, RLE, DIFF, TS_2DIFF, BITMAP, GORILLA, REGULAR
-                };
-            }
-}
+enum class compression_type { UNCOMPRESSED, SNAPPY, GZIP, LZO, SDT, PAA, PLA };
+enum class ts_datatype { BOOLEAN, INT32, INT64, FLOAT, DOUBLE, TEXT };
+enum class ts_encoding { PLAIN, PLAIN_DICTIONARY, RLE, DIFF, TS_2DIFF, BITMAP, GORILLA, REGULAR };
+}  // namespace iotdb::tsfile
 
-#endif //IOTDB_NATIVE_METADATA_H
+#endif  // IOTDB_NATIVE_METADATA_H

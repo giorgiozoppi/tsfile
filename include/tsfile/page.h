@@ -16,31 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-#ifndef IOTDB__TSFILE__FILE__METADATA__DEVICE_METADATA_INDEX__H
-#define IOTDB__TSFILE__FILE__METADATA__DEVICE_METADATA_INDEX__H
 
-#include <util/bytebuffer.h>
-#include <util/rwio.h>
+#ifndef IOTDB_NATIVE_PAGE_H
+#define IOTDB_NATIVE_PAGE_H
+#include "page_header.h"
+namespace iotdb::tsfile {
 
-namespace rwio = iotdb::util::rwio;
+class page {
+    page_header page_header_;
+    long hash_code_;
 
-namespace iotdb { namespace tsfile { namespace file { namespace metadata {
-
-class device_metadata_index {
-    int64_t _offset;
-    int32_t _len;
-    int64_t _start_time;
-    int64_t _end_time;
-
-public:
-    explicit device_metadata_index(util::buffer_window& buf) {
-        _offset = rwio::read<int64_t>(buf).value();
-        _len = rwio::read<int32_t>(buf).value();
-        _start_time = rwio::read<int64_t>(buf).value();
-        _end_time = rwio::read<int64_t>(buf).value();
-    }
+   public:
+   void set_header(page_header&& header) {
+       page_header_ = std::move(header);
+   }
+   void set_header(const page_header&header) {
+      page_header_ = header;
+   }
+    page_header header() const;
+    long hash_code() const;
 };
-
-}}}}
-
-#endif // IOTDB__TSFILE__FILE__METADATA__DEVICE_METADATA_INDEX__H
+}  // namespace iotdb::tsfile
+#endif

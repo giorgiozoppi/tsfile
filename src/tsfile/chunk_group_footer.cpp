@@ -13,25 +13,16 @@
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
  * under the License.
- */
-#ifndef IOTDB__H
-#define IOTDB__H
+na*/
 
-#include <stdint.h>
-#include <vector>
+#include "tsfile/chunk_group_footer.h"
 
-#include <tsfile/encoding/endian_type.h>
-
-namespace iotdb {
-    typedef char value_type;
-    typedef std::vector<value_type> container_type;
-#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-    constexpr tsfile::encoding::endian_type byte_order = tsfile::encoding::endian_type::IOTDB_LITTLE_ENDIAN;
-#else
-    constexpr tsfile::encoding::endian_type byte_order = tsfile::encoding::endian_type::IOTDB_BIG_ENDIAN;
-#endif
-}
-
-#endif // IOTDB__H
+namespace iotdb::tsfile {
+chunk_group_footer::chunk_group_footer(const std::string& device_id, long data_size,
+                                       int number_of_chunks)
+    : _device_id(device_id), _data_size(data_size), _number_of_chunks(number_of_chunks) {}
+std::string chunk_group_footer::get_device_id() const { return _device_id; }
+long chunk_group_footer::get_data_size() const { return _data_size; }
+int chunk_group_footer::get_number_of_chunks() const { return _number_of_chunks; }
+}  // namespace iotdb::tsfile

@@ -19,9 +19,7 @@
 
 #ifndef IOTDB_NATIVE_CHUNK_HEADER_H
 #define IOTDB_NATIVE_CHUNK_HEADER_H
-
-#include <iostream>
-#include <util/rwio.h>
+#include <string>
 #include "datatypes.h"
 #include "markers.h"
 
@@ -112,12 +110,6 @@ namespace iotdb::tsfile {
          * @param num_of_pages
          */
         void set_num_of_pages(const int &num_of_pages);
-
-        /**
-         *
-         * @return
-         */
-        std::string str() const;
 
     private:
         std::string _measurement_id;

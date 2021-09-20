@@ -19,15 +19,10 @@
 
 #ifndef IOTDB_NATIVE_MARKERS_H
 #define IOTDB_NATIVE_MARKERS_H
-#include <cstdint>
-namespace iotdb {
-    namespace tsfile {
-        namespace file {
-            constexpr uint8_t CHUNK_GROUP_FOOTER = 0;
-            constexpr uint8_t CHUNK_HEADER = 1;
-            constexpr uint8_t SEPARATOR = 2;
-            constexpr uint8_t VERSION = 3;
-        }
-    }
-}
-#endif //IOTDB_NATIVE_MARKERS_H
+namespace iotdb::tsfile::file {
+constexpr uint8_t CHUNK_GROUP_FOOTER = 0;
+constexpr uint8_t CHUNK_HEADER = 1;
+constexpr uint8_t SEPARATOR = 2;
+constexpr uint8_t VERSION = 3;
+}  // namespace iotdb::tsfile::file
+#endif  // IOTDB_NATIVE_MARKERS_H
