@@ -17,6 +17,7 @@
 na*/
 
 #include "tsfile/chunk.h"
+
 #include "tsfile/util.h"
 
 namespace iotdb::tsfile {
@@ -29,13 +30,21 @@ void chunk::add_page(iotdb::tsfile::page&& source) { _pages.push_back(std::move(
 bool chunk::remove_page(const iotdb::tsfile::page& page) {
     return iotdb::util::hashed_remove(_pages, page);
 }
+bool chunk::operator==(const chunk& source) const noexcept {
+    return hash_code() == source.hash_code();
+}
+bool chunk::operator<(const chunk& source) const noexcept { return hash_code() < source.hash_code(); }
+bool chunk::operator<=(const chunk& source) const noexcept { return hash_code() <= source.hash_code(); }
+bool chunk::operator>(const chunk& source) const noexcept { return hash_code() > source.hash_code(); }
+bool chunk::operator>=(const chunk& source) const noexcept { return hash_code() >= source.hash_code(); }
+
 page_iterator chunk::begin() { return _pages.begin(); }
 
 page_iterator chunk::end() { return _pages.end(); }
 const_page_iterator chunk::cbegin() const { return _pages.cbegin(); }
 const_page_iterator chunk::cend() const { return _pages.cend(); }
-reverse_page_iterator chunk::rbegin()  { return _pages.rbegin(); }
-reverse_page_iterator chunk::rend()  { return _pages.rend(); }
+reverse_page_iterator chunk::rbegin() { return _pages.rbegin(); }
+reverse_page_iterator chunk::rend() { return _pages.rend(); }
 const_reverse_page_iterator chunk::crbegin() const { return _pages.crbegin(); }
 const_reverse_page_iterator chunk::crend() const { return _pages.crend(); }
 uint64_t chunk::hash_code() const { return _hash_code; }

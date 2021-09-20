@@ -24,15 +24,19 @@ namespace iotdb::tsfile {
 
 class page {
     page_header page_header_;
-    long hash_code_;
+    long hash_code_{0};
 
    public:
-   void set_header(page_header&& header) {
-       page_header_ = std::move(header);
-   }
-   void set_header(const page_header&header) {
-      page_header_ = header;
-   }
+    page(const page_header& header) : page_header_(header) {}
+    page(page_header&& header);
+     
+    // comparision between chunks
+    bool operator==(const page& source) const noexcept;
+    bool operator<(const page& source) const noexcept;
+    bool operator<=(const page& source) const noexcept;
+    bool operator>(const page& source) const noexcept;
+    bool operator>=(const page& source) const noexcept;
+    void set_header(page_header&& header);
     page_header header() const;
     long hash_code() const;
 };
