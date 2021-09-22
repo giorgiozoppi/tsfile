@@ -1,9 +1,9 @@
 .PHONY: all
-all: format test build
+all: format build
 
 .PHONY: format
 format:
-	clang-format src/*.cpp include/*.h -i
+	clang-format src/tsfile/*.cpp include/tsfile/*.h -i
 
 .PHONY: build
 build:

@@ -1,0 +1,5 @@
+## Changelog
+
+- Sep 22 2021 17:52:23  @ Giorgio Zoppi <giorgio.zoppi@gmail.com>
+	* Restructuring header code in appropriate directories
+	* Adding dochange.py for changelog

@@ -16,10 +16,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+#ifndef IOTDB_NATIVE_SCHEMA_H
+#define IOTDB_NATIVE_SCHEMA_H
+#include <filesystem>
+#include <map>
+#include <utility>
 
-#include "tsfile/model/page.h"
+#include "schema.h"
 
 namespace iotdb::tsfile {
-iotdb::tsfile::page_header page::header() const { return page_header_; }
-long page::hash_code() const { return hash_code_; }
+class measurement_schema {
+   uint64_t _hashcode;
+public:
+    uint64_t hashcode() { return _hashcode; }
+};
+class schema {
+   public:
+    schema() {}
+    schema(std::map<std::filesystem::path, std::unique_ptr<measurement_schema>>&& measurement) {
+        _registered_timeseries = std::move(measurement);
+    }
+    void register_time_series(const std::filesystem::path& path,
+                              std::unique_ptr<measurement_schema>&& descriptor) {
+        _registered_timeseries.insert({path, std::move(descriptor)});
+    }
+
+   private:
+    std::map<std::filesystem::path, std::unique_ptr<measurement_schema>> _registered_timeseries;
+};
 }  // namespace iotdb::tsfile
+#endif

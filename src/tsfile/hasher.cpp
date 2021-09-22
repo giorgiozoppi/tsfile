@@ -1,5 +1,5 @@
 
-#include "tsfile/hasher.h"
+#include "tsfile/common/hasher.h"
 
 #include <cstdint>
 #include <cstring>
@@ -8,7 +8,7 @@
 #include <random>
 #include <utility>
 
-#include "tsfile/siphash.h"
+#include "tsfile/common/siphash.h"
 
 namespace iotdb::tsfile {
 

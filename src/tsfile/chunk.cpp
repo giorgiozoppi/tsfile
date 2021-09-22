@@ -16,13 +16,13 @@
  * under the License.
 na*/
 
-#include "tsfile/chunk.h"
+#include "tsfile/model/chunk.h"
 
-#include "tsfile/hasher.h"
-#include "tsfile/util.h"
+#include "tsfile/common/hasher.h"
+#include "tsfile/common/util.h"
 
 namespace iotdb::tsfile {
- chunk::chunk(const iotdb::tsfile::chunk_header& header, const std::byte& marker)
+chunk::chunk(const iotdb::tsfile::chunk_header& header, const std::byte& marker)
     : _header(header), _marker(marker) {}
 
 chunk_header chunk::header() const noexcept { return _header; }
@@ -32,7 +32,7 @@ void chunk::add_page(iotdb::tsfile::page&& source) {
     hasher hasher;
     hasher.add(_header.hash_code());
     hasher.add(_marker);
-    for (auto page : _pages) {
+    for (const auto& page : _pages) {
         hasher.add(page.hash_code());
     }
     _hash_code = hasher.compute();
@@ -43,7 +43,7 @@ bool chunk::remove_page(const iotdb::tsfile::page& page) {
         hasher hasher;
         hasher.add(_header.hash_code());
         hasher.add(_marker);
-        for (auto page : _pages) {
+        for (const auto& page : _pages) {
             hasher.add(page.hash_code());
         }
         _hash_code = hasher.compute();

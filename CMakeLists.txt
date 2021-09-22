@@ -23,4 +23,4 @@ include(${CMAKE_SOURCE_DIR}/cmake/unit_test.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/clang_tools.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/cppcheck.cmake)
 # TODO: Run -Werror in CI.
-target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror)
+target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -fconcepts)

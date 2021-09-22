@@ -1,4 +1,4 @@
-#include "chunk_header.h"
+#include "model/chunk_header.h"
 
 namespace iotdb::tsfile {
 /**
@@ -82,8 +82,6 @@ int chunk_header::get_num_of_pages() const { return _num_of_pages; }
 void chunk_header::set_num_of_pages(const int& num_of_pages) { _num_of_pages = num_of_pages; }
 
 uint64_t chunk_header::hash_code() const { return _hashcode; }
-uint64_t chunk_header::compute_hash() {
-
-}
+uint64_t chunk_header::compute_hash() { return 0; }
 
 }  // namespace iotdb::tsfile

@@ -16,7 +16,7 @@
  * under the License.
 na*/
 
-#include "tsfile/chunk_group_footer.h"
+#include "model/chunk_group_footer.h"
 
 namespace iotdb::tsfile {
 chunk_group_footer::chunk_group_footer(const std::string& device_id, long data_size,

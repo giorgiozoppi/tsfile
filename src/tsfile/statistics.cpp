@@ -1,4 +1,4 @@
-#include "tsfile/statistics.h"
+#include "tsfile/model/statistics.h"
 
 namespace iotdb::tsfile {
 long statistics::count() const { return _count; }

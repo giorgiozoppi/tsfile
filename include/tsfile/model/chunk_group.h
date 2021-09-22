@@ -22,8 +22,8 @@
 #include <cstddef>
 #include <memory>
 #include <vector>
-#include "chunk.h"
-#include "chunk_group_footer.h"
+#include "model/chunk.h"
+#include "model/chunk_group_footer.h"
 namespace iotdb::tsfile {
 using chunk_iterator = std::vector<iotdb::tsfile::chunk>::iterator;
 using reverse_chunk_iterator = std::vector<iotdb::tsfile::chunk>::reverse_iterator;
