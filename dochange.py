@@ -13,7 +13,7 @@ print("Header {}".format(header))
 exit_typing = False
 with open("Changelog", 'a') as fp:
     print("List the changes (type end.) to quit:")
-    fp.write("- "+header+"\n")
+    fp.write(" "+header+"\n")
     while not exit_typing:
         line = input()
         line = line.strip()

@@ -12,6 +12,7 @@ class statistics {
     double _sum_value;
     double _extreme;
     long _hashcode;
+
    public:
     long count() const;
     long start_time() const;

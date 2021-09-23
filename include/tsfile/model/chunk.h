@@ -23,7 +23,6 @@ na*/
 #include <memory>
 #include <numeric>
 #include <vector>
-#include <compare>
 
 #include "model/chunk_header.h"
 #include "model/page.h"
@@ -34,7 +33,6 @@ using reverse_page_iterator = std::vector<iotdb::tsfile::page>::reverse_iterator
 using const_reverse_page_iterator = std::vector<iotdb::tsfile::page>::const_reverse_iterator;
 using unique_page_ptr = std::unique_ptr<iotdb::tsfile::page>;
 
-
 class chunk {
     iotdb::tsfile::chunk_header _header;
     std::byte _marker{0};
@@ -42,11 +40,11 @@ class chunk {
     uint64_t _hash_code{0};
 
    public:
-        
     chunk(const iotdb::tsfile::chunk_header& header, const std::byte& marker);
-    auto operator<=>(const chunk& source) const {
-        return hash_code() <=> source.hash_code();
-    }
+    friend bool operator==(const chunk& lhs, const chunk& rhs);
+    friend bool operator<(const chunk& lhs, const chunk& rhs);
+    friend bool operator==(const chunk& lhs, const chunk& rhs);
+
     // getter
     chunk_header header() const noexcept;
     std::byte marker() const noexcept;
@@ -64,6 +62,8 @@ class chunk {
     const_reverse_page_iterator crend() const;
     uint64_t hash_code() const;
 };
+
+
 }  // namespace iotdb::tsfile
 
 #endif  // TSFILE_CHUNK_H

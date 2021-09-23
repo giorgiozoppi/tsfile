@@ -26,8 +26,9 @@
 
 namespace iotdb::tsfile {
 class measurement_schema {
-   uint64_t _hashcode;
-public:
+    uint64_t _hashcode;
+
+   public:
     uint64_t hashcode() { return _hashcode; }
 };
 class schema {

@@ -19,10 +19,12 @@
 
 #ifndef IOTDB_NATIVE_MARKERS_H
 #define IOTDB_NATIVE_MARKERS_H
-namespace iotdb::tsfile::file {
-constexpr uint8_t CHUNK_GROUP_FOOTER = 0;
-constexpr uint8_t CHUNK_HEADER = 1;
-constexpr uint8_t SEPARATOR = 2;
-constexpr uint8_t VERSION = 3;
+namespace iotdb::tsfile {
+constexpr std::byte CHUNK_GROUP_FOOTER = std::byte{0};
+constexpr std::byte CHUNK_HEADER = std::byte{1};
+constexpr std::byte SEPARATOR = std::byte{2};
+constexpr std::byte VERSION = std::byte{3};
+constexpr std::byte OPERATION_INDEX_RANGE = std::byte{4};
+constexpr std::byte ONLY_ONE_PAGE_CHUNK_HEADER = std::byte{5};
 }  // namespace iotdb::tsfile::file
 #endif  // IOTDB_NATIVE_MARKERS_H

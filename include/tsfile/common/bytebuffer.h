@@ -1,30 +1,33 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+/**
+ * Copyright (c) 2021 Giorgio Zoppi <giorgio.zoppi@iotdbe.com>
+ * All rights reserved.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+*/
 #ifndef IOTDB_UTIL_BYTEBUFFER
 #define IOTDB_UTIL_BYTEBUFFER
 
 #include <cstddef>
+#include <cstring>
 #include <iostream>
 #include <iterator>
+#include <sstream>
 #include <vector>
 
-namespace iotdb::util {
+#include "bytestream.h"
+
+namespace iotdb::common {
 
 using std::istream;
 using std::ostream;
@@ -32,6 +35,23 @@ using std::ostream;
 template <typename T>
 class basic_bytebuffer {
     std::vector<T> _bytes;
+
+   private:
+    template <typename V, typename K>
+    friend std::basic_ostream<K>& operator<<(std::basic_ostream<K>& os,
+                                             const basic_bytebuffer<V>& buffer);
+    template <typename V, typename K>
+    friend std::basic_istream<K>& operator>>(std::basic_istream<K>& is,
+                                             basic_bytebuffer<V>& buffer);
+    template <typename V, typename K>
+    friend std::basic_ofstream<K>& operator<<(std::basic_ofstream<K>& os,
+                                              const basic_bytebuffer<V>& buffer);
+    template <typename V, typename K>
+    friend std::basic_ifstream<K>& operator>>(std::basic_istream<K>& is,
+                                              basic_bytebuffer<V>& buffer);
+
+    template <typename V>
+    friend bool operator==(const basic_bytebuffer<V>& lhs, const basic_bytebuffer<V>& rhs);
 
    public:
     static constexpr unsigned int DEFAULT_SIZE = 1024;
@@ -109,6 +129,12 @@ class basic_bytebuffer {
      * Double the reserved size for the byte buffer
      */
     void ensure_space() { _bytes.reserve(_bytes.capacity() * 2); }
+    void append(const basic_bytebuffer& data) {
+        _bytes.emplace_back(data);
+        // _bytes.emplace_back(data);
+    }
+    void clear() { _bytes.clear(); }
+    void reserve(size_t size) { _bytes.reserve(size); }
     /**
      * Get the size of the byte buffer
      * @return size in byte of the buffer
@@ -137,12 +163,9 @@ class basic_bytebuffer {
     /**
      * Compare if two byte buffers are the same
      */
-    bool operator==(const basic_bytebuffer<T>& bytebuffer) {
-        return hex().compare(bytebuffer.hex()) == 0;
-    }
-    auto operator<=>(const basic_bytebuffer<T>& bytebuffer) { return hex() <=> bytebuffer.hex(); }
-    //friend ostream& operator<<(ostream& os, const basic_bytebuffer<T>& bb);
-    //istream& operator>>(istream& is, basic_bytebuffer<T>& dt);
+    // auto operator<=>(const basic_bytebuffer<T>& bytebuffer) { return hex() <=> bytebuffer.hex();
+    // } friend ostream& operator<<(ostream& os, const basic_bytebuffer<T>& bb); istream&
+    // operator>>(istream& is, basic_bytebuffer<T>& dt);
 
     /**
      * Return the byte by random access
@@ -156,18 +179,58 @@ class basic_bytebuffer {
      * @return value of the byte
      */
     const T& operator[](std::size_t idx) const { return _bytes[idx]; }
+
+    const T* data() { return _bytes.data(); }
 };
 
-typedef basic_bytebuffer<std::byte> bytebuffer;
 template <typename T>
-istream& operator>>(istream& is, basic_bytebuffer<T>& bb) {
-    return is;
+bool operator==(const basic_bytebuffer<T>& lhs, const basic_bytebuffer<T>& rhs) {
+    return lhs.hex().compare(rhs.hex()) == 0;
 }
-template <typename T>
-ostream& operator<<(ostream& os, const basic_bytebuffer<T>& bb) {
+typedef basic_bytebuffer<char> bytebuffer;
+template <typename V, typename K>
+
+std::basic_ostream<K>& operator<<(std::basic_ostream<K>& os, const basic_bytebuffer<V>& buffer) {
+    if (os.good()) {
+        // os.write(buffer.data(), buffer.size());
+    }
     return os;
 }
-
-}  // namespace iotdb::util
+template <typename V, typename K>
+std::basic_istream<K>& operator>>(std::basic_istream<K>& is, basic_bytebuffer<V>& buffer) {
+    std::byte internal_buf[iotdb::io::DEFAULT_BYTES_READ];
+    int bytesToRead{iotdb::io::DEFAULT_BYTES_READ};
+    int byteRead{0};
+    bool readFailed{false};
+    buffer.clear();
+    while (is.good() && !is.eof()) {
+        while (byteRead < bytesToRead) {
+            auto num = is.readsome(internal_buf, bytesToRead - byteRead);
+            byteRead += num;
+            if (!is.bad()) {
+                buffer.append(internal_buf);
+                std::memset(internal_buf, 0, iotdb::io::DEFAULT_BYTES_READ - 1);
+            }
+        }
+    }
+    return is;
+}
+template <typename V, typename K>
+std::basic_ofstream<K>& operator<<(std::basic_ofstream<K>& os, const basic_bytebuffer<V>& buffer) {
+    return os;
+}
+template <typename V, typename K>
+std::basic_ifstream<K>& operator>>(std::basic_ifstream<K>& is, basic_bytebuffer<V>& buffer) {
+    buffer.clear();
+    if (is) {
+        is.seekg(0, is.end);
+        int length = is.tellg();
+        is.seekg(0, is.beg);
+        buffer.reserve(length);
+        // is.read(buffer.data(), length);
+    }
+    return is;
+}
+}  // namespace iotdb::common
 
 #endif  // IOTDB__UTIL__BYTEBUFFER

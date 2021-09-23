@@ -20,41 +20,47 @@
 #define IOTDB_NATIVE_WRITER_H
 #include <filesystem>
 #include <optional>
-#include "schema.h"
+
 #include "result.h"
+#include "schema.h"
 namespace iotdb::tsfile::io {
 class record {
     uint64_t _hashcode;
-public:
+
+   public:
     uint64_t hashcode() { return _hashcode; }
 };
 class path {
     uint64_t _hashcode;
-public:
+
+   public:
     uint64_t hashcode() { return _hashcode; }
 };
 
-class file_writer  {
-    public:
-    file_writer(const std::filesystem::path file, const std::optional<schema>& schema = std::nullopt){}
-    status_result<file_error> write(const record&) { 
+class file_writer {
+   public:
+    file_writer(const std::filesystem::path file,
+                const std::optional<schema>& schema = std::nullopt) {}
+    status_result<file_error> write(const record&) {
         status_result<file_error> res(iotdb::tsfile::file_error::OK);
         return res;
     }
-    status_result<file_error> write(const record&&) { 
+    status_result<file_error> write(const record&&) {
         status_result<file_error> res(iotdb::tsfile::file_error::OK);
         return res;
     }
-    status_result<file_error> register_timeseries(const path& path, const measurement_schema& schema) {
+    status_result<file_error> register_timeseries(const path& path,
+                                                  const measurement_schema& schema) {
         status_result<file_error> res(iotdb::tsfile::file_error::OK);
         return res;
     }
-    status_result<file_error> register_device(const std::string& device_id, const std::string& template_name){
+    status_result<file_error> register_device(const std::string& device_id,
+                                              const std::string& template_name) {
         status_result<file_error> res(iotdb::tsfile::file_error::OK);
         return res;
     }
     void flush_chunks() {}
     void close() {}
 };
-}
+}  // namespace iotdb::tsfile::io
 #endif

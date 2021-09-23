@@ -22,6 +22,9 @@ na*/
 #include "tsfile/common/util.h"
 
 namespace iotdb::tsfile {
+
+bool operator==(const chunk& lhs, const chunk& rhs) { return lhs.hash_code() == rhs.hash_code(); }
+
 chunk::chunk(const iotdb::tsfile::chunk_header& header, const std::byte& marker)
     : _header(header), _marker(marker) {}
 
@@ -38,7 +41,7 @@ void chunk::add_page(iotdb::tsfile::page&& source) {
     _hash_code = hasher.compute();
 }
 bool chunk::remove_page(const iotdb::tsfile::page& page) {
-    auto ret = iotdb::util::hashed_remove(_pages, page);
+    auto ret = iotdb::util::remove_byhash(_pages, page);
     if (ret) {
         hasher hasher;
         hasher.add(_header.hash_code());

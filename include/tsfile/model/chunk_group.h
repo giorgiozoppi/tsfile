@@ -22,14 +22,14 @@
 #include <cstddef>
 #include <memory>
 #include <vector>
+
 #include "model/chunk.h"
 #include "model/chunk_group_footer.h"
 namespace iotdb::tsfile {
 using chunk_iterator = std::vector<iotdb::tsfile::chunk>::iterator;
 using reverse_chunk_iterator = std::vector<iotdb::tsfile::chunk>::reverse_iterator;
 using const_chunk_iterator = std::vector<iotdb::tsfile::chunk>::const_iterator;
-using const_reverse_chunk_iterator =
-    std::vector<iotdb::tsfile::chunk>::const_reverse_iterator;
+using const_reverse_chunk_iterator = std::vector<iotdb::tsfile::chunk>::const_reverse_iterator;
 
 class chunk_group {
     std::vector<iotdb::tsfile::chunk> _chunks;
@@ -41,10 +41,10 @@ class chunk_group {
     void add_chunk(iotdb::tsfile::chunk&& chunk);
     bool remove_chunk(const iotdb::tsfile::chunk& chunk);
     chunk_group_footer footer() const;
-    chunk_iterator begin() ;
-    chunk_iterator end() ;
-    reverse_chunk_iterator rbegin() ;
-    reverse_chunk_iterator rend() ;
+    chunk_iterator begin();
+    chunk_iterator end();
+    reverse_chunk_iterator rbegin();
+    reverse_chunk_iterator rend();
     const_chunk_iterator cbegin() const;
     const_chunk_iterator cend() const;
     const_reverse_chunk_iterator crbegin() const;

@@ -22,8 +22,6 @@
 #include <filesystem>
 #include <optional>
 
-#include "tsfile/common/bytebuffer.h"
-
 namespace iotdb::tsfile {
 
 class sequence_reader {
