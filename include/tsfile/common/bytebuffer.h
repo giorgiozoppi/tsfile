@@ -133,6 +133,10 @@ class basic_bytebuffer {
         _bytes.emplace_back(data);
         // _bytes.emplace_back(data);
     }
+    void add(const T& data) {
+        _bytes.emplace_back(data);
+        // _bytes.emplace_back(data);
+    }
     void clear() { _bytes.clear(); }
     void reserve(size_t size) { _bytes.reserve(size); }
     /**
@@ -166,7 +170,13 @@ class basic_bytebuffer {
     // auto operator<=>(const basic_bytebuffer<T>& bytebuffer) { return hex() <=> bytebuffer.hex();
     // } friend ostream& operator<<(ostream& os, const basic_bytebuffer<T>& bb); istream&
     // operator>>(istream& is, basic_bytebuffer<T>& dt);
-
+    T& add(std::size_t idx, std::size_t jdx) { return _bytes[idx] + _bytes[jdx]; }
+    T& sub(std::size_t idx, std::size_t jdx) { return _bytes[idx] - _bytes[jdx]; }
+    const basic_bytebuffer<T>& set(size_t idx, const T& value) {
+        auto index{0};
+        _bytes.data()[idx] = value;
+        return *this;
+    }
     /**
      * Return the byte by random access
      * @param idx index of the byte
@@ -216,11 +226,13 @@ std::basic_istream<K>& operator>>(std::basic_istream<K>& is, basic_bytebuffer<V>
     return is;
 }
 template <typename V, typename K>
-std::basic_ofstream<K>& operator<<(std::basic_ofstream<K>& os, const basic_bytebuffer<V>& buffer) {
+std::basic_ofstream<K>& operator<<(std::basic_ofstream<K>& os,
+                                   [[maybe_unused]] const basic_bytebuffer<V>& buffer) {
     return os;
 }
 template <typename V, typename K>
-std::basic_ifstream<K>& operator>>(std::basic_ifstream<K>& is, basic_bytebuffer<V>& buffer) {
+std::basic_ifstream<K>& operator>>(std::basic_ifstream<K>& is,
+                                   [[maybe_unused]] basic_bytebuffer<V>& buffer) {
     buffer.clear();
     if (is) {
         is.seekg(0, is.end);

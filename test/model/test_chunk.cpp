@@ -17,9 +17,9 @@
 */
 
 #include "catch2/catch.hpp"
-#include "tsfile/model/datatypes.h"
 #include "tsfile/model/chunk.h"
 #include "tsfile/model/chunk_header.h"
+#include "tsfile/model/datatypes.h"
 #include "tsfile/model/statistics.h"
 
 using iotdb::tsfile::chunk;
@@ -27,12 +27,10 @@ using iotdb::tsfile::chunk_header;
 using iotdb::tsfile::compression_type;
 using iotdb::tsfile::page;
 using iotdb::tsfile::page_header;
+using iotdb::tsfile::stat_container;
 using iotdb::tsfile::ts_datatype;
 using iotdb::tsfile::ts_encoding;
-using iotdb::tsfile::stat_container;
 using iotdb::tsfile::unique_stat_ptr;
-
-
 
 SCENARIO("chunk should be initialized correctly", "[model]]") {
     GIVEN("a chunk with a header and a page") {

@@ -55,8 +55,8 @@ class page_header {
             _uncompressed_size = header._uncompressed_size;
             _compressed_size = header._compressed_size;
             _page_type = std::move(_page_type);
-            if (_stat!= nullptr) {
-            _stat = std::make_unique<stat_container>(*(header._stat));
+            if (_stat != nullptr) {
+                _stat = std::make_unique<stat_container>(*(header._stat));
             }
         }
         return *this;

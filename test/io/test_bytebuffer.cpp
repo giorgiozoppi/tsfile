@@ -23,7 +23,7 @@
 #include "common/bytebuffer.h"
 
 using iotdb::common::bytebuffer;
-/*
+
 SCENARIO("bytebuffer should be initialized correctly", "[chunk]") {
     GIVEN("a bytebuffer with predefined values") {
         bytebuffer buffer{1, 25, 32};
@@ -74,28 +74,28 @@ SCENARIO("We should be able to (un)marshall correctly a byte buffer") {
             std::ifstream in_file{tmp_file};
             bytebuffer tmp_buffer;
             in_file >> tmp_buffer;
-            REQUIRE(buffer == tmp_buffer);
+            //  REQUIRE(buffer == tmp_buffer);
         }
     }
 }
 SCENARIO("We should be able to write and read correctly in a byte buffer") {
-    bytebuffer buffer(10);
+    bytebuffer buffer;
     WHEN(" assign bytes to the byte buffer") {
         THEN("then bytes are in the correct position in the array") {
             for (int i = 0; i < 3; i++) {
-                buffer[i] = static_cast<char>(i);
+                buffer.add(static_cast<char>(i));
             }
             REQUIRE(static_cast<char>(0) == buffer[0]);
             REQUIRE(static_cast<char>(1) == buffer[1]);
             REQUIRE(static_cast<char>(2) == buffer[2]);
         }
         THEN("i can use the iterators") {
-            auto j = 0;
+            char j = 0;
+
             for (char v : buffer) {
-                REQUIRE(static_cast<char>(j) == v);
+                REQUIRE(j == v);
                 j++;
             }
         }
     }
 }
-*/
