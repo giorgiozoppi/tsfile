@@ -25,6 +25,7 @@ debug:
 	make
 
 .PHONY: clean
-	@echo "Cleaning up directory"
+clean:	
+	@echo "Cleaning up building directory"
 	@rm -fr build
 

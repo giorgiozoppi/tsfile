@@ -28,6 +28,5 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # using GCC
   target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -fconcepts -fmodules-ts)
-
 endif()
 # TODO: Run -Werror in CI.
