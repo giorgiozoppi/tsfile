@@ -19,8 +19,8 @@
 #define IOTDB_NATIVE_STATISTICS_H
 #include <optional>
 
-#include "tsfile/common/tsconcepts.h"
 #include "tsfile/common/bytebuffer.h"
+#include "tsfile/common/tsconcepts.h"
 #include "tsfile/model/datatypes.h"
 
 namespace iotdb::tsfile {
@@ -44,10 +44,10 @@ class GenericStatistics {
    public:
     long count() const { return _count; }
     long start_time() const { return _start_time; }
-     long end_time() const { return _end_time; }
-     auto min_value() const { return _min_value; }
+    long end_time() const { return _end_time; }
+    auto min_value() const { return _min_value; }
     auto max_value() const { return _max_value; }
-   
+
     auto first_value() const { return _first_value; }
     auto last_value() const { return _last_value; }
     auto sum_value() const { return _sum_value; }
@@ -63,62 +63,59 @@ using statistics_double = BaseStatistics<generic_double>;
 using generic_binary = GenericStatistics<iotdb::common::bytebuffer>;
 using statistics_binary = BaseStatistics<generic_binary>;
 
-
-
 // using stat_ptr = template <typename T> std::unique_ptr<BaseStatistics<GenericStatistics<T>>;
 class stat_container {
     statistics_int _integer_stat;
     statistics_float _float_stat;
     statistics_double _double_stat;
     statistics_binary _binary_stat;
-    
+
     ts_datatype _type;
-    public: 
-    stat_container(const ts_datatype& data): _type(data) {
-    }
+
+   public:
+    stat_container(const ts_datatype& data) : _type(data) {}
     stat_container(stat_container&& m) {
         _type = std::move(m._type);
         _integer_stat = std::move(m._integer_stat);
         _float_stat = std::move(m._float_stat);
-    
     }
-    stat_container(const stat_container& m){
+    stat_container(const stat_container& m) {
         _type = m._type;
         _integer_stat = m._integer_stat;
-        _float_stat =  m._float_stat;
+        _float_stat = m._float_stat;
     }
-    stat_container& operator=(const stat_container& m){
+    stat_container& operator=(const stat_container& m) {
         if (this != &m) {
-        _type = m._type;
-        _integer_stat = m._integer_stat;
-        _float_stat =  m._float_stat;
+            _type = m._type;
+            _integer_stat = m._integer_stat;
+            _float_stat = m._float_stat;
         }
         return *this;
     }
 
     ~stat_container() = default;
-    template <StatLike StatisticsImpl> StatisticsImpl value() {
-        switch(_type) {
+    template <StatLike StatisticsImpl>
+    StatisticsImpl value() {
+        switch (_type) {
             case ts_datatype::INT32: {
                 return _integer_stat;
             }
-            case ts_datatype::DOUBLE : {
+            case ts_datatype::DOUBLE: {
                 return _double_stat;
             }
 
-            case ts_datatype::BINARY : {
+            case ts_datatype::BINARY: {
                 return _binary_stat;
             }
-            case ts_datatype::FLOAT : {
+            case ts_datatype::FLOAT: {
                 return _float_stat;
             }
             default:
                 return _float_stat;
         }
 
-    return _integer_stat;
+        return _integer_stat;
     }
-    
 };
 
 }  // namespace iotdb::tsfile

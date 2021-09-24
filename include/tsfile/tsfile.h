@@ -20,24 +20,25 @@
 #define IOTDB_NATIVE_TSFILE_H
 #include <array>
 #include <cstddef>
-#include <string>
 #include <memory>
+#include <string>
+
 #include "model/chunk_group.h"
 #include "model/ts_index.h"
 
+namespace iotdb::tsfile {
+class tsfile {
+    std::string _magic_string;
+    std::byte _version_number[6];
+    std::unique_ptr<iotdb::tsfile::chunk_group> _chunks;
+    std::unique_ptr<iotdb::tsfile::chunk_index> _chunk_index;
+    std::unique_ptr<iotdb::tsfile::time_series_index> _ts_index;
+    std::unique_ptr<iotdb::tsfile::secondary_index> _secondary_index;
 
-    namespace iotdb::tsfile {
-    class tsfile {
-        std::string _magic_string;
-        std::byte _version_number[6];
-        std::unique_ptr<iotdb::tsfile::chunk_group> _chunks;
-        std::unique_ptr<iotdb::tsfile::chunk_index> _chunk_index;
-        std::unique_ptr<iotdb::tsfile::time_series_index> _ts_index;
-        std::unique_ptr<iotdb::tsfile::secondary_index> _secondary_index;
-       public:
-        const std::array<std::byte, 6> version() const { return _version_number; }
-        const std::string magic_string() const { return _magic_string; }
-    };
-}
+   public:
+    const std::array<std::byte, 6> version() const { return _version_number; }
+    const std::string magic_string() const { return _magic_string; }
+};
+}  // namespace iotdb::tsfile
 
 #endif  // TSFILE_TSFILE_H

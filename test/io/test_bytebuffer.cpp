@@ -25,7 +25,6 @@
 using iotdb::common::bytebuffer;
 
 SCENARIO("bytebuffer should be initialized correctly", "[chunk]") {
- 
     GIVEN("a bytebuffer with predefined values") {
         bytebuffer buffer{1, 25, 32};
         WHEN("we access to values by index") {

@@ -21,7 +21,6 @@
 #include <memory>
 #include <vector>
 
-
 #include "common/bytebuffer.h"
 #include "statistics.h"
 namespace iotdb::tsfile {
@@ -32,21 +31,23 @@ class page_header {
     int _compressed_size;
     ts_datatype _page_type;
     unique_stat_ptr _stat;
-    
+
    public:
     page_header() = default;
 
     page_header(int uncompressed_size, int compressed_size)
         : _uncompressed_size(uncompressed_size), _compressed_size(compressed_size) {}
-    
+
     page_header(int uncompressed_size, int compressed_size, ts_datatype page_type)
-        : _uncompressed_size(uncompressed_size), _compressed_size(compressed_size), _page_type(page_type) {}
-    
+        : _uncompressed_size(uncompressed_size),
+          _compressed_size(compressed_size),
+          _page_type(page_type) {}
+
     page_header(const page_header& header) {
         _uncompressed_size = header._uncompressed_size;
         _compressed_size = header._compressed_size;
-        if (_stat!=nullptr) {
-        _stat = std::make_unique<stat_container>(*(header._stat));
+        if (_stat != nullptr) {
+            _stat = std::make_unique<stat_container>(*(header._stat));
         }
     }
     page_header& operator=(const page_header& header) {
@@ -66,9 +67,7 @@ class page_header {
 
     int uc_size() const { return _uncompressed_size; }
     int c_size() const { return _compressed_size; }
-    void set_statistics(unique_stat_ptr&& statistics) {
-        _stat = std::move(statistics);
-    }
+    void set_statistics(unique_stat_ptr&& statistics) { _stat = std::move(statistics); }
     unique_stat_ptr statistics() const {
         auto tmp = std::make_unique<stat_container>(*_stat);
         return tmp;

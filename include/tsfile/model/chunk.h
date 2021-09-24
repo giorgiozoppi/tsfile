@@ -63,7 +63,6 @@ class chunk {
     uint64_t hash_code() const;
 };
 
-
 }  // namespace iotdb::tsfile
 
 #endif  // TSFILE_CHUNK_H

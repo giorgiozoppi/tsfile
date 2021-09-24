@@ -25,5 +25,5 @@ constexpr std::byte SEPARATOR = std::byte{2};
 constexpr std::byte VERSION = std::byte{3};
 constexpr std::byte OPERATION_INDEX_RANGE = std::byte{4};
 constexpr std::byte ONLY_ONE_PAGE_CHUNK_HEADER = std::byte{5};
-}  // namespace iotdb::tsfile::file
+}  // namespace iotdb::tsfile
 #endif  // IOTDB_NATIVE_MARKERS_H

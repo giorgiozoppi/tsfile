@@ -20,22 +20,19 @@
 #define IOTDB_NATIVE_PAGE_H
 #include <memory>
 #include <vector>
-#include "page_header.h"
+
 #include "datatypes.h"
+#include "page_header.h"
 
 namespace iotdb::tsfile {
 
 class page {
     long _hash_code{0};
     page_header _page_header;
-   
+
    public:
-    page(page_header&& header) {
-        _page_header = std::move(header);
-    }
-    page_header header() const {
-        return std::move(_page_header);
-    }
+    page(page_header&& header) { _page_header = std::move(header); }
+    page_header header() const { return std::move(_page_header); }
     uint64_t hash_code() const { return _hash_code; }
 };
 }  // namespace iotdb::tsfile

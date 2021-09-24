@@ -29,7 +29,7 @@ template <typename T>
 concept HexConvertible = requires(T a) {
     std::declval<T>().hex();
 };
-template <typename T> 
+template <typename T>
 concept StatLike = requires(T a) {
     std::declval<T>().count();
     /*
