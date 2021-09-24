@@ -64,7 +64,6 @@ using statistics_double = BaseStatistics<generic_double>;
 using generic_binary = GenericStatistics<iotdb::common::bytebuffer>;
 using statistics_binary = BaseStatistics<generic_binary>;
 
-// using stat_ptr = template <typename T> std::unique_ptr<BaseStatistics<GenericStatistics<T>>;
 class stat_container {
     statistics_int _integer_stat;
     statistics_float _float_stat;

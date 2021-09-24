@@ -42,8 +42,9 @@ concept StatLike = requires(T a) {
     std::declval<T>().first_value();
     std::declval<T>().last_value();
     std::declval<T>().sum_value();
-    std::declval<T>().extreme(); 
+    std::declval<T>().extreme();
 };
-template <typename T> concept StatLikeHashable = StatLike<T> && Hashable<T>;
+template <typename T>
+concept StatLikeHashable = StatLike<T> && Hashable<T>;
 }  // namespace iotdb::tsfile
 #endif
