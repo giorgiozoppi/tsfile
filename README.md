@@ -19,7 +19,7 @@ The features of TsFile is as follow:
 
 - Write
   - Fast data import
-  - Efficiently compression schemas, diverse data encoding types
+  - Efficiently compression schemas
 - Read
   - Efficiently query
   - Time-sorted query data set
