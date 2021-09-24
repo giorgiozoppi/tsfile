@@ -1,4 +1,6 @@
 # Apache IoTDB TsFile Native.
+
+## Status
 ![Build Status](https://app.travis-ci.com/giorgiozoppi/tsfile.svg?branch=dev)
 
 ## Welcome!
@@ -8,7 +10,7 @@ Apache IoTDB TsFile Native is library for reading/storing Apache IOTDB TsFile. T
 
 The target of TsFile project is to support: high ingestion rate up to tens of million data points per second and rare updates only for the correction of low quality data; compact data packaging and deep compression for long-live historical data; traditional sequential and conditional query, complex exploratory query, signal processing, data mining and machine learning. The goal of this project is to provide tsfile for embedded applications where resource consumption is improtant.
 
-## Status
+## Current Code.
 
 We've just stated so for the moment is just an exercise in C++ 20 but we plan to work on it deeply in the next weeks.
 
