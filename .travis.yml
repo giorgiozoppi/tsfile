@@ -1,6 +1,6 @@
-language: c++
+language: cpp
 dist: focal
-matrix:
+jobs:
   include:
     # works on Precise and Trusty
     - os: linux
