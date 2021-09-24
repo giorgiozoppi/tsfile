@@ -17,9 +17,10 @@
 */
 
 #include "catch2/catch.hpp"
+#include "tsfile/model/datatypes.h"
 #include "tsfile/model/chunk.h"
 #include "tsfile/model/chunk_header.h"
-#include "tsfile/model/datatypes.h"
+#include "tsfile/model/statistics.h"
 
 using iotdb::tsfile::chunk;
 using iotdb::tsfile::chunk_header;
@@ -28,6 +29,10 @@ using iotdb::tsfile::page;
 using iotdb::tsfile::page_header;
 using iotdb::tsfile::ts_datatype;
 using iotdb::tsfile::ts_encoding;
+using iotdb::tsfile::stat_container;
+using iotdb::tsfile::unique_stat_ptr;
+
+
 
 SCENARIO("chunk should be initialized correctly", "[model]]") {
     GIVEN("a chunk with a header and a page") {
@@ -35,6 +40,8 @@ SCENARIO("chunk should be initialized correctly", "[model]]") {
             "temperature", 10, ts_datatype::INT32, compression_type::GZIP, ts_encoding::GORILLA, 1};
         chunk temp_chunk{temp_chunk_header, iotdb::tsfile::ONLY_ONE_PAGE_CHUNK_HEADER};
         page_header temp_page_header{4096, 1024};
+        auto s = std::make_unique<stat_container>(ts_datatype::INT32);
+        temp_page_header.set_statistics(std::move(s));
         page temp_page{std::move(temp_page_header)};
         temp_chunk.add_page(std::move(temp_page));
         WHEN("we access to values") {
