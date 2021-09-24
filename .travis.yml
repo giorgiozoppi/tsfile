@@ -12,6 +12,7 @@ jobs:
        - sudo apt install -y gcc-11 g++-11 lcov cmake
       env:
          - MATRIX_EVAL="CC=gcc-11 && CXX=g++-11"
+      script: VERBOSE=1 make && ctest -V --build-run-dir ./build
     - os: linux
       compiler: clang
       before_install:
@@ -27,10 +28,11 @@ jobs:
       #      - clang-10.0
       env:
         - MATRIX_EVAL="CC=clang-13 && CXX=clang++-13"
+      script: VERBOSE=1 make build-clang && ctest -V --build-run-dir ./build
+
 before_install:
     - eval "${MATRIX_EVAL}"
 
-script: VERBOSE=1 make && ctest -V --build-run-dir ./build
 addons:
   apt:
     packages: lcov
