@@ -7,13 +7,8 @@ jobs:
       compiler: gcc
       before_install: 
        - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1E9377A2BA9EF27F
-      addons:
-        apt:
-          sources:
-            - sourceline: "deb [arch=amd64] http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu focal main"
-          packages:
-            - g++-11
-            - gcc-11
+       - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+       - sudo apt install -y gcc-11 g++-11
       env:
          - MATRIX_EVAL="CC=gcc-11 && CXX=g++-11"
 
