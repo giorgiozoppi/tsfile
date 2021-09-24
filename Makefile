@@ -47,4 +47,7 @@ debug:
 clean:	
 	@echo "Cleaning up building directory"
 	@rm -fr build
+.PHONY: view-cover
+view_cover:
+	firefox $(shell pwd)/build/coverage/index.html
 
