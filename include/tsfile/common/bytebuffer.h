@@ -173,7 +173,6 @@ class basic_bytebuffer {
     T& add(std::size_t idx, std::size_t jdx) { return _bytes[idx] + _bytes[jdx]; }
     T& sub(std::size_t idx, std::size_t jdx) { return _bytes[idx] - _bytes[jdx]; }
     const basic_bytebuffer<T>& set(size_t idx, const T& value) {
-        auto index{0};
         _bytes.data()[idx] = value;
         return *this;
     }
@@ -200,10 +199,8 @@ bool operator==(const basic_bytebuffer<T>& lhs, const basic_bytebuffer<T>& rhs) 
 typedef basic_bytebuffer<char> bytebuffer;
 template <typename V, typename K>
 
-std::basic_ostream<K>& operator<<(std::basic_ostream<K>& os, const basic_bytebuffer<V>& buffer) {
-    if (os.good()) {
-        // os.write(buffer.data(), buffer.size());
-    }
+std::basic_ostream<K>& operator<<(std::basic_ostream<K>& os,
+                                  [[maybe_unused]] const basic_bytebuffer<V>& buffer) {
     return os;
 }
 template <typename V, typename K>
@@ -211,7 +208,6 @@ std::basic_istream<K>& operator>>(std::basic_istream<K>& is, basic_bytebuffer<V>
     std::byte internal_buf[iotdb::io::DEFAULT_BYTES_READ];
     int bytesToRead{iotdb::io::DEFAULT_BYTES_READ};
     int byteRead{0};
-    bool readFailed{false};
     buffer.clear();
     while (is.good() && !is.eof()) {
         while (byteRead < bytesToRead) {

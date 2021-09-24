@@ -9,11 +9,12 @@ enable_testing()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   # using Clang
-  target_compile_options(unit_test PRIVATE -Wall -Wextra -Werror -fconcepts -g -O1 -fsanitize=address -fno-omit-frame-pointer)
+  target_compile_options(unit_test PRIVATE -Wall -Wextra -Werror -std=c++20 -g -O1 -fno-omit-frame-pointer)
+  target_link_libraries(unit_test PRIVATE "-static-libsan")
   elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # using GCC
-  target_compile_options(unit_test PRIVATE -Wall -Wextra -Werror -fconcepts -g -O0 -fprofile-arcs -ftest-coverage)
-  target_link_libraries(unit_test PRIVATE "-lgcov --coverage")
+  target_compile_options(unit_test PRIVATE -Wall -Wextra -Werror -std=c++20 -fconcepts -g -O0 -fprofile-arcs -ftest-coverage)
+  target_link_libraries(unit_test PRIVATE "-lgcov --coverage ")
   execute_process(COMMAND
           ${CMAKE_CXX_COMPILER} -dumpversion
           OUTPUT_VARIABLE GCC_VERSION)

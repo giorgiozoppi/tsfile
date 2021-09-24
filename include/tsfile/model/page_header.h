@@ -54,7 +54,7 @@ class page_header {
         if (this != &header) {
             _uncompressed_size = header._uncompressed_size;
             _compressed_size = header._compressed_size;
-            _page_type = std::move(_page_type);
+            _page_type = std::move(header._page_type);
             if (_stat != nullptr) {
                 _stat = std::make_unique<stat_container>(*(header._stat));
             }
@@ -64,7 +64,7 @@ class page_header {
     page_header(iotdb::tsfile::page_header&& header) {
         _uncompressed_size = std::move(header._uncompressed_size);
         _compressed_size = std::move(header._compressed_size);
-        _page_type = std::move(_page_type);
+        _page_type = std::move(header._page_type);
         if (_stat != nullptr) {
             _stat = std::move(header._stat);
         }

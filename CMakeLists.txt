@@ -24,7 +24,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/clang_tools.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/cppcheck.cmake)
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   # using Clang
-  target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -fconcepts -fimplicit-modules -fimplicit-module-maps -c helloworld.cpp -Xclang -emit-module-interface -o tsfile.pcm)
+  target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -std=c++20)
   elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # using GCC
   target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -fconcepts -fmodules-ts)

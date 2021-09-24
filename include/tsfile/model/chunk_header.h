@@ -117,7 +117,7 @@ class chunk_header {
      * <p>if the 8th bit of this byte is 1 means this chunk is a time chunk of one vector if the 7th
      * bit of this byte is 1 means this chunk is a value chunk of one vector
      */
-    std::byte _chunkType;
+    // TODO add chunk type
     std::string _measurement_id;
     int _data_size;
     ts_datatype _datatype;

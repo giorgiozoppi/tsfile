@@ -28,8 +28,9 @@ class sequence_reader {
     const std::string VERSION_NUMBER = "000001";
 
     //    tsfile _tsfile_input;
-    int32_t _metadata_size;
-    std::size_t _metadata_pos;
+    
+    [[maybe_unused]] int32_t _metadata_size;
+    [[maybe_unused]] std::size_t _metadata_pos;
     std::filesystem::path _path;
     //    std::optional<iotdb::tsfile::file::metadata::file_metadata> _file_metadata;
 
