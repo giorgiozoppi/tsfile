@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 file(STRINGS "VERSION" VERSION_STRING)
 project(tsfile VERSION "${VERSION_STRING}" LANGUAGES CXX)
 set(CMAKE_VERBOSE_MAKEFILE 0)
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -27,6 +25,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -std=c++20)
   elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # using GCC
-  target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -fconcepts -fmodules-ts)
+  target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -std=c++20 -fconcepts -fmodules-ts)
 endif()
 # TODO: Run -Werror in CI.
