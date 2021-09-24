@@ -9,8 +9,7 @@ enable_testing()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   # using Clang
-  target_compile_options(unit_test PRIVATE -Wall -Wextra -Werror -std=c++20 -g -O1 -fno-omit-frame-pointer)
-  target_link_libraries(unit_test PRIVATE "-static-libsan")
+  target_compile_options(unit_test PRIVATE -Wall -Wextra -Werror -stdlib=libc++ -std=c++20 -g -O1 -fno-omit-frame-pointer)
   elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # using GCC
   target_compile_options(unit_test PRIVATE -Wall -Wextra -Werror -std=c++20 -fconcepts -g -O0 -fprofile-arcs -ftest-coverage)

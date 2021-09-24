@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 file(STRINGS "VERSION" VERSION_STRING)
 project(tsfile VERSION "${VERSION_STRING}" LANGUAGES CXX)
 set(CMAKE_VERBOSE_MAKEFILE 0)
@@ -22,9 +22,9 @@ include(${CMAKE_SOURCE_DIR}/cmake/clang_tools.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/cppcheck.cmake)
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   # using Clang
-  target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -std=c++20)
+  target_compile_options(tsfile PRIVATE -Wall -Wextra -stdlib=libc++ -Werror -std=c++20)
   elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # using GCC
-  target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -std=c++20 -fconcepts -fmodules-ts)
+  target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -std=c++20  -fconcepts -fmodules-ts)
 endif()
 # TODO: Run -Werror in CI.
