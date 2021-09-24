@@ -34,16 +34,15 @@ SCENARIO("chunk should be initialized correctly", "[model]]") {
         chunk_header temp_chunk_header{
             "temperature", 10, ts_datatype::INT32, compression_type::GZIP, ts_encoding::GORILLA, 1};
         chunk temp_chunk{temp_chunk_header, iotdb::tsfile::ONLY_ONE_PAGE_CHUNK_HEADER};
-        page_header temp_page_header{1024, 4096};
+        page_header temp_page_header{4096, 1024};
         page temp_page{std::move(temp_page_header)};
-
         temp_chunk.add_page(std::move(temp_page));
         WHEN("we access to values") {
             THEN("the correct pages are accessed correctly") {
                 int items{0};
                 for (auto& t : temp_chunk) {
                     REQUIRE(1024 == t.header().c_size());
-                    REQUIRE(2048 == t.header().uc_size());
+                    REQUIRE(4096 == t.header().uc_size());
                     items++;
                 }
                 // hash just one page.

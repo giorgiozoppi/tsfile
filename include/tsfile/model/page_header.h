@@ -27,10 +27,10 @@ namespace iotdb::tsfile {
 using unique_stat_ptr = std::unique_ptr<stat_container>;
 
 class page_header {
-    int _uncompressed_size;
-    int _compressed_size;
-    ts_datatype _page_type;
-    unique_stat_ptr _stat;
+    int _uncompressed_size{0};
+    int _compressed_size{0};
+    ts_datatype _page_type{ts_datatype::INT32};
+    unique_stat_ptr _stat{nullptr};
 
    public:
     page_header() = default;
@@ -54,14 +54,20 @@ class page_header {
         if (this != &header) {
             _uncompressed_size = header._uncompressed_size;
             _compressed_size = header._compressed_size;
+            _page_type = std::move(_page_type);
+            if (_stat!= nullptr) {
             _stat = std::make_unique<stat_container>(*(header._stat));
+            }
         }
         return *this;
     }
     page_header(iotdb::tsfile::page_header&& header) {
-        _stat = std::move(header._stat);
         _uncompressed_size = std::move(header._uncompressed_size);
         _compressed_size = std::move(header._compressed_size);
+        _page_type = std::move(_page_type);
+        if (_stat != nullptr) {
+            _stat = std::move(header._stat);
+        }
     }
     ~page_header() = default;
 
