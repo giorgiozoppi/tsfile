@@ -15,6 +15,58 @@ matrix:
   include:
     - os: linux
       compiler: gcc
+      before_install:
+        - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+      	- sudo apt install -y g++-11
+      addons:
+        apt:
+	  update: true
+      env:
+        - MATRIX_EVAL="CC=gcc-11 && CXX=g++11"
+    - os: linux
+      compiler: clang
+      before_install:
+        - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+        - sudo apt-get -y install clang-13 libc++-13-dev libc++abi-13-dev lcov clang-format-13 clang-tools-13 libclang-13-dev
+        - eval "${MATRIX_EVAL}"
+      addons:
+        apt:
+          update: true
+      #    sources:
+      #      - llvm-toolchain-xenial-10.0
+      #    packages:
+      #      - clang-10.0
+      env:
+        - MATRIX_EVAL="CC=clang-13 && CXX=clang++-13"
+
+before_install:
+    - eval "${MATRIX_EVAL}"
+
+before_script:
+  - git clone https://github.com/catchorg/Catch2.git
+
+script: VERBOSE=1 make && ctest -V
+addons:
+  apt:
+    packages: lcov
+
+dist: focal 
+language: cpp
+
+cache:
+  ccache: true
+  directories:
+    - $HOME/Library/Caches/Homebrew
+    - ${TRAVIS_BUILD_DIR}/clang
+    - ${TRAVIS_BUILD_DIR}/clang-windows
+    - ${TRAVIS_BUILD_DIR}/llvm-utils
+    - ${TRAVIS_BUILD_DIR}/upload-tool
+    - $HOME/AppData/Local/Temp/chocolatey
+
+matrix:
+  include:
+    - os: linux
+      compiler: gcc
       addons:
         apt:
           sources:
