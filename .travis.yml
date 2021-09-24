@@ -20,13 +20,13 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-9
+            - g++-11
       env:
-        - MATRIX_EVAL="CC=gcc-9 && CXX=g++-9"
+        - MATRIX_EVAL="CC=gcc-11 && CXX=g++11"
     - os: linux
       compiler: clang
       before_install:
-        - sudo apt-get -y install clang-9 libc++-9-dev libc++abi-9-dev lcov
+        - sudo apt-get -y install clang-13 libc++-13-dev libc++abi-13-dev lcov clang-format-13 clang-tools-13 libclang-13-dev
         - eval "${MATRIX_EVAL}"
       addons:
         apt:
@@ -36,7 +36,7 @@ matrix:
       #    packages:
       #      - clang-10.0
       env:
-        - MATRIX_EVAL="CC=clang-9 && CXX=clang++-9"
+        - MATRIX_EVAL="CC=clang-13 && CXX=clang++-13"
 
 before_install:
     - eval "${MATRIX_EVAL}"

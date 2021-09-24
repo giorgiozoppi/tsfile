@@ -17,8 +17,6 @@
 */
 #include "tsfile/io/path.h"
 
-#include <string>
-
 namespace iotdb::tsfile::io {
 path::path(const std::string& device, const std::string& measure)
     : _device(device), _measurement(measure) {}
