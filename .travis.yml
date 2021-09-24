@@ -8,7 +8,7 @@ matrix:
       addons:
         apt:
           sources:
-            - ubuntu-toolchain-r-test
+            - sourceline: "deb [arch=amd64] http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu focal main"
           packages:
             - g++-11
             - gcc-11
