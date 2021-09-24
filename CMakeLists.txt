@@ -22,7 +22,8 @@ include(${CMAKE_SOURCE_DIR}/cmake/clang_tools.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/cppcheck.cmake)
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   # using Clang
-  target_compile_options(tsfile PRIVATE -Wall -Wextra -stdlib=libc++ -Werror -std=c++20)
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++ -lc++abi")
+  target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -std=c++20 -stdlib=libc++ -v)
   elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # using GCC
   target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -std=c++20  -fconcepts -fmodules-ts)
