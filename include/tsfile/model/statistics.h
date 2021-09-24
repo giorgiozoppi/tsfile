@@ -25,7 +25,7 @@
 
 namespace iotdb::tsfile {
 
-template <StatLike StatisticsImpl>
+template <StatLikeHashable StatisticsImpl>
 struct BaseStatistics : StatisticsImpl {};
 
 template <typename T>
@@ -52,6 +52,7 @@ class GenericStatistics {
     auto last_value() const { return _last_value; }
     auto sum_value() const { return _sum_value; }
     auto extreme() const { return _extreme; }
+
     uint64_t hash_code() { return _hashcode; };
 };
 using generic_int = GenericStatistics<int>;
@@ -94,7 +95,7 @@ class stat_container {
     }
 
     ~stat_container() = default;
-    template <StatLike StatisticsImpl>
+    template <StatLikeHashable StatisticsImpl>
     StatisticsImpl value() {
         switch (_type) {
             case ts_datatype::INT32: {

@@ -23,9 +23,7 @@
 
 #include "datatypes.h"
 #include "page_header.h"
-
 namespace iotdb::tsfile {
-
 class page {
     long _hash_code{0};
     page_header _page_header;

@@ -30,17 +30,20 @@ concept HexConvertible = requires(T a) {
     std::declval<T>().hex();
 };
 template <typename T>
+concept Hashable = requires(T a) {
+    std::declval<T>().hash_code();
+};
+template <typename T>
 concept StatLike = requires(T a) {
     std::declval<T>().count();
-    /*
     std::declval<T>().start_time();
     std::declval<T>().min_value();
     std::declval<T>().max_value();
     std::declval<T>().first_value();
     std::declval<T>().last_value();
     std::declval<T>().sum_value();
-    std::declval<T>().hex();
-    std::declval<T>().extreme(); */
+    std::declval<T>().extreme(); 
 };
+template <typename T> concept StatLikeHashable = StatLike<T> && Hashable<T>;
 }  // namespace iotdb::tsfile
 #endif
