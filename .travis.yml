@@ -12,7 +12,9 @@ jobs:
        - sudo apt install -y gcc-11 g++-11 lcov cmake
       env:
          - MATRIX_EVAL="CC=gcc-11 && CXX=g++-11"
-      script: VERBOSE=1 make && ctest -V --build-run-dir ./build
+      script: 
+        - VERBOSE=1 make debug && ctest -V --build-run-dir ./build
+        - make coverage-report
     - os: linux
       compiler: clang
       before_install:
@@ -24,14 +26,38 @@ jobs:
         - eval "${MATRIX_EVAL}"
       env:
         - MATRIX_EVAL="CC=clang-13 && CXX=clang++-13"
-      script: VERBOSE=1 make build-clang && ctest -V --build-run-dir ./build
-
+      script: VERBOSE=1 make debug-clang && ctest -V --build-run-dir ./build
+    
+    - os: linux
+      compiler: gcc
+      before_install: 
+       - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1E9377A2BA9EF27F
+       - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+       - sudo apt-get -y update
+       - sudo apt install -y gcc-11 g++-11 lcov cmake
+      env:
+         - MATRIX_EVAL="CC=gcc-11 && CXX=g++-11"
+      script: VERBOSE=1 make
+         
+    
 before_install:
     - eval "${MATRIX_EVAL}"
 
 addons:
   apt:
     packages: lcov
+  #sonarcloud:
+  #  organization: "enlista"
+  #  token:
+  #    secure: "travis encrypt 06e0734f1c6a92310daacf0c8daf5f398166c92e" # encrypted value of your token
+
+# script:
+  # Wraps the compilation with the Build Wrapper to generate configuration (used
+  # later by the SonarScanner) into the "bw-output" folder
+  # - build-wrapper-linux-x86-64 --out-dir bw-output make clean
+  # And finally run the SonarCloud analysis - read the "sonar-project.properties"
+  # file to see the specific configuration
+  #- sonar-scanner -Dsonar.cfamily.build-wrapper-output=bw-output
 
 after_success:
 # Create lcov report

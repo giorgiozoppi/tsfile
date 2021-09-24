@@ -26,6 +26,10 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -std=c++20 -stdlib=libc++ -v)
   elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # using GCC
+  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -std=c++20  -fconcepts -fmodules-ts -g -O0 -fprofile-arcs -ftest-coverage)
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcov -coverage")
+  endif()
   target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -std=c++20  -fconcepts -fmodules-ts)
 endif()
 # TODO: Run -Werror in CI.

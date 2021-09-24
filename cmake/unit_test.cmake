@@ -13,7 +13,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # using GCC
   target_compile_options(unit_test PRIVATE -Wall -Wextra -Werror -std=c++20 -fconcepts -g -O0 -fprofile-arcs -ftest-coverage)
-  target_link_libraries(unit_test PRIVATE "-lgcov --coverage")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcov -coverage")
   execute_process(COMMAND
           ${CMAKE_CXX_COMPILER} -dumpversion
           OUTPUT_VARIABLE GCC_VERSION)
