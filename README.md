@@ -12,3 +12,14 @@ The target of TsFile project is to support: high ingestion rate up to tens of mi
 
 We've just stated so for the moment is just an exercise in C++ 20 but we plan to work on it deeply in the next weeks.
 
+## Features
+The features of TsFile is as follow:
+
+- Write
+  - Fast data import
+  - Efficiently compression schemas, diverse data encoding types
+- Read
+  - Efficiently query
+  - Time-sorted query data set
+
+
