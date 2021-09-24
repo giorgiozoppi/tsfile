@@ -23,5 +23,9 @@ The features of TsFile is as follow:
 - Read
   - Efficiently query
   - Time-sorted query data set
+  - 
+Below we see a eye of bird view image:
+
+![GitHub Logo](/assets/format.png)
 
 
