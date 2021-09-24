@@ -26,6 +26,6 @@ The features of TsFile is as follow:
   - 
 Below we see a eye of bird view image:
 
-![GitHub Logo](/assets/format.png)
+![TsFile Format Structure](/assets/format.png)
 
 
