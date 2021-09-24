@@ -17,15 +17,11 @@
 
 #ifndef IOTDB_NATIVE_TS_INDEX_H
 #define IOTDB_NATIVE_TS_INDEX_H
-
-class chunk_index {
-};
-class bloom_filter {
-};
-class time_series_index {
-
-};
-class secondary_index {
-};
+namespace iotdb::tsfile {
+class chunk_index {};
+class bloom_filter {};
+class time_series_index {};
+class secondary_index {};
+}  // namespace iotdb::tsfile
 
 #endif
