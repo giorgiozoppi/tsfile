@@ -16,12 +16,9 @@ matrix:
     - os: linux
       compiler: gcc
       before_install:
-        - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    	- sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   	- sudo apt-get -q update
       	- sudo apt install -y  g++-11 gcc-11 
-      addons:
-        apt:
-	  update: true
       env:
         - MATRIX_EVAL="CC=gcc-11 && CXX=g++11"
     - os: linux
