@@ -6,6 +6,8 @@
 - Sep 23 2021 19:49:19	Giorgio Zoppi <giorgio@apache.org>
 	* Added bytebuffer and failing tests
 	* Restructured file structure 
-	* Adding chunk and chunkheader unittest Sep 24 2021 10:04:44	Giorgio Zoppi <giorgio.zoppi@gmail.com>
-	* - still experiment but we added concepts
-	* - concepts for static polimorphism
+	* Adding chunk and chunkheader unittest
+- Sep 24 2021 10:04:44	Giorgio Zoppi <giorgio.zoppi@gmail.com>
+	* C++20 Concepts with static polimorphism in statistics
+	* Statistics now is container indipendent from the value types.
+	
