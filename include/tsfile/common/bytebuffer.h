@@ -15,8 +15,8 @@
 * limitations under the License.
 *
 */
-#ifndef IOTDB_UTIL_BYTEBUFFER
-#define IOTDB_UTIL_BYTEBUFFER
+#ifndef IOTDB_COMMON_BYTEBUFFER
+#define IOTDB_COMMON_BYTEBUFFER
 
 #include <cstddef>
 #include <cstring>

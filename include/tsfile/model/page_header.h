@@ -1,53 +1,78 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+/**
+ * Copyright (c) 2021 Giorgio Zoppi <giorgio.zoppi@iotdbe.com>
+ * All rights reserved.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+*/
 
 #ifndef IOTDB_NATIVE_PAGE_HEADER_H
 #define IOTDB_NATIVE_PAGE_HEADER_H
 #include <memory>
 #include <vector>
 
+
+#include "common/bytebuffer.h"
 #include "statistics.h"
 namespace iotdb::tsfile {
-using stat_iterator = std::vector<iotdb::tsfile::statistics>::iterator;
-using reverse_stat_iterator = std::vector<iotdb::tsfile::statistics>::reverse_iterator;
-using const_stat_iterator = std::vector<iotdb::tsfile::statistics>::const_iterator;
-using const_reverse_stat_iterator = std::vector<iotdb::tsfile::statistics>::const_reverse_iterator;
+using unique_stat_ptr = std::unique_ptr<stat_container>;
 
 class page_header {
-    int uncompressed_size;
-    int compressed_size;
-    std::vector<iotdb::tsfile::statistics> _statistics;
-
+    int _uncompressed_size;
+    int _compressed_size;
+    ts_datatype _page_type;
+    unique_stat_ptr _stat;
+    
    public:
-    page_header(int uncompressed_size, int compressed_size);
-    int uc_size() const;
-    int c_size() const;
-    void add_statistic(const iotdb::tsfile::statistics& statistics);
-    bool remove_statistic(const iotdb::tsfile::statistics& statistics);
-    stat_iterator begin();
-    stat_iterator end();
-    reverse_stat_iterator rbegin();
-    reverse_stat_iterator rend();
-    const_stat_iterator cbegin() const;
-    const_stat_iterator cend() const;
-    const_reverse_stat_iterator crbegin() const;
-    const_reverse_stat_iterator crend() const;
+    page_header() = default;
+
+    page_header(int uncompressed_size, int compressed_size)
+        : _uncompressed_size(uncompressed_size), _compressed_size(compressed_size) {}
+    
+    page_header(int uncompressed_size, int compressed_size, ts_datatype page_type)
+        : _uncompressed_size(uncompressed_size), _compressed_size(compressed_size), _page_type(page_type) {}
+    
+    page_header(const page_header& header) {
+        _uncompressed_size = header._uncompressed_size;
+        _compressed_size = header._compressed_size;
+        if (_stat!=nullptr) {
+        _stat = std::make_unique<stat_container>(*(header._stat));
+        }
+    }
+    page_header& operator=(const page_header& header) {
+        if (this != &header) {
+            _uncompressed_size = header._uncompressed_size;
+            _compressed_size = header._compressed_size;
+            _stat = std::make_unique<stat_container>(*(header._stat));
+        }
+        return *this;
+    }
+    page_header(iotdb::tsfile::page_header&& header) {
+        _stat = std::move(header._stat);
+        _uncompressed_size = std::move(header._uncompressed_size);
+        _compressed_size = std::move(header._compressed_size);
+    }
+    ~page_header() = default;
+
+    int uc_size() const { return _uncompressed_size; }
+    int c_size() const { return _compressed_size; }
+    void set_statistics(unique_stat_ptr&& statistics) {
+        _stat = std::move(statistics);
+    }
+    unique_stat_ptr statistics() const {
+        auto tmp = std::make_unique<stat_container>(*_stat);
+        return tmp;
+    }
 };
 }  // namespace iotdb::tsfile
 #endif
