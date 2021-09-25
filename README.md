@@ -14,6 +14,20 @@ The target of TsFile project is to support: high ingestion rate up to tens of mi
 
 We've just stated so for the moment is just an exercise in C++ 20 but we plan to work on it deeply in the next weeks.
 
+### Code Coverage
+
+To build with gcov code coverage and upload results to http://coveralls.io, here are some instructions.
+
+First, build the project with coverage and run the test suite
+
+- cd $TS_FILE_HOME
+- mkdir debug
+- cd build
+- ctest -v
+- make coverage-report
+- gem install coveralls-lcov (you need ruby)
+- coveralls-lcov --repo-token "COVERALL_TOKEN" coverage.info
+
 ## Features
 The features of TsFile is as follow:
 
