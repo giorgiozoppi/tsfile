@@ -4,6 +4,6 @@ Here we've a test suite that tests E2E, the serialization from the original [Apa
 
 To lauch this test suite you should run:
 
-``bash
+```bash
 pytest e2e.py
-``
+```
