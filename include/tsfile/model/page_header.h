@@ -54,19 +54,32 @@ class page_header {
         if (this != &header) {
             _uncompressed_size = header._uncompressed_size;
             _compressed_size = header._compressed_size;
-            _page_type = std::move(header._page_type);
-            if (_stat != nullptr) {
+            _page_type = header._page_type;
+            if (header._stat != nullptr) {
                 _stat = std::make_unique<stat_container>(*(header._stat));
             }
         }
         return *this;
     }
-    page_header(iotdb::tsfile::page_header&& header) {
-        _uncompressed_size = std::move(header._uncompressed_size);
-        _compressed_size = std::move(header._compressed_size);
-        _page_type = std::move(header._page_type);
-        if (_stat != nullptr) {
-            _stat = std::move(header._stat);
+    page_header(iotdb::tsfile::page_header&& header) noexcept {
+        if (this != &header) {
+            _uncompressed_size = std::exchange(header._uncompressed_size, 0);
+            _compressed_size = std::exchange(header._compressed_size, 0);
+            _page_type = std::move(header._page_type);
+            if (header._stat != nullptr) {
+                _stat = std::move(header._stat);
+            }
+        }
+    }
+    page_header& operator=(iotdb::tsfile::page_header&& header) noexcept {
+        if (this != &header) {
+
+            _uncompressed_size = std::exchange(header._uncompressed_size, 0);
+            _compressed_size = std::exchange(header._compressed_size, 0);
+            _page_type = std::move(header._page_type);
+            if (header._stat != nullptr) {
+                _stat = std::move(header._stat);
+            }
         }
     }
     ~page_header() = default;
