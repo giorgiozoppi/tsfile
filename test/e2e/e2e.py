@@ -2,8 +2,7 @@
 import os
 import os.path
 from autolib.gradle import Gradle
-
-if __name__ == "__main__":
+def test_file_executor():
     print("Execute Java Files Creation")
     current = os.getcwd()
     source = os.path.join(current, "java/src")
