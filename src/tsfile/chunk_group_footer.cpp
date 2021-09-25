@@ -19,7 +19,7 @@
 #include "model/chunk_group_footer.h"
 
 namespace iotdb::tsfile {
-chunk_group_footer::chunk_group_footer(const std::string& device_id, long data_size,
+chunk_group_footer::chunk_group_footer(const std::string_view& device_id, long data_size,
                                        int number_of_chunks)
     : _device_id(device_id), _data_size(data_size), _number_of_chunks(number_of_chunks) {}
 std::string chunk_group_footer::get_device_id() const { return _device_id; }

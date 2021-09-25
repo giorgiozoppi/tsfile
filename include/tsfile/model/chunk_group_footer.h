@@ -33,7 +33,7 @@ class chunk_group_footer {
      * @param data_size
      * @param number_of_chunks
      */
-    chunk_group_footer(const std::string& device_id, long data_size, int number_of_chunks);
+    chunk_group_footer(const std::string_view& device_id, long data_size, int number_of_chunks);
     /**
      * @brief Get the device id object
      *
