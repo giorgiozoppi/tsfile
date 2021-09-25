@@ -20,13 +20,13 @@ To build with gcov code coverage and upload results to http://coveralls.io, here
 
 First, build the project with coverage and run the test suite
 
-- cd $TS_FILE_HOME
-- mkdir debug
-- cd build
-- ctest -v
-- make coverage-report
-- gem install coveralls-lcov (you need ruby)
-- coveralls-lcov --repo-token "COVERALL_TOKEN" coverage.info
+- ``` cd $TS_FILE_HOME ```
+- ``` mkdir debug ```
+- ``` cd build ```
+- ``` ctest -v ```
+- ``` make coverage-report ```
+- ``` gem install coveralls-lcov```  (you need ruby)
+- ``` coveralls-lcov --repo-token "COVERALL_TOKEN" coverage.info```
 
 ## Features
 The features of TsFile is as follow:
