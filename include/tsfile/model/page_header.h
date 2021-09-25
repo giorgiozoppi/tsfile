@@ -73,7 +73,6 @@ class page_header {
     }
     page_header& operator=(iotdb::tsfile::page_header&& header) noexcept {
         if (this != &header) {
-
             _uncompressed_size = std::exchange(header._uncompressed_size, 0);
             _compressed_size = std::exchange(header._compressed_size, 0);
             _page_type = std::move(header._page_type);
@@ -81,12 +80,13 @@ class page_header {
                 _stat = std::move(header._stat);
             }
         }
+        return *this;
     }
     ~page_header() = default;
 
     int uc_size() const { return _uncompressed_size; }
     int c_size() const { return _compressed_size; }
-    void set_statistics(unique_stat_ptr&& statistics) { _stat = std::move(statistics); }
+    void set_statistics(unique_stat_ptr&& statistics) noexcept { _stat = std::move(statistics); }
     unique_stat_ptr statistics() const {
         auto tmp = std::make_unique<stat_container>(*_stat);
         return tmp;

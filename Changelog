@@ -3,11 +3,16 @@
 - Sep 22 2021 17:52:23  Giorgio Zoppi <giorgio@apache.org>
 	* Restructuring header code in appropriate directories
 	* Adding dochange.py for changelog
+
 - Sep 23 2021 19:49:19	Giorgio Zoppi <giorgio@apache.org>
 	* Added bytebuffer and failing tests
 	* Restructured file structure 
 	* Adding chunk and chunkheader unittest
+
 - Sep 24 2021 10:04:44	Giorgio Zoppi <giorgio.zoppi@gmail.com>
 	* C++20 Concepts with static polimorphism in statistics
 	* Statistics now is container indipendent from the value types.
 	
+- Sep 25 2021 19:45:55	Giorgio Zoppi <giorgio.zoppi@gmail.com>
+	* Added e2e suite skeleton in java
+	* Fixed build in page_header.h
