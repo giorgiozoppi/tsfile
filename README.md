@@ -2,6 +2,7 @@
 
 ## Status
 ![Build Status](https://app.travis-ci.com/giorgiozoppi/tsfile.svg?branch=dev)
+[![Coverage Status](https://coveralls.io/repos/github/giorgiozoppi/tsfile/badge.svg?branch=dev)](https://coveralls.io/github/giorgiozoppi/tsfile?branch=dev)
 
 ## Welcome!
 Apache IoTDB TsFile Native is a C++20 library for reading/storing Apache IOTDB TsFile. TsFile is a columnar storage file format designed for time series data, which supports efficient compression and query. It is easy to integrate TsFile into your IoT big data processing frameworks.
