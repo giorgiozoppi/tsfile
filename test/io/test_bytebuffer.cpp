@@ -20,7 +20,7 @@
 #include <iostream>
 
 #include "catch2/catch.hpp"
-#include "common/bytebuffer.h"
+#include "tsfile/common/buffer.h"
 
 using iotdb::common::bytebuffer;
 
@@ -83,7 +83,7 @@ SCENARIO("We should be able to write and read correctly in a byte buffer") {
     WHEN(" assign bytes to the byte buffer") {
         THEN("then bytes are in the correct position in the array") {
             for (int i = 0; i < 3; i++) {
-                buffer.add(static_cast<char>(i));
+                buffer.append(static_cast<char>(i));
             }
             REQUIRE(static_cast<char>(0) == buffer[0]);
             REQUIRE(static_cast<char>(1) == buffer[1]);

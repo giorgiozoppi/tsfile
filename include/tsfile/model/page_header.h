@@ -21,7 +21,6 @@
 #include <memory>
 #include <vector>
 
-#include "common/bytebuffer.h"
 #include "statistics.h"
 namespace iotdb::tsfile {
 using unique_stat_ptr = std::unique_ptr<stat_container>;

@@ -16,8 +16,6 @@
 */
 
 #include <istream>
-
-#include "bytebuffer.h"
 namespace iotdb::io {
 typedef std::basic_ifstream<std::byte> ifbstream;
 typedef std::basic_ofstream<std::byte> ofbstream;

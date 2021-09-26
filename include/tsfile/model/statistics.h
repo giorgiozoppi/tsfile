@@ -18,9 +18,10 @@
 #ifndef IOTDB_NATIVE_STATISTICS_H
 #define IOTDB_NATIVE_STATISTICS_H
 #include <optional>
+#include <unordered_map>
 
-#include "tsfile/common/bytebuffer.h"
 #include "tsfile/common/tsconcepts.h"
+#include "tsfile/common/buffer.h"
 #include "tsfile/model/datatypes.h"
 
 namespace iotdb::tsfile {
@@ -96,25 +97,19 @@ class stat_container {
     ~stat_container() = default;
     template <StatLikeHashable StatisticsImpl>
     StatisticsImpl value() {
-        switch (_type) {
-            case ts_datatype::INT32: {
-                return _integer_stat;
-            }
-            case ts_datatype::DOUBLE: {
-                return _double_stat;
-            }
-
-            case ts_datatype::BINARY: {
-                return _binary_stat;
-            }
-            case ts_datatype::FLOAT: {
-                return _float_stat;
-            }
-            default:
-                return _float_stat;
-        }
-
-        return _integer_stat;
+        std::unordered_map<ts_datatype, StatisticsImpl> type_map{
+      //  {ts_datatype::BOOLEAN, _integer_stat},
+        {ts_datatype::INT32, _integer_stat},
+       // {ts_datatype::INT64},
+        {ts_datatype::FLOAT, _float_stat},
+        {ts_datatype::DOUBLE, _double_stat},
+        {ts_datatype::BINARY, _binary_stat}
+       // {ts_datatype::NULLTYPE}        
+    };
+    if (type_map.find(_type)==type_map.end()) {
+        return _integer_stat;    
+    }
+    return type_map[_type];
     }
 };
 

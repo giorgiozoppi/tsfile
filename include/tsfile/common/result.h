@@ -18,7 +18,7 @@
 #ifndef IOTDB_NATIVE_RESULT_H
 #define IOTDB_NATIVE_RESULT_H
 #include <optional>
-namespace iotdb::tsfile {
+namespace iotdb::tsfile::common {
 enum class file_error { OK = 0, FORBIDDEN = 1, NOT_EXISTENT, ERROR_WRITING };
 template <typename T, typename V>
 class value_result {
