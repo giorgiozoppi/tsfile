@@ -28,7 +28,7 @@ constexpr endian_type byte_order = endian_type::IOTDB_BIG_ENDIAN;
 #endif
 
 enum class compression_type { UNCOMPRESSED, SNAPPY, GZIP, LZO, SDT, PAA, PLA };
-enum class ts_datatype { BOOLEAN, INT32, INT64, FLOAT, DOUBLE, TEXT, BINARY };
+enum class ts_datatype { BOOLEAN, INT32, INT64, FLOAT, DOUBLE, TEXT, BINARY, NULL_TYPE };
 enum class ts_encoding { PLAIN, PLAIN_DICTIONARY, RLE, DIFF, TS_2DIFF, BITMAP, GORILLA, REGULAR };
 }  // namespace iotdb::tsfile
 

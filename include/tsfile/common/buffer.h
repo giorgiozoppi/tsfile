@@ -129,12 +129,8 @@ class basic_bytebuffer {
      * Double the reserved size for the byte buffer
      */
     void ensure_space() { _bytes.reserve(_bytes.capacity() * 2); }
-    void append(const basic_bytebuffer& data) {
-        _bytes.emplace_back(data);
-    }
-    void append(const T& data) {
-        _bytes.emplace_back(data);
-    }
+    void append(const basic_bytebuffer& data) { _bytes.emplace_back(data); }
+    void append(const T& data) { _bytes.emplace_back(data); }
     void clear() { _bytes.clear(); }
     void reserve(size_t size) { _bytes.reserve(size); }
     /**
@@ -165,8 +161,8 @@ class basic_bytebuffer {
     /**
      * Compare if two byte buffers are the same
      */
-   // auto operator<=>(const basic_bytebuffer<T>& bytebuffer) { return hex() <=> bytebuffer.hex();
-    
+    // auto operator<=>(const basic_bytebuffer<T>& bytebuffer) { return hex() <=> bytebuffer.hex();
+
     /**
      * Return the byte by random access
      * @param idx index of the byte
@@ -230,6 +226,6 @@ std::basic_ifstream<K>& operator>>(std::basic_ifstream<K>& is,
     }
     return is;
 }
-}  // namespace iotdb::common
+}  // namespace iotdb::tsfile::common
 
 #endif  // IOTDB__UTIL__BYTEBUFFER

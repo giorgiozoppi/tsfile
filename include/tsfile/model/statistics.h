@@ -20,8 +20,8 @@
 #include <optional>
 #include <unordered_map>
 
-#include "tsfile/common/tsconcepts.h"
 #include "tsfile/common/buffer.h"
+#include "tsfile/common/tsconcepts.h"
 #include "tsfile/model/datatypes.h"
 
 namespace iotdb::tsfile {
@@ -98,18 +98,18 @@ class stat_container {
     template <StatLikeHashable StatisticsImpl>
     StatisticsImpl value() {
         std::unordered_map<ts_datatype, StatisticsImpl> type_map{
-      //  {ts_datatype::BOOLEAN, _integer_stat},
-        {ts_datatype::INT32, _integer_stat},
-       // {ts_datatype::INT64},
-        {ts_datatype::FLOAT, _float_stat},
-        {ts_datatype::DOUBLE, _double_stat},
-        {ts_datatype::BINARY, _binary_stat}
-       // {ts_datatype::NULLTYPE}        
-    };
-    if (type_map.find(_type)==type_map.end()) {
-        return _integer_stat;    
-    }
-    return type_map[_type];
+            //  {ts_datatype::BOOLEAN, _integer_stat},
+            {ts_datatype::INT32, _integer_stat},
+            // {ts_datatype::INT64},
+            {ts_datatype::FLOAT, _float_stat},
+            {ts_datatype::DOUBLE, _double_stat},
+            {ts_datatype::BINARY, _binary_stat}
+            // {ts_datatype::NULLTYPE}
+        };
+        if (type_map.find(_type) == type_map.end()) {
+            return _integer_stat;
+        }
+        return type_map[_type];
     }
 };
 

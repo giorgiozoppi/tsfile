@@ -8,6 +8,12 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
 endif()
 
+set(VCPKG_HOME $ENV{HOME}/vcpkg/scripts/buildsystems/vcpkg.cmake)
+if (EXISTS ${VCPKG_HOME})
+    MESSAGE(STATUS "Enabling vcpkg ${VCPKG_HOME}")
+    add_definitions(-DCMAKE -DCMAKE_TOOLCHAIN_FILE=${VCPKG_HOME})
+endif ()
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 include_directories(include)
 include_directories(include/tsfile)

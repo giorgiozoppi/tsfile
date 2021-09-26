@@ -19,27 +19,22 @@
 #define IOTDB_NATIVE_RESULT_H
 #include <optional>
 namespace iotdb::tsfile::common {
-enum class file_error { OK = 0, FORBIDDEN = 1, NOT_EXISTENT, ERROR_WRITING };
+enum class io_status { OK = 0, FORBIDDEN = 1, NOT_EXISTENT, ERROR_WRITING, EOF };
+
 template <typename T, typename V>
-class value_result {
+class result {
    public:
-    result() {}
+    result(const T& value, const V& error) : _value(value), _error(error) {}
+    result(const V& error) : _error(error);
     std::optional<V> value() const { return _value; }
-    T error() const { return _error; }
+    T state() const { return _error; }
 
    private:
     V _value;
     T _error;
 };
-template <typename T>
-class status_result {
-   public:
-    status_result() {}
-    status_result(const T& error) : _error(error) {}
-    std::optional<T> value() const { return _value; }
+template <>
+class result<void, io_status> {};
 
-   private:
-    T _error;
-};
-}  // namespace iotdb::tsfile
+}  // namespace iotdb::tsfile::common
 #endif
