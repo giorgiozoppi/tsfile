@@ -16,7 +16,7 @@
 */
 
 #include <istream>
-namespace iotdb::io {
+namespace iotdb::tsfile::common {
 typedef std::basic_ifstream<std::byte> ifbstream;
 typedef std::basic_ofstream<std::byte> ofbstream;
 typedef std::basic_istream<std::byte> ibstream;

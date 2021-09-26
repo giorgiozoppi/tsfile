@@ -22,7 +22,7 @@
 #include "catch2/catch.hpp"
 #include "tsfile/common/buffer.h"
 
-using iotdb::common::bytebuffer;
+using iotdb::tsfile::common::bytebuffer;
 
 SCENARIO("bytebuffer should be initialized correctly", "[chunk]") {
     GIVEN("a bytebuffer with predefined values") {

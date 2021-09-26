@@ -62,7 +62,7 @@ using generic_float = GenericStatistics<float>;
 using statistics_float = BaseStatistics<generic_float>;
 using generic_double = GenericStatistics<double>;
 using statistics_double = BaseStatistics<generic_double>;
-using generic_binary = GenericStatistics<iotdb::common::bytebuffer>;
+using generic_binary = GenericStatistics<iotdb::tsfile::common::bytebuffer>;
 using statistics_binary = BaseStatistics<generic_binary>;
 
 class stat_container {
