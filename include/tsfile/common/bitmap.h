@@ -22,29 +22,27 @@
 #include <cstddef>
 #include <cstring>
 #include <memory>
+#include <bitset>
 
 namespace iotdb::tsfile::common {
 ///
 /// @brief A bitmap is a variable array of bits. It can be constructed from a generic set of bytes.
 ///
 class BitMap {
+   
    public:
+
     ///
     /// @brief Constructor
-    /// @param size size of the bitMap
+    /// @param size number of bytes of the bitmap
     ///
-    explicit BitMap(size_t size) : count_(size) { bytes_ = std::make_unique<Byte[]>(size); }
+    explicit BitMap(const size_t& size);
     ///
     /// @brief Bitmap copy constructor
     /// @param map instance to copy
     ///
 
-    explicit BitMap(const BitMap& map) {
-        if (this != &map) {
-            bytes_ = std::make_unique<Byte[]>(map.count_);
-            std::memcpy(bytes_.get(), map.bytes_.get(), map.count_);
-        }
-    }
+    explicit BitMap(const BitMap& map);
 
     ///
     ///  @brief Bitmap copy operator
@@ -52,13 +50,38 @@ class BitMap {
     ///  @return a copy of the original Bitmap
     ///
 
-    BitMap& operator=(const BitMap& map) {
-        if (this != &map) {
-            bytes_ = std::make_unique<Byte[]>(map.count_);
-            std::memcpy(bytes_.get(), map.bytes_.get(), map.count_);
-        }
-        return *this;
-    }
+    BitMap& operator=(const BitMap& map);
+
+    ///
+    /// @brief BitMap move constructor
+    /// @param  BitMap moveable object.
+    ///
+
+    BitMap(BitMap&& b);
+
+    ///
+    ///  @brief BitMap move assignemnt operator
+    ///  @param BitMap to move
+    ///  @return a copy of the original BitMap
+
+    BitMap& operator=(BitMap&& map);
+
+    ///
+    /// @brief Set a bit in the BitMap
+    /// @param pos position to be set.
+    /// 
+    ValueResult<BitError, BitMap> Set(size_t index);
+    
+    ///
+    /// @brief Access to the a bit in a position;
+    /// @param index position in the bitmap to retrieve.
+    /// @return a bitset with the bit value, otherwise zero.
+
+    ValueResult<BitError, std::bitset<1>> operator[](size_t index) const;
+    ///
+    /// @brief Destructor
+    ///
+    ~BitMap() = default;  // to respect the rule of 5
 
    private:
     size_t count_;
