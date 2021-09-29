@@ -17,6 +17,7 @@
 */
 #ifndef IOTDB_NATIVE_PATH_H
 #define IOTDB_NATIVE_PATH_H
+#if 0
 #include <filesystem>
 #include <string>
 
@@ -40,4 +41,5 @@ class path {
     std::filesystem::path _fullpath;
 };
 }  // namespace iotdb::tsfile::io
+#endif
 #endif

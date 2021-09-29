@@ -14,6 +14,7 @@
    this software. If not, see
    <http://creativecommons.org/publicdomain/zero/1.0/>.
  */
+
 extern "C" {
 #include <inttypes.h>
 #include <string.h>

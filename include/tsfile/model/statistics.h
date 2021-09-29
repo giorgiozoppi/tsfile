@@ -19,10 +19,10 @@
 #define IOTDB_NATIVE_STATISTICS_H
 #include <optional>
 
-#include "tsfile/common/bytebuffer.h"
-#include "tsfile/common/tsconcepts.h"
-#include "tsfile/model/datatypes.h"
-
+#include <tsfile/common/bytebuffer.h>
+#include <tsfile/common/concepts.h>
+#include <tsfile/model/datatypes.h>
+#if 0
 namespace iotdb::tsfile {
 
 template <StatLikeHashable StatisticsImpl>
@@ -64,27 +64,27 @@ using statistics_double = BaseStatistics<generic_double>;
 using generic_binary = GenericStatistics<iotdb::common::bytebuffer>;
 using statistics_binary = BaseStatistics<generic_binary>;
 
-class stat_container {
+class StatisticsMap {
     statistics_int _integer_stat;
     statistics_float _float_stat;
     statistics_double _double_stat;
     statistics_binary _binary_stat;
 
-    ts_datatype _type;
+    TsDataType _type;
 
    public:
-    stat_container(const ts_datatype& data) : _type(data) {}
-    stat_container(stat_container&& m) {
+    StatisticsMap(const ts_datatype& data) : _type(data) {}
+    StatisticsMap(StatisticsMap&& m) {
         _type = std::move(m._type);
         _integer_stat = std::move(m._integer_stat);
         _float_stat = std::move(m._float_stat);
     }
-    stat_container(const stat_container& m) {
+    StatisticsMap(const StatisticsMap& m) {
         _type = m._type;
         _integer_stat = m._integer_stat;
         _float_stat = m._float_stat;
     }
-    stat_container& operator=(const stat_container& m) {
+    StatisticsMap& operator=(const StatisticsMap& m) {
         if (this != &m) {
             _type = m._type;
             _integer_stat = m._integer_stat;
@@ -93,7 +93,7 @@ class stat_container {
         return *this;
     }
 
-    ~stat_container() = default;
+    ~StatisticsMap() = default;
     template <StatLikeHashable StatisticsImpl>
     StatisticsImpl value() {
         switch (_type) {
@@ -119,4 +119,5 @@ class stat_container {
 };
 
 }  // namespace iotdb::tsfile
+#endif
 #endif

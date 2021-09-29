@@ -28,5 +28,5 @@ inline bool remove_byhash(std::vector<T>& container, const T& value) {
                               [=](auto current) { return current.hash_code() == hash_value; });
     return res != container.end();
 }
-}  // namespace iotdb::util
+}  // namespace iotdb::tsfile::common
 #endif

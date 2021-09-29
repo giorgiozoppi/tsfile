@@ -24,7 +24,9 @@
 #include <iterator>
 #include <sstream>
 #include <vector>
-#include "common.h"
+
+#include <tsfile/common/common.h>
+
 
 namespace iotdb::tsfile::common {
 
@@ -42,13 +44,17 @@ using std::ostream;
 ///    0      <=      reader_index   <=   writer_index    <=    capacity
 ///
 ///  - redable bytes: This segment is where the actual data is stored. Any reading operation starts
-///    the data at the current reader_index and increase it by the number of read bytes. If the argument of the 
-///    read operation is also a bytebuffer and no destination index is specified, the specified buffer's writerIndex 
-///    is increased together.
-///  - discarable bytes: This segment contains the bytes which were read already by a read operation. 
-///    Initially, the size of this segment is 0, but its size increases up to the writer_index as read operations are executed. 
-///    The read bytes can be discarded by calling Discard() to reclaim unused area.
-///  - writable bytes: This segment is a undefined space which needs to be filled. Any operation whose name starts with write will write the data at the current writerIndex and increase it by the number of written bytes. If the argument of the write operation is also a ByteBuf,
+///    the data at the current reader_index and increase it by the number of read bytes. If the
+///    argument of the read operation is also a bytebuffer and no destination index is specified,
+///    the specified buffer's writerIndex is increased together.
+///  - discarable bytes: This segment contains the bytes which were read already by a read
+///  operation.
+///    Initially, the size of this segment is 0, but its size increases up to the writer_index as
+///    read operations are executed. The read bytes can be discarded by calling Discard() to reclaim
+///    unused area.
+///  - writable bytes: This segment is a undefined space which needs to be filled. Any operation
+///  whose name starts with write will write the data at the current writerIndex and increase it by
+///  the number of written bytes. If the argument of the write operation is also a ByteBuf,
 ///    and no source index is specified, the specified buffer's readerIndex is increased together.
 ///   Example usage:
 ///   ByteBuffer buffer{10, 29, 31, 40, 6};
@@ -62,11 +68,11 @@ using std::ostream;
 ///     std::cout << i << ", "
 ///   }
 ///  We will see:
-///  10, 29, 31, 40, 6, 
+///  10, 29, 31, 40, 6,
 ///  32, 50
 ///
 /// BasicByteBuffer can be set to skip Index to get the normal buffer behaviour.
-/// 
+///
 ///   Example usage:
 ///   ByteBuffer buffer{10, 29, 31, 40, 6};
 ///   buffer.SkipIndexes();
@@ -80,10 +86,10 @@ using std::ostream;
 ///     std::cout << i << ", "
 ///   }
 ///  We will see:
-///  10, 29, 31, 40, 6, 
+///  10, 29, 31, 40, 6,
 ///  10, 29, 31, 40, 6, 32, 50
 /// The writable/redable mode is useful for concurrent in order to overlap writing and reading.
-/// When we have consumed the writeable part. 
+/// When we have consumed the writeable part.
 
 template <typename T>
 class BasicByteBuffer {
@@ -135,36 +141,36 @@ class BasicByteBuffer {
     /// @param buffer BasicByteBuffer to copy
     //
     BasicByteBuffer& operator=(BasicByteBuffer<T>&& buffer) {}
-    /// 
+    ///
     /// @brief Iterator in the buffer, in the reading zone.
     /// @return An iterator to the beginning of the given container c
     ///
-    iterator Begin() noexcept { return (bytes_.begin()+reader_index_; }
+    iterator Begin() noexcept { return bytes_.begin();}
     ///
     /// Iterator in the buffer
     /// @return an iterator to the end of the readable zone.
     ///
-    iterator End() noexcept { return bytes_.end() - writer_index_; }
+    iterator End() noexcept { return bytes_.end(); }
     ///
     /// iterator constant to the buffer
     /// @return a constant iterator to the beginning of readable zone
     ///
-    const_iterator CBegin() const noexcept { return bytes_.cbegin() + reader_index_; }
+    const_iterator CBegin() const noexcept { return bytes_.cbegin(); }
     ///
     /// @brief iterator constant to the buffer
     /// @return a constant iterator to the end of the buffer
     ///
-    const_iterator CEnd() const noexcept { return bytes_.cend() - writer_index_; }
+    const_iterator CEnd() const noexcept { return bytes_.cend(); }
     ///
     /// @brief reverse iterator to the begin of the buffer
     /// @return reverse iterator to the end of the buffer
     ///
-    reverse_iterator RBegin() noexcept { return bytes_.rbegin() -writer_index_; }
+    reverse_iterator RBegin() noexcept { return bytes_.rbegin();}
     /**
      * reverse iterator to the end of the buffer
      * @return reverse iterator to the end of the buffer
      */
-    reverse_iterator REnd() noexcept { return bytes_.rend() + reader_index_; }
+    reverse_iterator REnd() noexcept { return bytes_.rend(); }
     /**
      * constant reverse iterator to the begin of the buffer
      * @return constant reverse iterator to the end of the buffer
@@ -196,7 +202,7 @@ class BasicByteBuffer {
         bytes_.emplace_back(data);
         // bytes_.emplace_back(data);
     }
-    StatusRe Add(const T& data) {
+    void Add(const T& data) {
         bytes_.emplace_back(data);
         // bytes_.emplace_back(data);
     }
@@ -253,12 +259,11 @@ class BasicByteBuffer {
     template <typename V>
     friend bool operator==(const BasicByteBuffer<V>& lhs, const BasicByteBuffer<V>& rhs);
 };
-
 template <typename T>
 bool operator==(const BasicByteBuffer<T>& lhs, const BasicByteBuffer<T>& rhs) {
     return lhs.hex().compare(rhs.hex()) == 0;
 }
 typedef BasicByteBuffer<byte> ByteBuffer;
-}  // namespace iotdb::common
+}  // namespace iotdb::tsfile::common
 
 #endif  // IOTDB__UTIL__BYTEBUFFER

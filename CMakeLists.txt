@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 file(STRINGS "VERSION" VERSION_STRING)
 project(tsfile VERSION "${VERSION_STRING}" LANGUAGES CXX)
+set(CMAKE_BUILD_TYPE_INIT Release)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 set(CMAKE_VERBOSE_MAKEFILE 0)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
@@ -10,12 +15,13 @@ endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 include_directories(include)
-include_directories(include/tsfile)
 file(GLOB_RECURSE INCLUDE_FILES ${CMAKE_SOURCE_DIR}/include/tsfile/*.h)
 file(GLOB_RECURSE SOURCE_FILES_NO_MAIN ${CMAKE_SOURCE_DIR}/src/tsfile/*.cpp)
 # for using catch we don't need the main
 list(FILTER SOURCE_FILES_NO_MAIN EXCLUDE REGEX ".*main.cpp$")
-file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/src/tsfile/*.cpp)
+file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/src/tsfile/common/*.cpp \ 
+              ${CMAKE_SOURCE_DIR}/src/tsfile/model/*.cpp \ 
+              ${CMAKE_SOURCE_DIR}/src/tsfile/io/*.cpp)
 add_library(tsfile STATIC ${SOURCES})
 include(${CMAKE_SOURCE_DIR}/cmake/unit_test.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/clang_tools.cmake)

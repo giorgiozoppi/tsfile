@@ -19,27 +19,26 @@
 #ifndef IOTDB_NATIVE_CHUNK_HEADER_H
 #define IOTDB_NATIVE_CHUNK_HEADER_H
 #include <string>
-
-#include "datatypes.h"
-#include "markers.h"
-
+#include <tsfile/model/datatypes.h>
+#include <tsfile/model/markers.h>
+#if 0
 namespace iotdb::tsfile {
-/**
- * Class that holds the responsibility to model a chunk header
- */
-class chunk_header {
+///
+/// @brief Class that holds the responsibility to model a chunk header
+///
+class ChunkHeader {
    public:
-    /**
-     * Construct a chunk header
-     * @param measurementID     id of measurement
-     * @param dataSize          size of the data
-     * @param dataType          type of the data
-     * @param compressionType   type of compression
-     * @param encoding          type of encoding
-     * @param numOfPages        numeber of pages
-     */
-    explicit chunk_header(const std::string& measurementID, int dataSize, ts_datatype dataType,
-                          compression_type compressionType, ts_encoding encoding, int numOfPages);
+    ///
+    /// @brief Construct a chunk header
+    /// @param measurementID     id of measurement
+    /// @param dataSize          size of the data
+    /// @param dataType          type of the data
+    /// @param compressionType   type of compression
+    /// @param encoding          type of encoding
+    /// @param numOfPages        numeber of pages
+    ///
+    explicit ChunkHeader(const std::string& measurementID, int dataSize, TsDatatype dataType,
+                          compression_type compressionType, TsEncoding encoding, int numOfPages);
 
     /**
      * Get measurement identifier
@@ -128,3 +127,4 @@ class chunk_header {
 };
 }  // namespace iotdb::tsfile
 #endif  // IOTDB_NATIVE_CHUNK_HEADER_H
+#endif

@@ -15,6 +15,7 @@
 * limitations under the License.
 *
 */
+#ifdef 0
 #ifndef IOTDB_NATIVE_CHUNK_HASHER_H
 #define IOTDB_NATIVE_CHUNK_HASHER_H
 #include <cstdint>
@@ -24,7 +25,8 @@
 namespace iotdb::tsfile {
 class Hasher {
    public:
-    template<typename T> void Add(T data);
+    template <typename T>
+    void Add(T data);
     uint64_t Compute();
 
    private:
@@ -33,4 +35,5 @@ class Hasher {
     std::vector<uint8_t> _data;
 };
 }  // namespace iotdb::tsfile
+#endif
 #endif

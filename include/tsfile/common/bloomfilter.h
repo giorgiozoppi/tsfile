@@ -17,46 +17,47 @@
 */
 #ifndef IOTDB_COMMON_BLOOMFILTER
 #define IOTDB_COMMON_BLOOMFILTER
-#include <cstddef>
 #include <array>
 #include <bitset>
+#include <cstddef>
 #include <memory>
-#include "bytebuffer.h"
 
-class HashFunction {
+#ifdef 0
 
-};
+class HashFunction {};
 class BloomFilter {
+    static constexpr int MINIMAL_SIZE = 256;
+    static constexpr int MAXIMAL_HASH_FUNCTION_SIZE = 8;
+    static constexpr std::array<int, MAXIMAL_HASH_FUNCTION_SIZE> SEEDS = {5,  7,  11, 19,
+                                                                          31, 37, 43, 59};
+    int size_;
+    int hash_function_size_;
+    bits;
+    HashFunction[] func;
 
-  static constexpr int MINIMAL_SIZE = 256;
-  static constexpr int MAXIMAL_HASH_FUNCTION_SIZE = 8;
-  static constexpr std::array<int, MAXIMAL_HASH_FUNCTION_SIZE> SEEDS = {5, 7, 11, 19, 31, 37, 43, 59};
-  int size_;
-  int hash_function_size_;
-   bits;
-  HashFunction[] func;
+    // do not try to initialize the filter by construction method
+   private:
+    BloomFilter(std::byte[] bytes, int size, int hashFunctionSize) {
+        this.size_ = size;
+        this.hash_function_size_ = hashFunctionSize;
+        func = new HashFunction[hashFunctionSize];
+        for (int i = 0; i < hashFunctionSize; i++) {
+            func[i] = new HashFunction(size, SEEDS[i]);
+        }
 
-  // do not try to initialize the filter by construction method
-  private:
-   BloomFilter(std::byte[] bytes, int size, int hashFunctionSize) {
-    this.size_ = size;
-    this.hash_function_size_ = hashFunctionSize;
-    func = new HashFunction[hashFunctionSize];
-    for (int i = 0; i < hashFunctionSize; i++) {
-      func[i] = new HashFunction(size, SEEDS[i]);
+        bits = BitSet.valueOf(bytes);
     }
+    BloomFilter(int size, int hashFunctionSize) {
+        this.size = size;
+        this.hashFunctionSize = hashFunctionSize;
+        func = new HashFunction[hashFunctionSize];
+        for (int i = 0; i < hashFunctionSize; i++) {
+            func[i] = new HashFunction(size, SEEDS[i]);
+        }
 
-    bits = BitSet.valueOf(bytes);
-  }
-  BloomFilter(int size, int hashFunctionSize) {
-    this.size = size;
-    this.hashFunctionSize = hashFunctionSize;
-    func = new HashFunction[hashFunctionSize];
-    for (int i = 0; i < hashFunctionSize; i++) {
-      func[i] = new HashFunction(size, SEEDS[i]);
+        bits = new BitSet(size);
     }
-
-    bits = new BitSet(size);
-  }
 };
+#endif
+
 #endif

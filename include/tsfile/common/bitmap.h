@@ -20,26 +20,28 @@
 #include <cstddef>
 #include <cstring>
 #include <memory>
-#include "bytebuffer.h"
+#include <tsfile/common/common.h>
 
 namespace io::tsfile::common {
 ///
 /// @brief A bitmap is a variable array of bits. It can be constructed from a generic set of bytes.
-/// 
+///
 class BitMap {
+
    public:
     ///
     /// @brief BitMap constructor
     /// @param size   number of bytes of the array.
     ///
-    explicit BitMap(size_t size) : len_(size) { bytes_ = std::make_unique<std::byte[]>(size); }
+    ///explicit BitMap(size_t size) : len_(size) { bytes_ = std::make_unique<Byte[]>(size); }
+    #if 0
     ///
     /// @brief Bitmap constructor
     /// @param buffer   ByteArray to copy from.
     ///
-    explicit BitMap(const ByteBuffer& buffer) {
-        bytes_ = std::make_unique<std::byte[]>(buffer.size());
-        std::memcpy(*bytes_, buffer.data(), buffer.size());
+    explicit BitMap(const std::initializer_list<io::tsfile::common::Byte>& buffer) {
+        bytes_ = std::make_unique<io::tsfile::common::Byte[]>(buffer.size());
+        // std::memcpy(*bytes_, buffer.data(), buffer.size());
     }
 
     ///
@@ -48,7 +50,7 @@ class BitMap {
     ///
     BitMap(const BitMap& map) {
         if (this != &map) {
-            bytes_ = std::make_unique<std::byte[]>(map.len_);
+            bytes_ = std::make_unique<io::tsfile::common::Byte[]>(map.len_);
             std::memcpy(*_bytes, *map.bytes_, map.len_);
         }
     }
@@ -56,22 +58,22 @@ class BitMap {
     ///  @brief Bitmap copy operator
     ///  @param Bitmap to copy
     ///  @return a copy of the original Bitmap
-    
+
     BitMap& operator=(const BitMap& map) {
         if (this != &map) {
-            bytes_ = std::make_unique<std::byte[]>(map.len_);
+            bytes_ = std::make_unique<io::tsfile::common::Byte[]>(map.len_);
             len_ = map.len_;
             std::memcpy(*_bytes, *map.len_, map.len_);
         }
     }
-    
+
     ///
     /// @brief BitMap move constructor
     /// @param  BitMap moveable object.
     ///
-    
+
     BitMap(BitMap&& b) : bytes_(std::move(b.bytes_)), len_(std::move(b.len_)) {}
-    
+
     ///
     ///  @brief BitMap move assignemnt operator
     ///  @param BitMap to move
@@ -84,18 +86,18 @@ class BitMap {
         }
     }
     ///
-    /// @brief MarkSet Set all bits in the BitMap to 1.
+    /// @brief Set a bit in the BitMap
+    /// @param pos position to be set.
     /// 
-    void MarkSet() {
-
-    }
+    bool Set(uint64_t index) { return true; }
+    ///
+    /// @brief MarkSet Set all bits in the BitMap to 1.
+    ///
+    void MarkSet() {}
     ///
     /// @brief MarkSet Set all bits in the BitMap to 0.
-    /// 
-    
-    void Clear() {
-
-    }
+    ///
+    void Clear() {}
 
     ~BitMap() {}
     ///
@@ -103,8 +105,9 @@ class BitMap {
     /// @return Number of bits
     ///
     const size_t Size() const { return len_; }
+#endif
    private:
-    std::unique_ptr<std::byte[]> bytes_;
+    /// std::unique_ptr<Byte> bytes_;
     size_t len_;
 };
 }  // namespace io::tsfile::common

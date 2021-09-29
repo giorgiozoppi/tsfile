@@ -3,7 +3,7 @@
         {
             "name": "Linux",
             "includePath": [
-                "${default}"
+                "${default}","${workspaceFolder}/include"
             ],
             "compilerPath": "/usr/lib/llvm-13/bin/clang",
             "cStandard": "c17",

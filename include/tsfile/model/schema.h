@@ -29,41 +29,40 @@ class IMeasurementSchema {
    public:
     virtual std::string GetMeasurementId() = 0;
 
-  CompressionType getCompressor();
+    CompressionType getCompressor();
 
-  TSEncoding getEncodingType();
+    TSEncoding getEncodingType();
 
-  TSDataType getType();
+    TSDataType getType();
 
-  void setType(TSDataType dataType);
+    void setType(TSDataType dataType);
 
-  TSEncoding getTimeTSEncoding();
+    TSEncoding getTimeTSEncoding();
 
-  Encoder getTimeEncoder();
+    Encoder getTimeEncoder();
 
-  Encoder getValueEncoder();
+    Encoder getValueEncoder();
 
-  Map<String, String> getProps();
+    Map<String, String> getProps();
 
-  List<String> getSubMeasurementsList();
+    List<String> getSubMeasurementsList();
 
-  List<TSDataType> getSubMeasurementsTSDataTypeList();
+    List<TSDataType> getSubMeasurementsTSDataTypeList();
 
-  List<TSEncoding> getSubMeasurementsTSEncodingList();
+    List<TSEncoding> getSubMeasurementsTSEncodingList();
 
-  List<Encoder> getSubMeasurementsEncoderList();
+    List<Encoder> getSubMeasurementsEncoderList();
 
-  int getSubMeasurementIndex(String measurementId);
+    int getSubMeasurementIndex(String measurementId);
 
-  int getSubMeasurementsCount();
+    int getSubMeasurementsCount();
 
-  /* test whether the schema contains Measurement with given measurementId */
-  boolean containsSubMeasurement(String measurementId);
+    /* test whether the schema contains Measurement with given measurementId */
+    boolean containsSubMeasurement(String measurementId);
 
-  int serializeTo(ByteBuffer buffer);
+    int serializeTo(ByteBuffer buffer);
 
-  int serializeTo(OutputStream outputStream) throws IOException;
-
+    int serializeTo(OutputStream outputStream) throws IOException;
 
     uint64_t hashcode() { return _hashcode; }
 };

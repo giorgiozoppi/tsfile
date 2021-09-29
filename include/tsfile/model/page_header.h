@@ -18,13 +18,13 @@
 
 #ifndef IOTDB_NATIVE_PAGE_HEADER_H
 #define IOTDB_NATIVE_PAGE_HEADER_H
+#if 0
 #include <memory>
 #include <vector>
-
-#include "common/bytebuffer.h"
-#include "statistics.h"
+#include <tsfile/common/bytebuffer.h>
+#include <tsfile/model/statistics.h>
 namespace iotdb::tsfile {
-using unique_stat_ptr = std::unique_ptr<stat_container>;
+using unique_stat_ptr = std::unique_ptr<StatisticsMap>;
 
 class page_header {
     int _uncompressed_size{0};
@@ -47,7 +47,7 @@ class page_header {
         _uncompressed_size = header._uncompressed_size;
         _compressed_size = header._compressed_size;
         if (_stat != nullptr) {
-            _stat = std::make_unique<stat_container>(*(header._stat));
+            _stat = std::make_unique<StatisticsMap>(*(header._stat));
         }
     }
     page_header& operator=(const page_header& header) {
@@ -56,7 +56,7 @@ class page_header {
             _compressed_size = header._compressed_size;
             _page_type = header._page_type;
             if (header._stat != nullptr) {
-                _stat = std::make_unique<stat_container>(*(header._stat));
+                _stat = std::make_unique<StatisticsMap>(*(header._stat));
             }
         }
         return *this;
@@ -88,9 +88,10 @@ class page_header {
     int c_size() const { return _compressed_size; }
     void set_statistics(unique_stat_ptr&& statistics) noexcept { _stat = std::move(statistics); }
     unique_stat_ptr statistics() const {
-        auto tmp = std::make_unique<stat_container>(*_stat);
+        auto tmp = std::make_unique<StatisticsMap>(*_stat);
         return tmp;
     }
 };
 }  // namespace iotdb::tsfile
+#endif
 #endif

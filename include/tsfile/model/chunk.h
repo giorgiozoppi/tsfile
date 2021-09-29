@@ -15,7 +15,7 @@
 * limitations under the License.
 *
 */
-
+#if 0
 #ifndef IOTDB_NATIVE_CHUNK_H
 #define IOTDB_NATIVE_CHUNK_H
 
@@ -23,9 +23,9 @@
 #include <memory>
 #include <numeric>
 #include <vector>
+#include <tsfile/model/page.h>
+#include <tsfile/model/chunk_header.h>
 
-#include "model/chunk_header.h"
-#include "model/page.h"
 namespace iotdb::tsfile {
 using page_iterator = std::vector<iotdb::tsfile::page>::iterator;
 using const_page_iterator = std::vector<iotdb::tsfile::page>::const_iterator;
@@ -34,19 +34,20 @@ using const_reverse_page_iterator = std::vector<iotdb::tsfile::page>::const_reve
 using unique_page_ptr = std::unique_ptr<iotdb::tsfile::page>;
 
 class chunk {
-    iotdb::tsfile::chunk_header _header;
+    //iotdb::tsfile::ChunkHeader _header;
     std::byte _marker{0};
     std::vector<iotdb::tsfile::page> _pages;
     uint64_t _hash_code{0};
 
    public:
-    chunk(const iotdb::tsfile::chunk_header& header, const std::byte& marker);
+   Chunk() {}
+  //  chunk(const iotdb::tsfile::ChunkHeader& header, const std::byte& marker);
     friend bool operator==(const chunk& lhs, const chunk& rhs);
     friend bool operator<(const chunk& lhs, const chunk& rhs);
     friend bool operator==(const chunk& lhs, const chunk& rhs);
 
     // getter
-    chunk_header header() const noexcept;
+//    ChunkHeader header() const noexcept;
     std::byte marker() const noexcept;
     // add a page to a chunk.
     void add_page(iotdb::tsfile::page&& page);
@@ -66,3 +67,4 @@ class chunk {
 }  // namespace iotdb::tsfile
 
 #endif  // TSFILE_CHUNK_H
+#endif
