@@ -72,8 +72,6 @@ class BasicByteBuffer {
     ///
     explicit BasicByteBuffer(size_t n) : bytes_(n) {
         bytes_.reserve(n);
-        reader_index_ = 0;
-        writer_index_ = 0;
     }
     ///
     /// @brief Construct a byte array of predefined size using uniform init
@@ -114,42 +112,42 @@ class BasicByteBuffer {
     /// @brief Iterator in the buffer, in the reading zone.
     /// @return An iterator to the beginning of the given container c
     ///
-    iterator Begin() noexcept { return bytes_.begin(); }
+    iterator begin() noexcept { return bytes_.begin(); }
     ///
     /// Iterator in the buffer
     /// @return an iterator to the end of the readable zone.
     ///
-    iterator End() noexcept { return bytes_.end(); }
+    iterator end() noexcept { return bytes_.end(); }
     ///
     /// iterator constant to the buffer
     /// @return a constant iterator to the beginning of readable zone
     ///
-    const_iterator CBegin() const noexcept { return bytes_.cbegin(); }
+    const_iterator cbegin() const noexcept { return bytes_.cbegin(); }
     ///
     /// @brief iterator constant to the buffer
     /// @return a constant iterator to the end of the buffer
     ///
-    const_iterator CEnd() const noexcept { return bytes_.cend(); }
+    const_iterator cend() const noexcept { return bytes_.cend(); }
     ///
     /// @brief reverse iterator to the begin of the buffer
     /// @return reverse iterator to the end of the buffer
     ///
-    reverse_iterator RBegin() noexcept { return bytes_.rbegin(); }
+    reverse_iterator rbegin() noexcept { return bytes_.rbegin(); }
     ///
     /// @brief reverse iterator to the end of the buffer
     /// @return reverse iterator to the end of the buffer
     ///
-    reverse_iterator REnd() noexcept { return bytes_.rend(); }
+    reverse_iterator rend() noexcept { return bytes_.rend(); }
     ///
     /// @brief  constant reverse iterator to the begin of the buffer
     /// @return constant reverse iterator to the end of the buffer
     ///
-    const_reverse_iterator CRBegin() const noexcept { return bytes_.crbegin(); }
+    const_reverse_iterator crbegin() const noexcept { return bytes_.crbegin(); }
     ///
     /// @brief constant reverse iterator to the begin of the buffer
     /// @return constant reverse iterator to the end of the buffer
     ///
-    const_reverse_iterator CREnd() const noexcept { return bytes_.crend(); }
+    const_reverse_iterator crend() const noexcept { return bytes_.crend(); }
     ///
     /// @brief Append a buffer inside the byte buffer
     /// @param  data  buffer to append
