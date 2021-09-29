@@ -18,6 +18,7 @@
 extern "C" {
 #include <inttypes.h>
 #include <string.h>
+struct SipHash {};
 
 int SipHash(const void* in, const size_t inlen, const void* k, uint8_t* out, const size_t outlen);
 }
