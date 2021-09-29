@@ -16,10 +16,15 @@
 *
 */
 #include <tsfile/common/bitmap.h>
+#include <cmath>
 
 namespace iotdb::tsfile::common {
 
-BitMap::BitMap(const size_t& siz) : count_(siz) { bytes_ = std::make_unique<Byte[]>(siz); }
+BitMap::BitMap(const size_t& siz) : count_(siz) { 
+    auto num_bytes = std::round(count_/8.0);
+
+    bytes_ = std::make_unique<Byte[]>(num_bytes); 
+}
 
 BitMap::BitMap(const BitMap& map) {
     if (this != &map) {
@@ -47,9 +52,13 @@ BitMap& BitMap::operator=(BitMap&& map) {
     }
     return *this;
 }
-ValueResult<BitError, BitMap> BitMap::Set(uint64_t index) {
+ValueResult<BitError, BitMap> BitMap::Set(size_t index) {
     // PRE: shall be lower then len
-    if (index < count_) {
+    auto numbits = count_ * 8;
+    if (index < numbits) {
+        auto pos = (count_ * 8 )/ index;
+        auto rest = (count_ * 8 ) % index;
+        bytes_[pos]
         return ValueResult<BitError, BitMap>(BitError::OUT_RANGE, *this);
     }
     return ValueResult<BitError, BitMap>(BitError::OUT_RANGE, *this);

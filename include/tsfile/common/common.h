@@ -19,7 +19,30 @@
 #include <optional>
 
 namespace iotdb::tsfile::common {
-typedef unsigned char Byte;
+typedef int8_t Byte; // this differs from C++20 standard (it's an unsigned char for compatibility with Java).
+/// Endianess
+
+// here we handle endianess.
+// note that in java we've signed bytes as default.
+
+#if defined(__BYTE_ORDER) && __BYTE_ORDER == __BIG_ENDIAN || \
+    defined(__BIG_ENDIAN__) || \
+    defined(__ARMEB__) || \
+    defined(__THUMBEB__) || \
+    defined(__AARCH64EB__) || \
+    defined(_MIBSEB) || defined(__MIBSEB) || defined(__MIBSEB__)
+
+constexpr int8_t to_big_endian(int8_t n) { return n; }
+constexpr int16_t to_big_endian(int16_t n) { return n; }
+constexpr int32_t to_big_endian(int32_t n) { return n; }
+
+#else
+constexpr int8_t to_big_endian(int8_t n) { return n; }
+constexpr int16_t to_big_endian(int16_t n) { return n; }
+constexpr int32_t to_big_endian(int32_t n) { return n; }
+#endif
+
+
 ///
 /// @brief Suffix/Extension of the TSFile
 ///
@@ -45,7 +68,6 @@ constexpr bool IsOk(T t) {
 ///  return ComputeAlgorithm(value);
 /// }
 ///
-
 template <typename T, typename V>
 class ValueResult {
    public:
@@ -66,6 +88,9 @@ class ValueResult {
     std::optional<V> _value{std::nullopt};
     T _error;
 };
+///
+/// @brief StatusResult return  a result.
+///
 template<typename T> class StatusResult {
     public:
     StatusResult(const T& result) {
@@ -85,6 +110,6 @@ std::tuple<K, Z> get(const ValueResult<K, Z>& v) {
 }
 
 enum class BitError { OK = 0, OUT_RANGE = 1 };
-class lua {};
+
 }  // namespace iotdb::tsfile::common
 #endif
