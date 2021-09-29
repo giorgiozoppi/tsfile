@@ -15,100 +15,55 @@
 * limitations under the License.
 *
 */
-#ifndef IOTDB_TSFILE_COMMON_BITMAP
-#define IOTDB_TSFILE_COMMON_BITMAP
+#ifndef IOTDB_NATIVE_COMMON_BITMAP
+#define IOTDB_NATIVE_COMMON_BITMAP
+#include <tsfile/common/common.h>
+
 #include <cstddef>
 #include <cstring>
 #include <memory>
-#include <tsfile/common/common.h>
 
-namespace io::tsfile::common {
+namespace iotdb::tsfile::common {
 ///
 /// @brief A bitmap is a variable array of bits. It can be constructed from a generic set of bytes.
 ///
 class BitMap {
-
    public:
     ///
-    /// @brief BitMap constructor
-    /// @param size   number of bytes of the array.
+    /// @brief Constructor
+    /// @param size size of the bitMap
     ///
-    ///explicit BitMap(size_t size) : len_(size) { bytes_ = std::make_unique<Byte[]>(size); }
-    #if 0
-    ///
-    /// @brief Bitmap constructor
-    /// @param buffer   ByteArray to copy from.
-    ///
-    explicit BitMap(const std::initializer_list<io::tsfile::common::Byte>& buffer) {
-        bytes_ = std::make_unique<io::tsfile::common::Byte[]>(buffer.size());
-        // std::memcpy(*bytes_, buffer.data(), buffer.size());
-    }
-
+    explicit BitMap(size_t size) : count_(size) { bytes_ = std::make_unique<Byte[]>(size); }
     ///
     /// @brief Bitmap copy constructor
     /// @param map instance to copy
     ///
-    BitMap(const BitMap& map) {
+
+    explicit BitMap(const BitMap& map) {
         if (this != &map) {
-            bytes_ = std::make_unique<io::tsfile::common::Byte[]>(map.len_);
-            std::memcpy(*_bytes, *map.bytes_, map.len_);
+            bytes_ = std::make_unique<Byte[]>(map.count_);
+            std::memcpy(bytes_.get(), map.bytes_.get(), map.count_);
         }
     }
+
     ///
     ///  @brief Bitmap copy operator
     ///  @param Bitmap to copy
     ///  @return a copy of the original Bitmap
+    ///
 
     BitMap& operator=(const BitMap& map) {
         if (this != &map) {
-            bytes_ = std::make_unique<io::tsfile::common::Byte[]>(map.len_);
-            len_ = map.len_;
-            std::memcpy(*_bytes, *map.len_, map.len_);
+            bytes_ = std::make_unique<Byte[]>(map.count_);
+            std::memcpy(bytes_.get(), map.bytes_.get(), map.count_);
         }
+        return *this;
     }
 
-    ///
-    /// @brief BitMap move constructor
-    /// @param  BitMap moveable object.
-    ///
-
-    BitMap(BitMap&& b) : bytes_(std::move(b.bytes_)), len_(std::move(b.len_)) {}
-
-    ///
-    ///  @brief BitMap move assignemnt operator
-    ///  @param BitMap to move
-    ///  @return a copy of the original BitMap
-
-    BitMap& operator=(BitMap&& map) {
-        if (this != &map) {
-            bytes_ = std::move(map.bytes_);
-            len_ = std::move(map.len_);
-        }
-    }
-    ///
-    /// @brief Set a bit in the BitMap
-    /// @param pos position to be set.
-    /// 
-    bool Set(uint64_t index) { return true; }
-    ///
-    /// @brief MarkSet Set all bits in the BitMap to 1.
-    ///
-    void MarkSet() {}
-    ///
-    /// @brief MarkSet Set all bits in the BitMap to 0.
-    ///
-    void Clear() {}
-
-    ~BitMap() {}
-    ///
-    /// @brief Size in number o bits
-    /// @return Number of bits
-    ///
-    const size_t Size() const { return len_; }
-#endif
    private:
-    /// std::unique_ptr<Byte> bytes_;
-    size_t len_;
+    size_t count_;
+    std::unique_ptr<Byte[]> bytes_;
 };
-}  // namespace io::tsfile::common
+
+}  // namespace iotdb::tsfile::common
 #endif

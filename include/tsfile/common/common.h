@@ -85,5 +85,6 @@ std::tuple<K, Z> get(const ValueResult<K, Z>& v) {
 }
 
 enum class BitError { OK = 0, OUT_RANGE = 1 };
+class lua {};
 }  // namespace iotdb::tsfile::common
 #endif

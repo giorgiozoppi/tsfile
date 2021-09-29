@@ -15,7 +15,7 @@ endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 include_directories(include)
-file(GLOB_RECURSE INCLUDE_FILES ${CMAKE_SOURCE_DIR}/include/tsfile/*.h)
+file(GLOB_RECURSE INCLUDE_FILES ${CMAKE_SOURCE_DIR}/include/tsfile/*.h ${CMAKE_SOURCE_DIR}/include/tsfile/common/*.h)
 file(GLOB_RECURSE SOURCE_FILES_NO_MAIN ${CMAKE_SOURCE_DIR}/src/tsfile/*.cpp)
 # for using catch we don't need the main
 list(FILTER SOURCE_FILES_NO_MAIN EXCLUDE REGEX ".*main.cpp$")
