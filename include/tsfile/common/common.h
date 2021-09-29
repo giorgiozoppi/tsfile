@@ -19,7 +19,7 @@
 #include <optional>
 
 namespace iotdb::tsfile::common {
-typedef int8_t Byte; // this differs from C++20 standard (it's an unsigned char for compatibility with Java).
+typedef uint8_t Byte; 
 /// Endianess
 
 // here we handle endianess.
@@ -31,15 +31,19 @@ typedef int8_t Byte; // this differs from C++20 standard (it's an unsigned char 
     defined(__THUMBEB__) || \
     defined(__AARCH64EB__) || \
     defined(_MIBSEB) || defined(__MIBSEB) || defined(__MIBSEB__)
+#define IOTDB_BIG_ENDIAN 1
 
-constexpr int8_t to_big_endian(int8_t n) { return n; }
 constexpr int16_t to_big_endian(int16_t n) { return n; }
 constexpr int32_t to_big_endian(int32_t n) { return n; }
+constexpr int64_t to_big_endian(int32_t n) { return n; }
 
 #else
-constexpr int8_t to_big_endian(int8_t n) { return n; }
+#define IOTDB_BIG_ENDIAN 0
+// @todo
 constexpr int16_t to_big_endian(int16_t n) { return n; }
 constexpr int32_t to_big_endian(int32_t n) { return n; }
+constexpr int64_t to_big_endian(int64_t n) { return n; }
+
 #endif
 
 

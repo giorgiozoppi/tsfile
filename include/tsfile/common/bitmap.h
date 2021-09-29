@@ -69,15 +69,36 @@ class BitMap {
     ///
     /// @brief Set a bit in the BitMap
     /// @param pos position to be set.
-    /// 
-    ValueResult<BitError, BitMap> Set(size_t index);
+    /// @return A tuple of value and bitmap 
+
+    StatusResult<BitError> Mark(size_t index);
+
+    ///
+    /// @brief Mark all bits to 1.
+    /// @return If the operation has been successfully
+    ///
+
+    StatusResult<BitError> MarkAll();
+    ///
+    /// @brief Reset all bitmaps.
+    /// @return If the operation has been successfully
+    ///
+
+    StatusResult<BitError> Reset();
+
+    ///
+    /// @brief Set a bit to zero the BitMap
+    /// @param pos position to be set.
+    /// @return A tuple of value and bitmap 
+
+    StatusResult<BitError> UnMark(size_t index);
     
     ///
     /// @brief Access to the a bit in a position;
     /// @param index position in the bitmap to retrieve.
-    /// @return a bitset with the bit value, otherwise zero.
+    /// @return A tuple ValueResult = (error, bit value).
 
-    ValueResult<BitError, std::bitset<1>> operator[](size_t index) const;
+    ValueResult<BitError, short> operator[](size_t index) const;
     ///
     /// @brief Destructor
     ///

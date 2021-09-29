@@ -26,7 +26,7 @@ class TsRecord {
     TsRecord(int64_t timestamp, const std::string& device_id)
         : timestamp_(timestamp), device_id_(device_id) {}
 
-    // @brief Set the currentTime stamp
+    // @brief Mark the currentTime stamp
     //
     void SetTimestamp(long timestamp) { timestamp_ = timestamp; }
     int64_t Time() const { return timestamp_; }

@@ -233,7 +233,7 @@ class BasicByteBuffer {
         }
         return out.str();
     }
-    const BasicByteBuffer<T>& Set(size_t idx, const T& value) {
+    const BasicByteBuffer<T>& Mark(size_t idx, const T& value) {
         bytes_.data()[idx] = value;
         return *this;
     }

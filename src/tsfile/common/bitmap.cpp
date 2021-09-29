@@ -16,14 +16,16 @@
 *
 */
 #include <tsfile/common/bitmap.h>
+
 #include <cmath>
+#include <iterator>
 
 namespace iotdb::tsfile::common {
 
-BitMap::BitMap(const size_t& siz) : count_(siz) { 
-    auto num_bytes = std::round(count_/8.0);
+BitMap::BitMap(const size_t& siz) : count_(siz) {
+    auto num_bytes = std::round(count_ / 8.0);
 
-    bytes_ = std::make_unique<Byte[]>(num_bytes); 
+    bytes_ = std::make_unique<Byte[]>(num_bytes);
 }
 
 BitMap::BitMap(const BitMap& map) {
@@ -43,32 +45,43 @@ BitMap& BitMap::operator=(const BitMap& map) {
     return *this;
 }
 
-BitMap::BitMap(BitMap&& b) : count_(std::move(b.count_)), bytes_(std::move(b.bytes_))  {}
+BitMap::BitMap(BitMap&& b) : count_(std::move(b.count_)), bytes_(std::move(b.bytes_)) {}
 
 BitMap& BitMap::operator=(BitMap&& map) {
     if (this != &map) {
-        count_= std::move(map.count_);
+        count_ = std::move(map.count_);
         bytes_ = std::move(map.bytes_);
     }
     return *this;
 }
-ValueResult<BitError, BitMap> BitMap::Set(size_t index) {
-    // PRE: shall be lower then len
+StatusResult<BitError> BitMap::Mark(size_t index) {
     auto numbits = count_ * 8;
     if (index < numbits) {
-        auto pos = (count_ * 8 )/ index;
-        auto rest = (count_ * 8 ) % index;
-        bytes_[pos]
-        return ValueResult<BitError, BitMap>(BitError::OUT_RANGE, *this);
+        auto pos = (count_ * 8) / index;
+        auto rest = (count_ * 8) % index;
+        uint8_t data = static_cast<uint8_t>(std::pow(2, rest));
+        auto value = bytes_[pos] | data;
+        bytes_[pos] = value;
+        return StatusResult<BitError>(BitError::OK);
     }
-    return ValueResult<BitError, BitMap>(BitError::OUT_RANGE, *this);
+    return StatusResult<BitError>(BitError::OUT_RANGE);
+}
+StatusResult<BitError> BitMap::MarkAll() {
+     for (size_t i = 0; i < count_; ++i) {
+         bytes_.get()[i] = 0xFF;
+     }
+     return StatusResult<BitError>(BitError::OK); 
 }
 
-ValueResult<BitError, std::bitset<1>> BitMap::operator[](size_t index) const {
-    if (index < count_) {
-        return ValueResult<BitError, std::bitset<1>>(BitError::OUT_RANGE, std::bitset<1>());
+ValueResult<BitError, short> BitMap::operator[](size_t index) const {
+    auto numbits = count_ * 8;
+    if (index < numbits) {
+        auto rest = (count_ * 8) % index;
+        auto bit_to_set = 8 - rest;
+        std::bitset<8> out(rest);
+        return ValueResult<BitError, short>(BitError::OK, out.test(bit_to_set) ? 1 : 0);
     }
-    return ValueResult<BitError, std::bitset<1>>(BitError::OUT_RANGE, std::bitset<1>());
+    return ValueResult<BitError, short>(BitError::OUT_RANGE, 0);
 }
-    
+
 }  // namespace iotdb::tsfile::common

@@ -52,7 +52,7 @@ class ChunkHeader {
     size_t get_data_size() const;
 
     /**
-     * Set measurement identifier
+     * Mark measurement identifier
      * @param id
      */
     void set_measurement_id(const std::string& id);
@@ -64,7 +64,7 @@ class ChunkHeader {
     compression_type get_compression_type() const;
 
     /**
-     * Set the compression type
+     * Mark the compression type
      * @param type of the compression.
      */
     void set_compression_type(const compression_type& type);
@@ -76,7 +76,7 @@ class ChunkHeader {
     ts_datatype get_ts_datatype() const;
 
     /**
-     * Set the time series data type
+     * Mark the time series data type
      */
     void set_ts_datatype(const ts_datatype& type);
 
@@ -87,7 +87,7 @@ class ChunkHeader {
     ts_encoding get_ts_encoding() const;
 
     /**
-     * Set the time series encoding
+     * Mark the time series encoding
      * @param type series encoding
      */
     void set_ts_encoding(const ts_encoding& type);
@@ -100,7 +100,7 @@ class ChunkHeader {
     int get_num_of_pages() const;
 
     /**
-     * Set the number of paging
+     * Mark the number of paging
      * @param num_of_pages
      */
     void set_num_of_pages(const int& num_of_pages);
