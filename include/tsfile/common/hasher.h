@@ -22,20 +22,14 @@
 #include <vector>
 
 namespace iotdb::tsfile {
-class hasher {
+class Hasher {
    public:
-    void add(double data);
-    void add(long data);
-    void add(int data);
-    void add(unsigned int data);
-    void add(float data);
-    void add(unsigned long data);
-    void add(std::byte data);
-    uint64_t compute();
+    template<typename T> void Add(T data);
+    uint64_t Compute();
 
    private:
-    void add_data(uint64_t data, std::vector<uint8_t>& value);
-    uint64_t gen_key_part();
+    void AddData(uint64_t data, std::vector<uint8_t>& value);
+    uint64_t GenerateKeyPart();
     std::vector<uint8_t> _data;
 };
 }  // namespace iotdb::tsfile

@@ -43,4 +43,10 @@ Below we see a eye of bird view image:
 
 ![TsFile Format Structure](/assets/format.png)
 
+## Code Style
+
+We use for the naming the Google C++ Code Style Guidelines. Please look at (https://google.github.io/styleguide/cppguide.html#General_Naming_Rules)
+
+
+
 

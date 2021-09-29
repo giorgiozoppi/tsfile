@@ -18,7 +18,7 @@
 #ifndef IOTDB_NATIVE_UTIL_HASHER_H
 #define IOTDB_NATIVE_UTIL_HASHER_H
 #include <vector>
-namespace iotdb::util {
+namespace iotdb::tsfile::common {
 
 // extend with concepts.
 template <typename T>

@@ -18,9 +18,26 @@
 #ifndef IOTDB_NATIVE_CONCEPTS_H
 #define IOTDB_NATIVE_CONCEPTS_H
 #include <concepts>
+#include <<type_traits>
 #include <cstdint>
 
-namespace iotdb::tsfile {
+namespace iotdb::tsfile::common { {
+
+template <typename T, typename S>
+struct is_string
+{
+  static const bool value = false;
+};
+
+template <class T, class Traits, class Alloc>
+struct is_string<T, std::basic_string<T, Traits, Alloc>>
+{
+  static const bool value = true;
+};
+
+template <typename T> concept HashFunction = requires {
+    std::decl
+}
 template <typename T>
 concept Serializable = requires {
     std::declval<T>().members();
@@ -44,6 +61,8 @@ concept StatLike = requires(T a) {
     std::declval<T>().sum_value();
     std::declval<T>().extreme();
 };
+template <typename T> concept PrimitiveType = std::is_integral<T>() || is_string<T>::value || std::floating_point<T>;
+
 template <typename T>
 concept StatLikeHashable = StatLike<T> && Hashable<T>;
 }  // namespace iotdb::tsfile

@@ -16,3 +16,6 @@
 - Sep 25 2021 19:45:55	Giorgio Zoppi <giorgio.zoppi@gmail.com>
 	* Added e2e suite skeleton in java
 	* Fixed build in page_header.h
+ Sep 27 2021 14:31:45	Giorgio Zoppi <giorgio.zoppi@gmail.com>
+	* add tablet and record classes
+	* add datapoint class.

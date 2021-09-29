@@ -24,35 +24,69 @@
 #include <iterator>
 #include <sstream>
 #include <vector>
+#include "common.h"
 
-#include "bytestream.h"
-
-namespace iotdb::common {
+namespace iotdb::tsfile::common {
 
 using std::istream;
 using std::ostream;
+///
+///  @brief ByteBuffer/BasicByteBuffer work as Netty's ByteBuf
+///  We've divided the buffer array in three segments:
+///
+///   +-------------------+------------------+------------------+
+///   | discardable bytes |  readable bytes  |  writable bytes  |
+///   |                   |     (CONTENT)    |                  |
+///   +-------------------+------------------+------------------+
+///   |                   |                  |                  |
+///    0      <=      reader_index   <=   writer_index    <=    capacity
+///
+///  - redable bytes: This segment is where the actual data is stored. Any reading operation starts
+///    the data at the current reader_index and increase it by the number of read bytes. If the argument of the 
+///    read operation is also a bytebuffer and no destination index is specified, the specified buffer's writerIndex 
+///    is increased together.
+///  - discarable bytes: This segment contains the bytes which were read already by a read operation. 
+///    Initially, the size of this segment is 0, but its size increases up to the writer_index as read operations are executed. 
+///    The read bytes can be discarded by calling Discard() to reclaim unused area.
+///  - writable bytes: This segment is a undefined space which needs to be filled. Any operation whose name starts with write will write the data at the current writerIndex and increase it by the number of written bytes. If the argument of the write operation is also a ByteBuf,
+///    and no source index is specified, the specified buffer's readerIndex is increased together.
+///   Example usage:
+///   ByteBuffer buffer{10, 29, 31, 40, 6};
+///   for(auto& i: buffer) {
+///     std::cout << i << ", "
+///   }
+///   std::cout << std::endl;
+///   buffer.Add(32);
+///   buffer.Add(50);
+///   for(auto& i: buffer) {
+///     std::cout << i << ", "
+///   }
+///  We will see:
+///  10, 29, 31, 40, 6, 
+///  32, 50
+///
+/// BasicByteBuffer can be set to skip Index to get the normal buffer behaviour.
+/// 
+///   Example usage:
+///   ByteBuffer buffer{10, 29, 31, 40, 6};
+///   buffer.SkipIndexes();
+///   for(auto& i: buffer) {
+///     std::cout << i << ", "
+///   }
+///   std::cout << std::endl;
+///   buffer.Add(32);
+///   buffer.Add(50);
+///   for(auto& i: buffer) {
+///     std::cout << i << ", "
+///   }
+///  We will see:
+///  10, 29, 31, 40, 6, 
+///  10, 29, 31, 40, 6, 32, 50
+/// The writable/redable mode is useful for concurrent in order to overlap writing and reading.
+/// When we have consumed the writeable part. 
 
 template <typename T>
-class basic_bytebuffer {
-    std::vector<T> _bytes;
-
-   private:
-    template <typename V, typename K>
-    friend std::basic_ostream<K>& operator<<(std::basic_ostream<K>& os,
-                                             const basic_bytebuffer<V>& buffer);
-    template <typename V, typename K>
-    friend std::basic_istream<K>& operator>>(std::basic_istream<K>& is,
-                                             basic_bytebuffer<V>& buffer);
-    template <typename V, typename K>
-    friend std::basic_ofstream<K>& operator<<(std::basic_ofstream<K>& os,
-                                              const basic_bytebuffer<V>& buffer);
-    template <typename V, typename K>
-    friend std::basic_ifstream<K>& operator>>(std::basic_istream<K>& is,
-                                              basic_bytebuffer<V>& buffer);
-
-    template <typename V>
-    friend bool operator==(const basic_bytebuffer<V>& lhs, const basic_bytebuffer<V>& rhs);
-
+class BasicByteBuffer {
    public:
     static constexpr unsigned int DEFAULT_SIZE = 1024;
     using internal_buffer = typename std::vector<T>;
@@ -62,101 +96,130 @@ class basic_bytebuffer {
     using const_reverse_iterator = typename internal_buffer::const_reverse_iterator;
     using const_iterator = typename internal_buffer::const_iterator;
 
-    /**
-     * default constructor
-     */
-    basic_bytebuffer() { _bytes.reserve(DEFAULT_SIZE); }
-    /**
-     * construct a byte array of predefined size
-     * @param n number of bytes that a bytearray should have
-     */
-    explicit basic_bytebuffer(size_t n) : _bytes(n) { _bytes.reserve(n); }
-    /**
-     * construct a byte array of predefined size using uniform init
-     * @param n number of bytes that a bytearray should have
-     */
-    basic_bytebuffer(const std::initializer_list<T>& bytes) {
-        auto dim = bytes.size();
-        _bytes.reserve(dim * 2);
-        _bytes.insert(_bytes.end(), bytes.begin(), bytes.end());
+    ///
+    /// @brief Default constructor
+    ///
+    BasicByteBuffer() { bytes_.reserve(DEFAULT_SIZE); }
+
+    ///
+    /// @brief Construct a byte array of predefined size
+    /// @param n number of bytes that a bytearray should have
+    ///
+    explicit BasicByteBuffer(size_t n) : bytes_(n) {
+        bytes_.reserve(n);
+        reader_index_ = 0;
+        writer_index_ = 0;
     }
-    /**
-     * Move constructor
-     * @param bytes
-     */
-    basic_bytebuffer(internal_buffer&& bytes) : _bytes(std::move(bytes)) {}
-    /**
-     * iterator in the buffer
-     * @return an iterator to the beginning of the given container c
-     */
-    iterator begin() noexcept { return _bytes.begin(); }
-    /**
-     * iterator in the buffer
-     * @return an iterator to the end of the given container c
-     */
-    iterator end() noexcept { return _bytes.end(); }
-    /**
-     * iterator constant to the buffer
-     * @return a constant iterator to the beginning of the given container c
-     */
-    const_iterator cbegin() const noexcept { return _bytes.cbegin(); }
-    /**
-     * iterator constant to the buffer
-     * @return a constant iterator to the end of the buffer
-     */
-    const_iterator cend() const noexcept { return _bytes.cend(); }
-    /**
-     * reverse iterator to the begin of the buffer
-     * @return reverse iterator to the end of the buffer
-     */
-    reverse_iterator rbegin() noexcept { return _bytes.rbegin(); }
+    ///
+    /// @brief Construct a byte array of predefined size using uniform init
+    /// @param n number of bytes that a bytearray should have
+    ///
+    explicit BasicByteBuffer(const std::initializer_list<T>& bytes) {
+        auto dim = bytes.size();
+        reader_index_ = 0;
+        bytes_.reserve(dim * 2);
+        bytes_.insert(bytes_.end() + reader_index_, bytes.begin(), bytes.end());
+    }
+    ///
+    /// @brief Copy Constructor
+    /// @param buffer BasicByteBuffer to copy
+    ///
+    BasicByteBuffer(const BasicByteBuffer<T>& buffer) {}
+    ///
+    /// @brief Copy Assignment operator
+    /// @param buffer BasicByteBuffer to copy
+    //
+    BasicByteBuffer& operator=(const BasicByteBuffer<T>& buffer) {}
+    ///
+    /// @brief Move Assignment operator
+    /// @param buffer BasicByteBuffer to copy
+    //
+    BasicByteBuffer& operator=(BasicByteBuffer<T>&& buffer) {}
+    /// 
+    /// @brief Iterator in the buffer, in the reading zone.
+    /// @return An iterator to the beginning of the given container c
+    ///
+    iterator Begin() noexcept { return (bytes_.begin()+reader_index_; }
+    ///
+    /// Iterator in the buffer
+    /// @return an iterator to the end of the readable zone.
+    ///
+    iterator End() noexcept { return bytes_.end() - writer_index_; }
+    ///
+    /// iterator constant to the buffer
+    /// @return a constant iterator to the beginning of readable zone
+    ///
+    const_iterator CBegin() const noexcept { return bytes_.cbegin() + reader_index_; }
+    ///
+    /// @brief iterator constant to the buffer
+    /// @return a constant iterator to the end of the buffer
+    ///
+    const_iterator CEnd() const noexcept { return bytes_.cend() - writer_index_; }
+    ///
+    /// @brief reverse iterator to the begin of the buffer
+    /// @return reverse iterator to the end of the buffer
+    ///
+    reverse_iterator RBegin() noexcept { return bytes_.rbegin() -writer_index_; }
     /**
      * reverse iterator to the end of the buffer
      * @return reverse iterator to the end of the buffer
      */
-    reverse_iterator rend() noexcept { return _bytes.rend(); }
+    reverse_iterator REnd() noexcept { return bytes_.rend() + reader_index_; }
     /**
      * constant reverse iterator to the begin of the buffer
      * @return constant reverse iterator to the end of the buffer
      */
-    const_reverse_iterator crbegin() const noexcept { return _bytes.crbegin(); }
+    const_reverse_iterator CRBegin() const noexcept { return bytes_.crbegin(); }
     /**
      * constant reverse iterator to the begin of the buffer
      * @return constant reverse iterator to the end of the buffer
      */
-    const_reverse_iterator crend() const noexcept { return _bytes.crend(); }
+    const_reverse_iterator CREnd() const noexcept { return bytes_.crend(); }
+
+    ///
+    /// @brief Discard byte operation. Please note that there is no guarantee about
+    /// the content of writable bytes after calling Discard().
+    /// The writable bytes will not be moved in most cases and could even be filled with completely
+    /// different data depending on the underlying buffer implementation.
+    /// Discard is for writing like std::move.
+
+    void Discard() {
+        auto scale = writer_index_ - reader_index_;
+        reader_index_ = 0;
+        writer_index_ = writer_index_ - scale;
+    }
     /**
      * Double the reserved size for the byte buffer
      */
-    void ensure_space() { _bytes.reserve(_bytes.capacity() * 2); }
-    void append(const basic_bytebuffer& data) {
-        _bytes.emplace_back(data);
-        // _bytes.emplace_back(data);
+    void EnsureSpace() { bytes_.reserve(bytes_.capacity() * 2); }
+    void Append(const BasicByteBuffer& data) {
+        bytes_.emplace_back(data);
+        // bytes_.emplace_back(data);
     }
-    void add(const T& data) {
-        _bytes.emplace_back(data);
-        // _bytes.emplace_back(data);
+    StatusRe Add(const T& data) {
+        bytes_.emplace_back(data);
+        // bytes_.emplace_back(data);
     }
-    void clear() { _bytes.clear(); }
-    void reserve(size_t size) { _bytes.reserve(size); }
+    void Clear() { bytes_.clear(); }
+    void Reserve(size_t size) { bytes_.reserve(size); }
     /**
      * Get the size of the byte buffer
      * @return size in byte of the buffer
      */
-    size_t size() const { return _bytes.size(); }
+    size_t Size() const { return bytes_.size(); }
     /**
      * Get the real capacity of the buffer
      * @return
      */
-    size_t capacity() const { return _bytes.capacity(); }
+    size_t Capacity() const { return bytes_.capacity(); }
     /**
      * Get the bytes converted in hexadecimal string
      * @return hexdecimal string of the bytebuffer
      */
-    const std::string hex() const {
+    std::string Hex() const {
         const char code[]{"0123456789ABCDEF"};
         std::ostringstream out;
-        for (auto& b : _bytes) {
+        for (auto& b : bytes_) {
             auto num = b / 16;
             auto rest = b % 16;
             out << code[num];
@@ -164,16 +227,8 @@ class basic_bytebuffer {
         }
         return out.str();
     }
-    /**
-     * Compare if two byte buffers are the same
-     */
-    // auto operator<=>(const basic_bytebuffer<T>& bytebuffer) { return hex() <=> bytebuffer.hex();
-    // } friend ostream& operator<<(ostream& os, const basic_bytebuffer<T>& bb); istream&
-    // operator>>(istream& is, basic_bytebuffer<T>& dt);
-    T& add(std::size_t idx, std::size_t jdx) { return _bytes[idx] + _bytes[jdx]; }
-    T& sub(std::size_t idx, std::size_t jdx) { return _bytes[idx] - _bytes[jdx]; }
-    const basic_bytebuffer<T>& set(size_t idx, const T& value) {
-        _bytes.data()[idx] = value;
+    const BasicByteBuffer<T>& Set(size_t idx, const T& value) {
+        bytes_.data()[idx] = value;
         return *this;
     }
     /**
@@ -181,64 +236,29 @@ class basic_bytebuffer {
      * @param idx index of the byte
      * @return value of the byte
      */
-    T& operator[](std::size_t idx) { return _bytes[idx]; }
+    T& operator[](std::size_t idx) { return bytes_[idx]; }
     /**
      * Return the byte by random access
      * @param idx index of the byte
      * @return value of the byte
      */
-    const T& operator[](std::size_t idx) const { return _bytes[idx]; }
+    const T& operator[](std::size_t idx) const { return bytes_[idx]; }
 
-    const T* data() { return _bytes.data(); }
+    const T* Data() { return bytes_.data(); }
+
+   private:
+    std::vector<T> bytes_;
+    uint64_t reader_index_{0};
+    uint64_t writer_index_{0};
+    template <typename V>
+    friend bool operator==(const BasicByteBuffer<V>& lhs, const BasicByteBuffer<V>& rhs);
 };
 
 template <typename T>
-bool operator==(const basic_bytebuffer<T>& lhs, const basic_bytebuffer<T>& rhs) {
+bool operator==(const BasicByteBuffer<T>& lhs, const BasicByteBuffer<T>& rhs) {
     return lhs.hex().compare(rhs.hex()) == 0;
 }
-typedef basic_bytebuffer<char> bytebuffer;
-template <typename V, typename K>
-
-std::basic_ostream<K>& operator<<(std::basic_ostream<K>& os,
-                                  [[maybe_unused]] const basic_bytebuffer<V>& buffer) {
-    return os;
-}
-template <typename V, typename K>
-std::basic_istream<K>& operator>>(std::basic_istream<K>& is, basic_bytebuffer<V>& buffer) {
-    std::byte internal_buf[iotdb::io::DEFAULT_BYTES_READ];
-    int bytesToRead{iotdb::io::DEFAULT_BYTES_READ};
-    int byteRead{0};
-    buffer.clear();
-    while (is.good() && !is.eof()) {
-        while (byteRead < bytesToRead) {
-            auto num = is.readsome(internal_buf, bytesToRead - byteRead);
-            byteRead += num;
-            if (!is.bad()) {
-                buffer.append(internal_buf);
-                std::memset(internal_buf, 0, iotdb::io::DEFAULT_BYTES_READ - 1);
-            }
-        }
-    }
-    return is;
-}
-template <typename V, typename K>
-std::basic_ofstream<K>& operator<<(std::basic_ofstream<K>& os,
-                                   [[maybe_unused]] const basic_bytebuffer<V>& buffer) {
-    return os;
-}
-template <typename V, typename K>
-std::basic_ifstream<K>& operator>>(std::basic_ifstream<K>& is,
-                                   [[maybe_unused]] basic_bytebuffer<V>& buffer) {
-    buffer.clear();
-    if (is) {
-        is.seekg(0, is.end);
-        int length = is.tellg();
-        is.seekg(0, is.beg);
-        buffer.reserve(length);
-        // is.read(buffer.data(), length);
-    }
-    return is;
-}
+typedef BasicByteBuffer<byte> ByteBuffer;
 }  // namespace iotdb::common
 
 #endif  // IOTDB__UTIL__BYTEBUFFER

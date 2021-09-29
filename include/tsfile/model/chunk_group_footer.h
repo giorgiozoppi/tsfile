@@ -19,12 +19,12 @@
 #ifndef IOTDB_NATIVE_CHUNK_GROUP_FOOTER_H
 #define IOTDB_NATIVE_CHUNK_GROUP_FOOTER_H
 #include <string>
+#include <string_view>
+
 namespace iotdb::tsfile {
-/**
- * @brief  chunk group footer.
- *
- */
-class chunk_group_footer {
+//
+// @brief  ChunkGroupFooter. Each ChunkGroup in a TsFile has a footer.
+class ChunkGroupFooter {
    public:
     /**
      * @brief Construct a new chunk group footer object
@@ -33,30 +33,30 @@ class chunk_group_footer {
      * @param data_size
      * @param number_of_chunks
      */
-    chunk_group_footer(const std::string_view& device_id, long data_size, int number_of_chunks);
+    ChunkGroupFooter(const std::string_view& device_id, long data_size, int number_of_chunks);
     /**
      * @brief Get the device id object
      *
      * @return std::string
      */
-    std::string get_device_id() const;
+    std::string DeviceId() const;
     /**
      * @brief Get the data size object
      *
      * @return long
      */
-    long get_data_size() const;
+    long DataSize() const;
     /**
      * @brief Get the number of chunks object
      *
      * @return int
      */
-    int get_number_of_chunks() const;
+    int NumberOfChunks() const;
 
    private:
-    std::string _device_id;
-    long _data_size;
-    int _number_of_chunks;
+    std::string device_id_;
+    long data_size_;
+    int number_of_chunks_;
 };
 }  // namespace iotdb::tsfile
 #endif  // IOTDB_NATIVE_CHUNK_GROUP_FOOTER_H

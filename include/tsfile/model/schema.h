@@ -25,10 +25,46 @@
 #include "schema.h"
 
 namespace iotdb::tsfile {
-class measurement_schema {
-    uint64_t _hashcode;
-
+class IMeasurementSchema {
    public:
+    virtual std::string GetMeasurementId() = 0;
+
+  CompressionType getCompressor();
+
+  TSEncoding getEncodingType();
+
+  TSDataType getType();
+
+  void setType(TSDataType dataType);
+
+  TSEncoding getTimeTSEncoding();
+
+  Encoder getTimeEncoder();
+
+  Encoder getValueEncoder();
+
+  Map<String, String> getProps();
+
+  List<String> getSubMeasurementsList();
+
+  List<TSDataType> getSubMeasurementsTSDataTypeList();
+
+  List<TSEncoding> getSubMeasurementsTSEncodingList();
+
+  List<Encoder> getSubMeasurementsEncoderList();
+
+  int getSubMeasurementIndex(String measurementId);
+
+  int getSubMeasurementsCount();
+
+  /* test whether the schema contains Measurement with given measurementId */
+  boolean containsSubMeasurement(String measurementId);
+
+  int serializeTo(ByteBuffer buffer);
+
+  int serializeTo(OutputStream outputStream) throws IOException;
+
+
     uint64_t hashcode() { return _hashcode; }
 };
 class schema {
