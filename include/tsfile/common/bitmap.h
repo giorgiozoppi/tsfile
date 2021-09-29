@@ -19,19 +19,17 @@
 #define IOTDB_NATIVE_COMMON_BITMAP
 #include <tsfile/common/common.h>
 
+#include <bitset>
 #include <cstddef>
 #include <cstring>
 #include <memory>
-#include <bitset>
 
 namespace iotdb::tsfile::common {
 ///
 /// @brief A bitmap is a variable array of bits. It can be constructed from a generic set of bytes.
 ///
 class BitMap {
-   
    public:
-
     ///
     /// @brief Constructor
     /// @param size number of bytes of the bitmap
@@ -69,7 +67,7 @@ class BitMap {
     ///
     /// @brief Set a bit in the BitMap
     /// @param pos position to be set.
-    /// @return A tuple of value and bitmap 
+    /// @return A tuple of value and bitmap
 
     StatusResult<BitError> Mark(size_t index);
 
@@ -89,10 +87,10 @@ class BitMap {
     ///
     /// @brief Set a bit to zero the BitMap
     /// @param pos position to be set.
-    /// @return A tuple of value and bitmap 
+    /// @return A tuple of value and bitmap
 
     StatusResult<BitError> UnMark(size_t index);
-    
+
     ///
     /// @brief Access to the a bit in a position;
     /// @param index position in the bitmap to retrieve.
@@ -105,9 +103,24 @@ class BitMap {
     ~BitMap() = default;  // to respect the rule of 5
 
    private:
+    friend bool operator==(const BitMap& lhs, const BitMap& rhs);
     size_t count_;
     std::unique_ptr<Byte[]> bytes_;
 };
+///
+/// @brief compare two bitmaps
+///
+bool operator==(const BitMap& lhs, const BitMap& rhs) {
+    if (lhs.count_ == rhs.count_) {
+        for (size_t i = 0; i < lhs.count_; ++i) {
+            if (lhs.bytes_.get()[i] != rhs.bytes_.get()[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
+}
 
 }  // namespace iotdb::tsfile::common
 #endif
