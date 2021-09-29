@@ -13,7 +13,7 @@ The target of TsFile project is to support: high ingestion rate up to tens of mi
 
 ## Current Code.
 
-We've just stated so for the moment is just an exercise in C++ 20 but we plan to work on it deeply in the next weeks.
+We've just started so for the moment is just an exercise in C++ 20 but we plan to work on it deeply in the next weeks.
 
 ### Code Coverage
 
@@ -47,6 +47,16 @@ Below we see a eye of bird view image:
 
 We use for the naming the Google C++ Code Style Guidelines. Please look at (https://google.github.io/styleguide/cppguide.html#General_Naming_Rules)
 
+## Visual Studio Code Support.
 
-
+We provide Visual Studio Code support for C/C++ Extensions in the vscode_cpp.json. If you want to use it, we require llvm-13. To
+setup clang-13 in Ubuntu 20.04 you need to execute the following commands:
+```
+$ wget -O /tmp/repo.key https://apt.llvm.org/llvm-snapshot.gpg.key
+$ sudo apt-key add /tmp/repo.key
+$ sudo add-apt-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-13 main"
+$ sudo apt-get -y update
+$ sudo apt-get -y install clang-13 clang-tools-13 libclang-common-13-dev libclang-13-dev libclang1-13 clang-format-13 libc++-13-dev libc++abi-13-dev lld-13 libunwind-13-dev libfuzzer-13-dev
+```
+Then you might want to copy vscode_cpp.json in your ```.vscode/c_cpp_properties.json```.
 
