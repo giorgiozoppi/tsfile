@@ -1,0 +1,106 @@
+/**
+ * Copyright (c) 2021 Giorgio Zoppi <giorgio.zoppi@iotdbe.com>
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+*/
+#if 0
+#include "model/chunk_header.h"
+
+namespace iotdb::tsfile {
+/**
+ * Class that holds the responsibility to model a chunk header
+ */
+
+ChunkHeader::ChunkHeader(const std::string& measurementID, int dataSize, ts_datatype dataType,
+                           compression_type compressionType, ts_encoding encoding, int numOfPages)
+    : _measurement_id(measurementID),
+      _data_size(dataSize),
+      _datatype(dataType),
+      _compression_type(compressionType),
+      _encoding_type(encoding),
+      _num_of_pages(numOfPages) {}
+/**
+ * Get measurement identifier
+ * @return the measurement id
+ */
+std::string ChunkHeader::get_measurement_id() const { return _measurement_id; }
+
+/**
+ * Get the data size.
+ */
+size_t ChunkHeader::get_data_size() const { return _data_size; }
+
+/**
+ * Set measurement identifier
+ * @param id
+ */
+void ChunkHeader::set_measurement_id(const std::string& id) { _measurement_id = id; }
+
+/**
+ * Get the compression type.
+ * @return compression type
+ */
+compression_type ChunkHeader::get_compression_type() const { return _compression_type; }
+
+/**
+ * Set the compression type
+ * @param type of the compression.
+ */
+
+void ChunkHeader::set_compression_type([[maybe_unused]] const compression_type& type) {
+    this->_compression_type = type;
+}
+
+/**
+ * Get the time series data type
+ * @return time series data type
+ */
+ts_datatype ChunkHeader::get_ts_datatype() const { return _datatype; }
+
+/**
+ * Set the time series data type
+ */
+void ChunkHeader::set_ts_datatype(const ts_datatype& type) { _datatype = type; }
+
+/**
+ * Get the time series data type
+ * @return time series encoding.
+ */
+ts_encoding ChunkHeader::get_ts_encoding() const { return _encoding_type; }
+
+/**
+ * Set the time series encoding
+ * @param type series encoding
+ */
+void ChunkHeader::set_ts_encoding(const ts_encoding& type) { _encoding_type = type; }
+
+/**
+ * Get number of pages
+ * @return current number of pages.
+ */
+
+int ChunkHeader::get_num_of_pages() const { return _num_of_pages; }
+
+/**
+ * Set the number of paging
+ * @param num_of_pages
+ */
+void ChunkHeader::set_num_of_pages(const int& num_of_pages) { _num_of_pages = num_of_pages; }
+
+uint64_t ChunkHeader::hash_code() const { return _hashcode; }
+uint64_t ChunkHeader::compute_hash() { return 0; }
+
+}  // namespace iotdb::tsfile
+#endif
