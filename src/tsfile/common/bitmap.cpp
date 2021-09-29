@@ -22,10 +22,11 @@
 
 namespace iotdb::tsfile::common {
 
-BitMap::BitMap(const size_t& siz) : count_(siz) {
-    auto num_bytes = std::round(count_ / 8.0);
-
+BitMap::BitMap(const size_t& siz)  {
+    auto num_bytes = std::round(siz / 8.0);
+    count_ = num_bytes;
     bytes_ = std::make_unique<Byte[]>(num_bytes);
+   
 }
 
 BitMap::BitMap(const BitMap& map) {
@@ -57,9 +58,9 @@ BitMap& BitMap::operator=(BitMap&& map) {
 StatusResult<BitError> BitMap::Mark(size_t index) {
     auto numbits = count_ * 8;
     if (index < numbits) {
-        auto pos = (count_ * 8) / index;
-        auto rest = (count_ * 8) % index;
-        uint8_t data = static_cast<uint8_t>(std::pow(2, rest));
+        auto pos = index / 8;
+        auto rest_pos = index % 8;
+        uint8_t data = static_cast<uint8_t>(std::pow(2, rest_pos));
         auto value = bytes_[pos] | data;
         bytes_[pos] = value;
         return StatusResult<BitError>(BitError::OK);
@@ -72,16 +73,41 @@ StatusResult<BitError> BitMap::MarkAll() {
      }
      return StatusResult<BitError>(BitError::OK); 
 }
-
+StatusResult<BitError> BitMap::Reset() {
+     for (size_t i = 0; i < count_; ++i) {
+         bytes_.get()[i] = 0x00;
+     }
+     return StatusResult<BitError>(BitError::OK); 
+}
 ValueResult<BitError, short> BitMap::operator[](size_t index) const {
     auto numbits = count_ * 8;
     if (index < numbits) {
-        auto rest = (count_ * 8) % index;
-        auto bit_to_set = 8 - rest;
-        std::bitset<8> out(rest);
-        return ValueResult<BitError, short>(BitError::OK, out.test(bit_to_set) ? 1 : 0);
+        auto byte_pos = index / 8;
+        auto rest_pos = index % 8;
+        auto current = bytes_.get()[byte_pos];
+        std::bitset<8> v(current);
+
+        return ValueResult<BitError, short>(BitError::OK, v.test(rest_pos) ? 1 : 0);
     }
     return ValueResult<BitError, short>(BitError::OUT_RANGE, 0);
 }
+///
+/// @brief compare two bitmaps
+/// @param lhs BitMap to check
+/// @param rhs BitMap to check
+/// @return value to return
+///
+bool operator==(const BitMap& lhs, const BitMap& rhs) {
+    if (lhs.count_ == rhs.count_) {
+        for (size_t i = 0; i < lhs.count_; ++i) {
+            if (lhs.bytes_.get()[i] != rhs.bytes_.get()[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
 
 }  // namespace iotdb::tsfile::common

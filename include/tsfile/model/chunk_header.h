@@ -18,9 +18,10 @@
 
 #ifndef IOTDB_NATIVE_CHUNK_HEADER_H
 #define IOTDB_NATIVE_CHUNK_HEADER_H
-#include <string>
 #include <tsfile/model/datatypes.h>
 #include <tsfile/model/markers.h>
+
+#include <string>
 #if 0
 namespace iotdb::tsfile {
 ///

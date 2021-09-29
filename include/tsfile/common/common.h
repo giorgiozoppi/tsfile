@@ -14,23 +14,20 @@
 
 // include file zone.
 #include <functional>
+#include <optional>
 #include <string>
 #include <string_view>
-#include <optional>
 
 namespace iotdb::tsfile::common {
-typedef uint8_t Byte; 
+typedef uint8_t Byte;
 /// Endianess
 
 // here we handle endianess.
 // note that in java we've signed bytes as default.
 
-#if defined(__BYTE_ORDER) && __BYTE_ORDER == __BIG_ENDIAN || \
-    defined(__BIG_ENDIAN__) || \
-    defined(__ARMEB__) || \
-    defined(__THUMBEB__) || \
-    defined(__AARCH64EB__) || \
-    defined(_MIBSEB) || defined(__MIBSEB) || defined(__MIBSEB__)
+#if defined(__BYTE_ORDER) && __BYTE_ORDER == __BIG_ENDIAN || defined(__BIG_ENDIAN__) ||         \
+    defined(__ARMEB__) || defined(__THUMBEB__) || defined(__AARCH64EB__) || defined(_MIBSEB) || \
+    defined(__MIBSEB) || defined(__MIBSEB__)
 #define IOTDB_BIG_ENDIAN 1
 
 constexpr int16_t to_big_endian(int16_t n) { return n; }
@@ -45,7 +42,6 @@ constexpr int32_t to_big_endian(int32_t n) { return n; }
 constexpr int64_t to_big_endian(int64_t n) { return n; }
 
 #endif
-
 
 ///
 /// @brief Suffix/Extension of the TSFile
@@ -95,24 +91,22 @@ class ValueResult {
 ///
 /// @brief StatusResult return  a result.
 ///
-template<typename T> class StatusResult {
-    public:
-    StatusResult(const T& result) {
-        _error = result;
-    }
+template <typename T>
+class StatusResult {
+   public:
+    StatusResult(const T& result) { _error = result; }
+    StatusResult(const StatusResult& result) = default;
+    StatusResult& operator=(const StatusResult& result) = default;
     auto Result() const { return _error; }
-    StatusResult(StatusResult&& vr) {
-        _error = std::move(vr._error);
-    }
+    StatusResult(StatusResult&& vr) { _error = std::move(vr._error); }
+    StatusResult& operator=(StatusResult&& vr) { _error = std::move(vr._error); }
    private:
     T _error;
 };
-
 template <typename K, typename Z>
 std::tuple<K, Z> get(const ValueResult<K, Z>& v) {
     return {v._error, v._value.value()};
 }
-
 enum class BitError { OK = 0, OUT_RANGE = 1 };
 
 }  // namespace iotdb::tsfile::common

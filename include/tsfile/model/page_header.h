@@ -19,10 +19,11 @@
 #ifndef IOTDB_NATIVE_PAGE_HEADER_H
 #define IOTDB_NATIVE_PAGE_HEADER_H
 #if 0
-#include <memory>
-#include <vector>
 #include <tsfile/common/bytebuffer.h>
 #include <tsfile/model/statistics.h>
+
+#include <memory>
+#include <vector>
 namespace iotdb::tsfile {
 using unique_stat_ptr = std::unique_ptr<StatisticsMap>;
 

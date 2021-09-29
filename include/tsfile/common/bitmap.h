@@ -107,20 +107,6 @@ class BitMap {
     size_t count_;
     std::unique_ptr<Byte[]> bytes_;
 };
-///
-/// @brief compare two bitmaps
-///
-bool operator==(const BitMap& lhs, const BitMap& rhs) {
-    if (lhs.count_ == rhs.count_) {
-        for (size_t i = 0; i < lhs.count_; ++i) {
-            if (lhs.bytes_.get()[i] != rhs.bytes_.get()[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
-    return false;
-}
 
 }  // namespace iotdb::tsfile::common
 #endif

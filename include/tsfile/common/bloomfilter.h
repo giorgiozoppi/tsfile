@@ -21,7 +21,15 @@
 #include <bitset>
 #include <cstddef>
 #include <memory>
-
+namespace iotdb::tsfile::common {
+class BloomFilter {
+   public:
+    static constexpr int MINIMAL_SIZE = 256;
+    static constexpr int MAXIMAL_HASH_FUNCTION_SIZE = 8;
+    static constexpr std::array<int, MAXIMAL_HASH_FUNCTION_SIZE> SEEDS = {5,  7,  11, 19,
+                                                                          31, 37, 43, 59};
+};
+}  // namespace iotdb::tsfile::common
 #ifdef 0
 
 class HashFunction {};

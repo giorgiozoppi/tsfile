@@ -18,15 +18,14 @@
 #ifndef IOTDB_COMMON_BYTEBUFFER
 #define IOTDB_COMMON_BYTEBUFFER
 
+#include <tsfile/common/common.h>
+
 #include <cstddef>
 #include <cstring>
 #include <iostream>
 #include <iterator>
 #include <sstream>
 #include <vector>
-
-#include <tsfile/common/common.h>
-
 
 namespace iotdb::tsfile::common {
 
@@ -145,7 +144,7 @@ class BasicByteBuffer {
     /// @brief Iterator in the buffer, in the reading zone.
     /// @return An iterator to the beginning of the given container c
     ///
-    iterator Begin() noexcept { return bytes_.begin();}
+    iterator Begin() noexcept { return bytes_.begin(); }
     ///
     /// Iterator in the buffer
     /// @return an iterator to the end of the readable zone.
@@ -165,7 +164,7 @@ class BasicByteBuffer {
     /// @brief reverse iterator to the begin of the buffer
     /// @return reverse iterator to the end of the buffer
     ///
-    reverse_iterator RBegin() noexcept { return bytes_.rbegin();}
+    reverse_iterator RBegin() noexcept { return bytes_.rbegin(); }
     /**
      * reverse iterator to the end of the buffer
      * @return reverse iterator to the end of the buffer
