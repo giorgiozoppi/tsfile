@@ -25,29 +25,30 @@
 #include "chunk.h"
 #include "chunk_group_footer.h"
 namespace iotdb::tsfile {
-using chunk_iterator = std::vector<iotdb::tsfile::chunk>::iterator;
-using reverse_chunk_iterator = std::vector<iotdb::tsfile::chunk>::reverse_iterator;
-using const_chunk_iterator = std::vector<iotdb::tsfile::chunk>::const_iterator;
-using const_reverse_chunk_iterator = std::vector<iotdb::tsfile::chunk>::const_reverse_iterator;
+using ChunkIterator = std::vector<iotdb::tsfile::Chunk>::iterator;
+using ReverseChunkIterator = std::vector<iotdb::tsfile::Chunk>::reverse_iterator;
+using ConstChunkIterator = std::vector<iotdb::tsfile::Chunk>::const_iterator;
+using ConstReverseChunkIterator = std::vector<iotdb::tsfile::Chunk>::const_reverse_iterator;
 
 class ChunkGroup {
-    std::vector<iotdb::tsfile::chunk> _chunks;
-    std::byte _byte_delimiter;
-    chunk_group_footer _footer;
-
    public:
-    std::byte delimiter() const;
-    void add_chunk(iotdb::tsfile::chunk&& chunk);
-    bool remove_chunk(const iotdb::tsfile::chunk& chunk);
-    chunk_group_footer footer() const;
-    chunk_iterator begin();
-    chunk_iterator end();
-    reverse_chunk_iterator rbegin();
-    reverse_chunk_iterator rend();
-    const_chunk_iterator cbegin() const;
-    const_chunk_iterator cend() const;
-    const_reverse_chunk_iterator crbegin() const;
-    const_reverse_chunk_iterator crend() const;
+    std::byte Delimiter() const;
+    void AddChunk(iotdb::tsfile::Chunk&& chunk);
+    bool RemoveChunk(const iotdb::tsfile::Chunk& chunk);
+    ChunkGroupFooter Footer() const;
+    ChunkIterator begin();
+    ChunkIterator end();
+    ReverseChunkIterator rbegin();
+    ReverseChunkIterator rend();
+    ConstChunkIterator cbegin() const;
+    ConstChunkIterator cend() const;
+    ConstReverseChunkIterator crbegin() const;
+    ConstReverseChunkIterator crend() const;
+
+   private:
+    std::vector<iotdb::tsfile::Chunk> chunks_;
+    std::byte byte_delimiter_;
+    ChunkGroupFooter footer_;
 };
 }  // namespace iotdb::tsfile
 

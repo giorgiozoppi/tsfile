@@ -17,17 +17,26 @@
 */
 #ifndef IOTDB_NATIVE_HASH_H
 #define IOTDB_NATIVE_HASH_H
-#include <tsfile/common/common.h>
 #include <tsfile/common/bytebuffer.h>
+#include <tsfile/common/common.h>
+
 #include <optional>
-
+#if 0
 namespace iotdb::tsfile::common {
- struct SipHash {};
- class MurmurHash3 {
- };
- template<typename KeyType, typename AlgorithmKind> std::optional<ByteBuffer> Hash(const KeyType& key) { return std::nullopt; }
- template <> std::optional<ByteBuffer> Hash<ByteBuffer, MurmurHash3>(const ByteBuffer& key) { return std::nullopt; }
- template <> std::optional<ByteBuffer> Hash<ByteBuffer, SipHash>(const ByteBuffer& key) { return std::nullopt; }
+struct SipHash {};
+struct MurmurHash3 {};
+template <typename KeyType, typename AlgorithmKind>
+std::optional<ByteBuffer> Hash(const KeyType& key) {
+    return std::nullopt;
 }
-#endif;
-
+template <>
+std::optional<ByteBuffer> Hash<ByteBuffer, MurmurHash3>(const ByteBuffer& key) {
+    return std::nullopt;
+}
+template <>
+std::optional<ByteBuffer> Hash<ByteBuffer, SipHash>(const ByteBuffer& key) {
+    return std::nullopt;
+}
+}  // namespace iotdb::tsfile::common
+#endif
+#endif

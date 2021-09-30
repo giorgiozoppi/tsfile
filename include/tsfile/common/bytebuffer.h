@@ -1,20 +1,20 @@
 /**
-* Copyright (c) 2021 Giorgio Zoppi <giorgio.zoppi@iotdbe.com>
-* All rights reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*   http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*
-*/
+ * Copyright (c) 2021 Giorgio Zoppi <giorgio.zoppi@iotdbe.com>
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 #ifndef IOTDB_COMMON_BYTEBUFFER
 #define IOTDB_COMMON_BYTEBUFFER
 
@@ -70,9 +70,7 @@ class BasicByteBuffer {
     /// @brief Construct a byte array of predefined size
     /// @param n number of bytes that a bytearray should have
     ///
-    explicit BasicByteBuffer(size_t n) : bytes_(n) {
-        bytes_.reserve(n);
-    }
+    explicit BasicByteBuffer(size_t n) : bytes_(n) { bytes_.reserve(n); }
     ///
     /// @brief Construct a byte array of predefined size using uniform init
     /// @param n number of bytes that a bytearray should have
@@ -86,14 +84,13 @@ class BasicByteBuffer {
     /// @brief Copy Constructor
     /// @param buffer BasicByteBuffer to copy
     ///
-    BasicByteBuffer(const BasicByteBuffer<T>& buffer): bytes_(buffer.bytes_) {
-    }
+    BasicByteBuffer(const BasicByteBuffer<T>& buffer) : bytes_(buffer.bytes_) {}
     ///
     /// @brief Copy Assignment operator
     /// @param buffer BasicByteBuffer to copy
     //
     BasicByteBuffer& operator=(const BasicByteBuffer<T>& buffer) {
-        if(&this != buffer) {
+        if (&this != buffer) {
             bytes_ = buffer.bytes_;
         }
         return *this;
@@ -103,7 +100,7 @@ class BasicByteBuffer {
     /// @param buffer BasicByteBuffer to copy
     //
     BasicByteBuffer& operator=(BasicByteBuffer<T>&& buffer) {
-         if(&this != buffer) {
+        if (&this != buffer) {
             bytes_ = std::move(buffer.bytes_);
         }
         return *this;
@@ -152,16 +149,12 @@ class BasicByteBuffer {
     /// @brief Append a buffer inside the byte buffer
     /// @param  data  buffer to append
     ///
-    void Append(const BasicByteBuffer& data) {
-        bytes_.emplace_back(data);
-    }
+    void Append(const BasicByteBuffer& data) { bytes_.emplace_back(data); }
     ///
     /// @brief Add an item to the buffer
     /// @param data item to add.
     ///
-    void Add(const T& data) {
-        bytes_.emplace_back(data);
-    }
+    void Add(const T& data) { bytes_.emplace_back(data); }
     ///
     /// @brief Clear the buffer.
     ///

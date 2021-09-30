@@ -25,14 +25,14 @@
 #include <vector>
 
 namespace iotdb::tsfile {
-class page {
-    long _hash_code{0};
+class Page {
+    long hash_code_{0};
     // page_header _page_header;
 
    public:
     // page(page_header&& header) { _page_header = std::move(header); }
     // page_header header() const { return std::move(_page_header); }
-    uint64_t hash_code() const { return _hash_code; }
+    uint64_t HashCode() const { return hash_code_; }
 };
 }  // namespace iotdb::tsfile
 #endif
