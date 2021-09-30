@@ -22,7 +22,7 @@
 #include <tsfile/model/datatypes.h>
 
 #include <optional>
-#if 0
+
 namespace iotdb::tsfile {
 
 template <StatLikeHashable StatisticsImpl>
@@ -42,53 +42,53 @@ class GenericStatistics {
     uint64_t _hashcode;
 
    public:
-    long count() const { return _count; }
-    long start_time() const { return _start_time; }
-    long end_time() const { return _end_time; }
-    auto min_value() const { return _min_value; }
-    auto max_value() const { return _max_value; }
+    long Count() const { return _count; }
+    long StartTime() const { return _start_time; }
+    long EndTime() const { return _end_time; }
+    auto MinValue() const { return _min_value; }
+    auto MaxValue() const { return _max_value; }
 
-    auto first_value() const { return _first_value; }
-    auto last_value() const { return _last_value; }
-    auto sum_value() const { return _sum_value; }
-    auto extreme() const { return _extreme; }
+    auto FirstValue() const { return _first_value; }
+    auto LastValue() const { return _last_value; }
+    auto SumValue() const { return _sum_value; }
+    auto Extreme() const { return _extreme; }
 
-    uint64_t hash_code() { return _hashcode; };
+    uint64_t HashCode() { return _hashcode; };
 };
 using generic_int = GenericStatistics<int>;
-using statistics_int = BaseStatistics<generic_int>;
+using IntStatistics = BaseStatistics<generic_int>;
 using generic_float = GenericStatistics<float>;
-using statistics_float = BaseStatistics<generic_float>;
+using FloatStatistics = BaseStatistics<generic_float>;
 using generic_double = GenericStatistics<double>;
-using statistics_double = BaseStatistics<generic_double>;
+using DoubleStatistics = BaseStatistics<generic_double>;
 using generic_binary = GenericStatistics<iotdb::common::bytebuffer>;
-using statistics_binary = BaseStatistics<generic_binary>;
+using BinaryStatistics = BaseStatistics<generic_binary>;
 
 class StatisticsMap {
-    statistics_int _integer_stat;
-    statistics_float _float_stat;
-    statistics_double _double_stat;
-    statistics_binary _binary_stat;
+    IntStatistics integer_stat_;
+    FloatStatistics float_stat_;
+    DoubleStatistics double_stat_;
+    BinaryStatistics binary_stat_;
 
-    TsDataType _type;
+    TsDataType type_;
 
    public:
-    StatisticsMap(const ts_datatype& data) : _type(data) {}
+    StatisticsMap(const TsDataType& data) : type_(data) {}
     StatisticsMap(StatisticsMap&& m) {
-        _type = std::move(m._type);
-        _integer_stat = std::move(m._integer_stat);
-        _float_stat = std::move(m._float_stat);
+        type_ = std::move(m.type_);
+        integer_stat_ = std::move(m.integer_stat_);
+        float_stat_ = std::move(m.float_stat_);
     }
     StatisticsMap(const StatisticsMap& m) {
-        _type = m._type;
-        _integer_stat = m._integer_stat;
-        _float_stat = m._float_stat;
+        type_ = m.type_;
+        integer_stat_ = m.integer_stat_;
+        float_stat_ = m.float_stat_;
     }
     StatisticsMap& operator=(const StatisticsMap& m) {
         if (this != &m) {
-            _type = m._type;
-            _integer_stat = m._integer_stat;
-            _float_stat = m._float_stat;
+            type_ = m.type_;
+            integer_stat_ = m.integer_stat_;
+            float_stat_ = m.float_stat_;
         }
         return *this;
     }
@@ -96,28 +96,27 @@ class StatisticsMap {
     ~StatisticsMap() = default;
     template <StatLikeHashable StatisticsImpl>
     StatisticsImpl value() {
-        switch (_type) {
+        switch (type_) {
             case ts_datatype::INT32: {
-                return _integer_stat;
+                return integer_stat_;
             }
             case ts_datatype::DOUBLE: {
-                return _double_stat;
+                return double_stat_;
             }
 
             case ts_datatype::BINARY: {
-                return _binary_stat;
+                return binary_stat_;
             }
             case ts_datatype::FLOAT: {
-                return _float_stat;
+                return float_stat_;
             }
             default:
-                return _float_stat;
+                return float_stat_;
         }
 
-        return _integer_stat;
+        return integer_stat_;
     }
 };
 
 }  // namespace iotdb::tsfile
-#endif
 #endif

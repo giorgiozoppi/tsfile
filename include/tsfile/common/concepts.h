@@ -33,18 +33,18 @@ concept HexConvertible = requires(T a) {
 };
 template <typename T>
 concept Hashable = requires(T a) {
-    std::declval<T>().hash_code();
+    std::declval<T>().HashCode();
 };
 template <typename T>
 concept StatLike = requires(T a) {
-    std::declval<T>().count();
-    std::declval<T>().start_time();
-    std::declval<T>().min_value();
-    std::declval<T>().max_value();
-    std::declval<T>().first_value();
-    std::declval<T>().last_value();
-    std::declval<T>().sum_value();
-    std::declval<T>().extreme();
+    std::declval<T>().Count();
+    std::declval<T>().StartTime();
+    std::declval<T>().MinValue();
+    std::declval<T>().MaxValue();
+    std::declval<T>().FirstValue();
+    std::declval<T>().LastValue();
+    std::declval<T>().SumValue();
+    std::declval<T>().Extreme();
 };
 template <typename T>
 concept StatLikeHashable = StatLike<T> && Hashable<T>;

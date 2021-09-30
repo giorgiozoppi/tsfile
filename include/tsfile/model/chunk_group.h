@@ -29,20 +29,63 @@ using ChunkIterator = std::vector<iotdb::tsfile::Chunk>::iterator;
 using ReverseChunkIterator = std::vector<iotdb::tsfile::Chunk>::reverse_iterator;
 using ConstChunkIterator = std::vector<iotdb::tsfile::Chunk>::const_iterator;
 using ConstReverseChunkIterator = std::vector<iotdb::tsfile::Chunk>::const_reverse_iterator;
-
+///
+/// @brief A ChunkGroup stores the data of an entity for a period of time.
+//  It consists of several Chunk, a byte delimiter 0x00 and a ChunkFooter.
+///
 class ChunkGroup {
    public:
+    ///
+    /// @brief  Return the chunk delimiter
+    ///
+    /// @return Chunk delimiter
     std::byte Delimiter() const;
+    ///
+    /// @brief  Add a new chunk to the chunkgroup, transfer ownership
+    ///
+    /// @return chunk Chunk
     void AddChunk(iotdb::tsfile::Chunk&& chunk);
+    ///
+    /// @brief Remove a chunk from the chunkgroup
+    ///
+    /// @return true if it's removed.
     bool RemoveChunk(const iotdb::tsfile::Chunk& chunk);
+    ///
+    /// @brief Get the chunk group footer
+    ///
+    /// @return Chunk group footer.
     ChunkGroupFooter Footer() const;
+    ///
+    ///
+    ///
     ChunkIterator begin();
+    ///
+    ///
+    ///
     ChunkIterator end();
+    ///
+    ///
+    ///
     ReverseChunkIterator rbegin();
+    ///
+    ///
+    ///
     ReverseChunkIterator rend();
+    ///
+    ///
+    ///
     ConstChunkIterator cbegin() const;
+    ///
+    ///
+    ///
     ConstChunkIterator cend() const;
+    ///
+    ///
+    ///
     ConstReverseChunkIterator crbegin() const;
+    ///
+    ///
+    ///
     ConstReverseChunkIterator crend() const;
 
    private:
