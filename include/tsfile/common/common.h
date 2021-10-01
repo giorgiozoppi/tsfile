@@ -1,5 +1,6 @@
 #ifndef IOTDB_NATIVE_COMMON_H
 #define IOTDB_NATIVE_COMMON_H
+
 #ifndef IOTDB_NATIVE_DISALLOW_COPY_AND_ASSIGN
 #define IOTDB_NATIVE_DISALLOW_COPY_AND_ASSIGN(TypeName) \
     TypeName(const TypeName&) = delete;                 \
@@ -13,10 +14,11 @@
 #endif
 
 // include file zone.
-#include <functional>
+
 #include <optional>
 #include <string>
 #include <string_view>
+#include <vector>
 
 namespace iotdb::tsfile::common {
 typedef uint8_t Byte;
@@ -126,11 +128,18 @@ enum class BitError { OK = 0, OUT_RANGE = 1 };
 
 template <typename T>
 inline bool RemoveUsingHash(std::vector<T>& container, const T& value) {
-    auto hash_value = value.hash_code();
+    auto hash_value = value.HashCode();
     auto res = std::remove_if(std::begin(container), std::end(container),
-                              [=](auto current) { return current.hash_code() == hash_value; });
+                              [=](auto current) { return current.HashCode() == hash_value; });
     return res != container.end();
 }
+/// TsFile Markers
+constexpr Byte CHUNK_GROUP_FOOTER = Byte{0};
+constexpr Byte CHUNK_HEADER = Byte{1};
+constexpr Byte SEPARATOR = Byte{2};
+constexpr Byte VERSION = Byte{3};
+constexpr Byte OPERATION_INDEX_RANGE = Byte{4};
+constexpr Byte ONLY_ONE_PAGE_CHUNK_HEADER = Byte{5};
 
 }  // namespace iotdb::tsfile::common
 #endif

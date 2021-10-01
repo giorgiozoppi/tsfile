@@ -37,11 +37,7 @@ class PageHeader {
     /// @brief Constructor
     ///
     PageHeader();
-    ///
-    /// @brief Constructor
-    /// @param uncompressed_size  Header uncompressed size
-    /// @param compressed_size    Header compressed size
-    PageHeader(int uncompressed_size, int compressed_size);
+
     /// @brief Constructor
     /// @param uncompressed_size  Header uncompressed size
     /// @param compressed_size    Header compressed size

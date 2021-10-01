@@ -19,6 +19,7 @@
 #define IOTDB_NATIVE_CHUNK_H
 
 #include <tsfile/common/common.h>
+#include <tsfile/common/concepts.h>
 #include <tsfile/model/chunk_header.h>
 #include <tsfile/model/page.h>
 
@@ -28,34 +29,33 @@
 #include <vector>
 
 namespace iotdb::tsfile {
-using PageIterator = std::vector<iotdb::tsfile::Page>::iterator;
-using ConstPageIterator = std::vector<iotdb::tsfile::Page>::const_iterator;
-using ReversePageIterator = std::vector<iotdb::tsfile::Page>::reverse_iterator;
-using ConstReversePageIterator = std::vector<iotdb::tsfile::Page>::const_reverse_iterator;
-using UniquePagePtr = std::unique_ptr<iotdb::tsfile::Page>;
-///
+
 /// @brief Class that holds the responsibility to model a chunk
 ///
 class Chunk {
    public:
+    using iterator = std::vector<iotdb::tsfile::Page>::iterator;
+    using const_iterator = std::vector<iotdb::tsfile::Page>::const_iterator;
+    using reverse_iterator = std::vector<iotdb::tsfile::Page>::reverse_iterator;
+    using const_reverse_iterator = std::vector<iotdb::tsfile::Page>::const_reverse_iterator;
+    using UniquePagePtr = std::unique_ptr<iotdb::tsfile::Page>;
+    using Byte = iotdb::tsfile::common::Byte;
+
     ///
     /// @brief Constructor
     /// @param header header of the chunk
     /// @param marker marker
     ///
-    Chunk(iotdb::tsfile::ChunkHeader&& header, const Byte& marker) noexcept;
+    Chunk(iotdb::tsfile::ChunkHeader&& header, const Byte& marker);
     ///
     /// @brief Equality comparison operator
     ///
-    friend bool operator==(const Chunk& lhs, const Chunk& rhs);
+    template <Hashable>
+    friend bool operator==(const Hashable auto& lhs, const Hashable auto& rhs);
     ///
     /// @brief Ordering comparison operator
-    ///
-    friend bool operator<(const Chunk& lhs, const Chunk& rhs);
-    ///
-    /// @brief Ordering comparison operator
-    ///
-    friend bool operator==(const Chunk& lhs, const Chunk& rhs);
+    template <Hashable>
+    friend bool operator>(const Hashable auto& lhs, const Hashable auto& rhs);
 
     ///
     ///  @brief Return the header.
@@ -64,7 +64,7 @@ class Chunk {
     ///
     /// @brief Return the file marker
     /// @return marker of the chunk
-    std::byte Marker() const noexcept;
+    Byte Marker() const noexcept;
     ///
     /// @brief Add a page to the chunk.
     /// @param page to add.
@@ -77,42 +77,42 @@ class Chunk {
     ///
     /// @brief Page forward iterator
     ///
-    PageIterator begin();
+    iterator begin();
     ///
     /// @brief Page forward  mark iterator
     ///
-    PageIterator end();
+    iterator end();
     ///
     /// @brief Page const forward iterator
     ///
-    ConstPageIterator cbegin() const;
+    const_iterator cbegin() const;
     ///
     /// @brief Page forward  mark iterator
     ///
-    ConstPageIterator cend() const;
+    const_iterator cend() const;
     ///
     /// @brief Page backward iterator
     ///
-    ReversePageIterator rbegin();
+    reverse_iterator rbegin();
     ///
     /// @brief Page backward mark iterator
     ///
-    ReversePageIterator rend();
+    reverse_iterator rend();
     ///
     /// @brief Reverse const forward iterator
     ///
-    ConstReversePageIterator crbegin() const;
+    const_reverse_iterator crbegin() const;
     ///
     /// @brief Reverse const forward iterator
     ///
-    ConstReversePageIterator crend() const;
+    const_reverse_iterator crend() const;
     /// @brief Object hash
     ///
     uint64_t HashCode() const;
 
    private:
     iotdb::tsfile::ChunkHeader header_;
-    std::byte marker_{0};
+    iotdb::tsfile::common::Byte marker_{0};
     std::vector<iotdb::tsfile::Page> pages_;
     uint64_t hash_code_{0};
 };

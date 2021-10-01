@@ -19,7 +19,6 @@
 #ifndef IOTDB_NATIVE_CHUNK_HEADER_H
 #define IOTDB_NATIVE_CHUNK_HEADER_H
 #include <tsfile/model/datatypes.h>
-#include <tsfile/model/markers.h>
 
 #include <string>
 namespace iotdb::tsfile {
@@ -43,72 +42,71 @@ class ChunkHeader {
     /// @brief Get measurement identifier
     /// @return the measurement id
     ///
-    std::string MeasurementId() const;
+    std::string MeasurementId() const noexcept;
     ///
     /// @brief Get the data size.
     ///
-    size_t DataSize() const;
+    size_t DataSize() const noexcept;
 
     ///
     /// @brief Mark measurement identifier
     /// @param id Identifier of the measurement
     ///
-    void SetMeasurementId(const std::string& id);
+    void SetMeasurementId(const std::string& id) noexcept;
 
     ///
     /// @brief Get the compression type.
     /// @return compression type
     ///
-    TsCompressionType GetCompressionType() const;
+    TsCompressionType CompressionType() const noexcept;
 
     ///
     /// Mark the compression type
     /// @param type of the compression.
     ///
-    void CompressionType(const TsCompressionType& type);
+    void SetCompressionType(const TsCompressionType& type) noexcept;
 
     ///
     /// @brief Get the time series data type
     /// @return time series data type
     ///
-    TsDataType DataType() const;
+    TsDataType DataType() const noexcept;
 
     ///
     /// @brief Mark the time series data type
     /// @param type set the type.
     ///
-    void SetDataType(const TsDataType& type);
+    void SetDataType(const TsDataType& type) noexcept;
 
     ///
     /// @brief Get the time series data type
     /// @return Time series encoding.
     ///
-    TsEncoding Encoding() const;
+    TsEncoding Encoding() const noexcept;
 
     ///
     /// @brief Mark the time series encoding
     /// @param type  Set the series encoding
     ///
-    void SetTsEncoding(const TsEncoding& type);
+    void SetEncoding(const TsEncoding& type) noexcept;
 
     ///
     /// @brief Get number of pages
     /// @return Current number of pages.
     ///
-    int NumOfPages() const;
+    int NumOfPages() const noexcept;
 
     ///
     /// Mark the number of paging
     /// @param num_of_pages
     ///
-    void SetNumOfPages(const int& num_of_pages);
+    void SetNumOfPages(const int& num_of_pages) noexcept;
 
     /// Return object hashcode
     ///
     uint64_t HashCode() const;
 
    private:
-    uint64_t ComputeHash();
     ///
     /// 1 means this chunk has more than one Page, so each Page has its own Page statistic 5 means
     /// this chunk has only one Page, and this Page has no Page statistic

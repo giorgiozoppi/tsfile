@@ -26,7 +26,6 @@
 #include "chunk_group_footer.h"
 namespace iotdb::tsfile {
 
-    
 using ChunkIterator = std::vector<iotdb::tsfile::Chunk>::iterator;
 using ReverseChunkIterator = std::vector<iotdb::tsfile::Chunk>::reverse_iterator;
 using ConstChunkIterator = std::vector<iotdb::tsfile::Chunk>::const_iterator;

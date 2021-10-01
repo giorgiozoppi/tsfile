@@ -15,55 +15,31 @@
 * limitations under the License.
 *
 */
-#if 0
 
 #include "tsfile/model/chunk.h"
 
-#include "tsfile/common/hasher.h"
-#include "tsfile/common/util.h"
-
 namespace iotdb::tsfile {
 
-bool operator==(const chunk& lhs, const chunk& rhs) { return lhs.hash_code() == rhs.hash_code(); }
+Chunk::Chunk(iotdb::tsfile::ChunkHeader&& header, const iotdb::tsfile::common::Byte& marker)
+    : header_(std::move(header)), marker_(marker) {}
 
-chunk::chunk(const iotdb::tsfile::ChunkHeader& header, const std::byte& marker)
-    : _header(header), _marker(marker) {}
-
-ChunkHeader chunk::header() const noexcept { return _header; }
-std::byte chunk::marker() const noexcept { return _marker; }
-void chunk::add_page(iotdb::tsfile::page&& source) {
-    _pages.push_back(std::move(source));
-    hasher hasher;
-    hasher.add(_header.hash_code());
-    hasher.add(_marker);
-    for (const auto& page : _pages) {
-        hasher.add(page.hash_code());
-    }
-    _hash_code = hasher.compute();
+ChunkHeader Chunk::Header() const noexcept { return header_; }
+iotdb::tsfile::common::Byte Chunk::Marker() const noexcept { return marker_; }
+void Chunk::AddPage(iotdb::tsfile::Page&& source) {
+    pages_.push_back(std::move(source));
+    header_.SetNumOfPages(header_.NumOfPages() +1);
+    hash_code_ = 10219219280182L;
 }
-bool chunk::remove_page(const iotdb::tsfile::page& page) {
-    auto ret = iotdb::util::RemoveUsingHash(_pages, page);
-    if (ret) {
-        hasher hasher;
-        hasher.add(_header.hash_code());
-        hasher.add(_marker);
-        for (const auto& page : _pages) {
-            hasher.add(page.hash_code());
-        }
-        _hash_code = hasher.compute();
-    }
-    return ret;
+bool Chunk::RemovePage(const iotdb::tsfile::Page& page) {
+    return iotdb::tsfile::common::RemoveUsingHash(pages_, page);
 }
-
-page_iterator chunk::begin() { return _pages.begin(); }
-page_iterator chunk::end() { return _pages.end(); }
-const_page_iterator chunk::cbegin() const { return _pages.cbegin(); }
-const_page_iterator chunk::cend() const { return _pages.cend(); }
-reverse_page_iterator chunk::rbegin() { return _pages.rbegin(); }
-reverse_page_iterator chunk::rend() { return _pages.rend(); }
-const_reverse_page_iterator chunk::crbegin() const { return _pages.crbegin(); }
-const_reverse_page_iterator chunk::crend() const { return _pages.crend(); }
-uint64_t chunk::hash_code() const { return _hash_code; }
-
-};  // namespace iotdb::tsfile
-#endif
+Chunk::iterator Chunk::begin() { return pages_.begin(); }
+Chunk::iterator Chunk::end() { return pages_.end(); }
+Chunk::const_iterator Chunk::cbegin() const { return pages_.cbegin(); }
+Chunk::const_iterator Chunk::cend() const { return pages_.cend(); }
+Chunk::reverse_iterator Chunk::rbegin() { return pages_.rbegin(); }
+Chunk::reverse_iterator Chunk::rend() { return pages_.rend(); }
+Chunk::const_reverse_iterator Chunk::crbegin() const { return pages_.crbegin(); }
+Chunk::const_reverse_iterator Chunk::crend() const { return pages_.crend(); }
+uint64_t Chunk::HashCode() const { return  hash_code_; } 
+};  // n_amespace iotdb::tsfile

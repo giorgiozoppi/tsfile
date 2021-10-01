@@ -24,6 +24,20 @@
 #include <optional>
 
 namespace iotdb::tsfile {
+template <typename T>
+concept StatLike = requires(T a) {
+    std::declval<T>().Count();
+    std::declval<T>().StartTime();
+    std::declval<T>().MinValue();
+    std::declval<T>().MaxValue();
+    std::declval<T>().FirstValue();
+    std::declval<T>().LastValue();
+    std::declval<T>().SumValue();
+    std::declval<T>().Extreme();
+};
+
+template <typename T>
+concept StatLikeHashable = StatLike<T> && Hashable<T>;
 
 template <StatLikeHashable StatisticsImpl>
 struct BaseStatistics : StatisticsImpl {};
@@ -55,13 +69,14 @@ class GenericStatistics {
 
     uint64_t HashCode() { return _hashcode; };
 };
+
 using generic_int = GenericStatistics<int>;
 using IntStatistics = BaseStatistics<generic_int>;
 using generic_float = GenericStatistics<float>;
 using FloatStatistics = BaseStatistics<generic_float>;
 using generic_double = GenericStatistics<double>;
 using DoubleStatistics = BaseStatistics<generic_double>;
-using generic_binary = GenericStatistics<iotdb::common::ByteBuffer>;
+using generic_binary = GenericStatistics<iotdb::tsfile::common::ByteBuffer>;
 using BinaryStatistics = BaseStatistics<generic_binary>;
 
 class StatisticsMap {

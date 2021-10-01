@@ -17,45 +17,48 @@
 */
 
 #include "catch2/catch.hpp"
-
-#include "tsfile/model/chunk.h"
-#include "tsfile/model/chunk_header.h"
 #include "tsfile/model/datatypes.h"
 #include "tsfile/model/statistics.h"
-#include "tsfile/model/common.h"
+#include "tsfile/model/chunk_header.h"
+#include "tsfile/model/chunk.h"
+#include "tsfile/model/utility.h"
+
+
 
 
 using namespace iotdb::tsfile;
+using namespace iotdb::tsfile::common;
 
-SCENARIO("chunk should be initialized correctly", "[model]]") {
-    GIVEN("a chunk with a header and a page") {
-        ChunkContext ctx{"temperature", 10, TsDataType::INT32, TsCompressionType::GZIP, 
-        TsEncoding::GORILLA, 1, ONLY_ONE_PAGE_CHUNK_HEADER};
-        ChunkHeader temp_chunk_header{
-            "temperature", 10, TsDataType::INT32, TsCompressionType::GZIP, TsEncoding::GORILLA, 1};
-        Chunk temp_chunk{temp_chunk_header, iotdb::tsfile::ONLY_ONE_PAGE_CHUNK_HEADER};
-        PageHeader temp_page_header{4096, 1024};
-        auto s = std::make_unique<StatisticsMap>(TsDataType::INT32);
-        temp_page_header.SetStatistics(std::move(s));
-        Page temp_page{std::move(temp_page_header)};
-        temp_chunk.AddPage(std::move(temp_page));
-        WHEN("we access to values") {
-            THEN("the correct pages are accessed correctly") {
+
+
+SCENARIO("Chunk should be initialized correctly", "[model]]") {
+    GIVEN("A chunk with N pages") {
+        const int NUM_PAGES = 10;
+        std::string measure{"Temperature"};
+        ChunkContext ctx{measure, 10, TsDataType::INT32, TsCompressionType::GZIP, 
+        TsEncoding::GORILLA, 0, ONLY_ONE_PAGE_CHUNK_HEADER};
+        auto chunk = MakeUniqueChunk(ctx);
+        for (int i = 0; i < NUM_PAGES; ++i) {
+            chunk->AddPage(MakePage(4096, 1024, TsDataType::INT32));
+        }
+        WHEN("we access to the chunk") {
+            THEN("all pages are correctly set") {
                 int items{0};
-                for (auto& t : temp_chunk) {
-                    REQUIRE(1024 == t.header().c_size());
-                    REQUIRE(4096 == t.header().uc_size());
+                for (auto& page : *chunk) {
+                    auto page_header = page.Header(); 
+                    REQUIRE(1024 == page_header.CompressedSize());
+                    REQUIRE(4096 == page_header.UncompressedSize());
                     items++;
                 }
                 // hash just one page.
-                REQUIRE(1 == items);
+                REQUIRE(NUM_PAGES == items);
             }
             THEN("the chunk header values are correct") {
-                auto headers = temp_chunk.Header();
-                REQUIRE(TsCompressionType::GZIP == headers.get_TsCompressionType());
-                REQUIRE(TsDataType::INT32 == headers.get_ts_datatype());
-                REQUIRE(TsEncoding::GORILLA == headers.get_TsEncoding());
-                REQUIRE(1 == headers.get_num_of_pages());
+                ChunkHeader header = chunk->Header();
+                REQUIRE(TsCompressionType::GZIP == header.CompressionType());
+                REQUIRE(TsDataType::INT32 == header.DataType());
+                REQUIRE(TsEncoding::GORILLA == header.Encoding());
+                REQUIRE(NUM_PAGES == header.NumOfPages());
             }
         }
     }

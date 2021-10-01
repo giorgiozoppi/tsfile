@@ -21,33 +21,18 @@
 #include <cstdint>
 #include <string>
 
-namespace iotdb::tsfile::common {
-
 template <typename T>
 concept Serializable = requires {
-    std::declval<T>().members();
+    std::declval<T>().Members();
 };
 template <typename T>
 concept HexConvertible = requires(T a) {
-    std::declval<T>().hex();
+    std::declval<T>().Hex();
 };
 template <typename T>
 concept Hashable = requires(T a) {
     std::declval<T>().HashCode();
 };
-template <typename T>
-concept StatLike = requires(T a) {
-    std::declval<T>().Count();
-    std::declval<T>().StartTime();
-    std::declval<T>().MinValue();
-    std::declval<T>().MaxValue();
-    std::declval<T>().FirstValue();
-    std::declval<T>().LastValue();
-    std::declval<T>().SumValue();
-    std::declval<T>().Extreme();
-};
-template <typename T>
-concept StatLikeHashable = StatLike<T> && Hashable<T>;
 
 template <typename T, typename S>
 struct is_string {
@@ -57,6 +42,28 @@ template <class T, class Traits, class Alloc>
 struct is_string<T, std::basic_string<T, Traits, Alloc>> {
     static const bool value = true;
 };
+
+template <Hashable>
+bool operator==(const Hashable auto& lhs, const Hashable auto& rhs) {
+    return lhs.HashCode() == rhs.HashCode();
+}
+template <Hashable>
+bool operator<=(const Hashable auto& lhs, const Hashable auto& rhs) {
+    return lhs.HashCode() <= rhs.HashCode();
+}
+template <Hashable>
+bool operator>=(const Hashable auto& lhs, const Hashable auto& rhs) {
+    return lhs.HashCode() >= rhs.HashCode();
+}
+template <Hashable>
+bool operator>(const Hashable auto& lhs, const Hashable auto& rhs) {
+    return lhs.HashCode() > rhs.HashCode();
+}
+template <Hashable>
+bool operator<(const Hashable auto& lhs, const Hashable auto& rhs) {
+    return lhs.HashCode() < rhs.HashCode();
+}
+
 /*
 template <typename T>
 inline constexpr bool is_string_v = is_string<T>::value;
@@ -68,5 +75,4 @@ template <typename T>
 concept BaseType = Number<T> || String<T>;
 */
 
-}  // namespace iotdb::tsfile::common
 #endif

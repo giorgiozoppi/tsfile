@@ -38,6 +38,7 @@ enum class TsDataType { BOOLEAN, INT32, INT64, FLOAT, DOUBLE, TEXT, BINARY };
 /// @brief Supported encoding type
 ///
 enum class TsEncoding { PLAIN, PLAIN_DICTIONARY, RLE, DIFF, TS_2DIFF, BITMAP, GORILLA, REGULAR };
+
 }  // namespace iotdb::tsfile
 
 #endif  // IOTDB_NATIVE_METADATA_H

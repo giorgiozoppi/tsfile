@@ -1,3 +1,4 @@
+#if 0
 #include "catch2/catch.hpp"
 #include "tsfile/model/chunk_group.h"
 
@@ -17,4 +18,6 @@ SCENARIO("We can work correctly with a chunkgroup", "[model]") {
      }
     }
 }
+#endif
+
 
