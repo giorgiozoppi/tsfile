@@ -14,7 +14,7 @@ inline std::unique_ptr<ChunkGroup> make_unique_chunk_group(const std::string_vie
                                                            long data_size) {
     auto footer = ChunkGroupFooter(device_id, data_size, 0);
     return std::make_unique<ChunkGroup>(std::move(footer),
-                                        iotdb::tsfile::common::CHUNK_GROUP_FOOTER);
+                                        iotdb::tsfile::common::kChunkGroupFooter);
 }
 
 ///

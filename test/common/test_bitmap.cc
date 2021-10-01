@@ -61,6 +61,13 @@ SCENARIO("Should be able to mark and unmark all bits", "[bytebuffer]") {
                 REQUIRE(map == clean);
             }
         }
+        WHEN("we ask to mark and reset") {
+            map.MarkAll();
+            map.Reset();
+            THEN("we get zero value at an arbitrary given bit") {
+                REQUIRE(0 == map[10].Value());
+            }
+        }
     }
 }
 
