@@ -33,12 +33,12 @@ using namespace iotdb::tsfile::common;
 
 SCENARIO("Chunk should be initialized correctly", "[model]]") {
     GIVEN("A chunk with N pages") {
-        const int NUM_PAGES = 10;
+        const int kNumPages = 10;
         std::string measure{"Temperature"};
         ChunkContext ctx{measure, 10, TsDataType::INT32, TsCompressionType::GZIP, 
         TsEncoding::GORILLA, 0, kOnlyOnePageChunkHeader};
         auto chunk = make_unique_chunk(ctx);
-        for (int i = 0; i < NUM_PAGES; ++i) {
+        for (int i = 0; i < kNumPages; ++i) {
             chunk->AddPage(make_page(4096, 1024, TsDataType::INT32));
         }
         WHEN("we access to the chunk") {
@@ -51,14 +51,14 @@ SCENARIO("Chunk should be initialized correctly", "[model]]") {
                     items++;
                 }
                 // hash just one page.
-                REQUIRE(NUM_PAGES == items);
+                REQUIRE(kNumPages == items);
             }
             THEN("the chunk header values are correct") {
                 ChunkHeader header = chunk->Header();
                 REQUIRE(TsCompressionType::GZIP == header.CompressionType());
                 REQUIRE(TsDataType::INT32 == header.DataType());
                 REQUIRE(TsEncoding::GORILLA == header.Encoding());
-                REQUIRE(NUM_PAGES == header.NumOfPages());
+                REQUIRE(kNumPages == header.NumOfPages());
             }
         }
     }
