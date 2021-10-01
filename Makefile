@@ -3,17 +3,8 @@ HEADER_FILES=$(shell find ./include -iname '*.h')
 PHONY: all
 all: format build
 
-.PHONY: stylecheck
-stylecheck:
-	@echo "Checking Google Style Guide"
-	@cd build && make stylelint
-
-.PHONY: format
-
-format:
-	@echo "Formatting files with clang"
-	@clang-format -i $(FILES)
-	@clang-format -i $(HEADER_FILES)
+.PHONY: release
+release : build-clang
 
 .PHONY: build-clang
 
@@ -51,6 +42,21 @@ debug:
 clean:	
 	@echo "Cleaning up building directory"
 	@rm -fr build
+
+
+.PHONY: stylecheck
+
+stylecheck:
+	@echo "Checking Google Style Guide"
+	@cd build && make stylelint
+
+.PHONY: format
+
+format:
+	@echo "Formatting files with clang"
+	@clang-format -i $(FILES)
+	@clang-format -i $(HEADER_FILES)
+
 .PHONY: view-cover
 view_cover:
 	firefox $(shell pwd)/build/coverage/index.html

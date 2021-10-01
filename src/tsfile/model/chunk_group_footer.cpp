@@ -15,15 +15,13 @@
 * limitations under the License.
 *
 */
-#if 0
-#include "model/chunk_group_footer.h"
+#include "tsfile/model/chunk_group_footer.h"
 
 namespace iotdb::tsfile {
-chunk_group_footer::chunk_group_footer(const std::string_view& device_id, long data_size,
+ChunkGroupFooter::ChunkGroupFooter(const std::string_view& device_id, long data_size,
                                        int number_of_chunks)
-    : _device_id(device_id), _data_size(data_size), _number_of_chunks(number_of_chunks) {}
-std::string chunk_group_footer::get_device_id() const { return _device_id; }
-long chunk_group_footer::get_data_size() const { return _data_size; }
-int chunk_group_footer::get_number_of_chunks() const { return _number_of_chunks; }
-}  // namespace iotdb::tsfile
-#endif
+    : device_id_(device_id), data_size_(data_size), number_of_chunks_(number_of_chunks) {}
+std::string ChunkGroupFooter::DeviceId() const { return device_id_; }
+long ChunkGroupFooter::DataSize() const { return data_size_; }
+int ChunkGroupFooter::NumberOfChunks() const { return number_of_chunks_; }
+}

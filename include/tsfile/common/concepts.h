@@ -64,15 +64,4 @@ bool operator<(const Hashable auto& lhs, const Hashable auto& rhs) {
     return lhs.HashCode() < rhs.HashCode();
 }
 
-/*
-template <typename T>
-inline constexpr bool is_string_v = is_string<T>::value;
-template <typename _Tp>
-concept String = is_string_v<_Tp>;
-template <typename T>
-concept Number = std::integral<T>() || std::floating_point<T>;
-template <typename T>
-concept BaseType = Number<T> || String<T>;
-*/
-
 #endif

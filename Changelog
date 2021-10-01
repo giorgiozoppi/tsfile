@@ -19,3 +19,6 @@
  Sep 27 2021 14:31:45	Giorgio Zoppi <giorgio.zoppi@gmail.com>
 	* add tablet and record classes
 	* add datapoint class.
+ Oct 01 2021 20:13:52	Giorgio Zoppi <giorgio.zoppi@gmail.com>
+	* Added doxygen support
+	* Cleaned all

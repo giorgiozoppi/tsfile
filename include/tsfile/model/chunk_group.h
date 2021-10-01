@@ -18,29 +18,36 @@
 
 #ifndef IOTDB_NATIVE_CHUNK_GROUP_H
 #define IOTDB_NATIVE_CHUNK_GROUP_H
+#include <tsfile/common/common.h>
+#include <tsfile/model/chunk.h>
+#include <tsfile/model/chunk_group_footer.h>
+
 #include <cstddef>
 #include <memory>
 #include <vector>
-
-#include "chunk.h"
-#include "chunk_group_footer.h"
 namespace iotdb::tsfile {
 
-using ChunkIterator = std::vector<iotdb::tsfile::Chunk>::iterator;
-using ReverseChunkIterator = std::vector<iotdb::tsfile::Chunk>::reverse_iterator;
-using ConstChunkIterator = std::vector<iotdb::tsfile::Chunk>::const_iterator;
-using ConstReverseChunkIterator = std::vector<iotdb::tsfile::Chunk>::const_reverse_iterator;
 ///
 /// @brief A ChunkGroup stores the data of an entity for a period of time.
 //  It consists of several Chunk, a byte delimiter 0x00 and a ChunkFooter.
 ///
 class ChunkGroup {
    public:
+    using iterator = std::vector<iotdb::tsfile::Chunk>::iterator;
+    using reverse_iterator = std::vector<iotdb::tsfile::Chunk>::reverse_iterator;
+    using const_iterator = std::vector<iotdb::tsfile::Chunk>::const_iterator;
+    using const_reverse_iterator = std::vector<iotdb::tsfile::Chunk>::const_reverse_iterator;
+    ///
+    /// @brief Constructor
+    /// @param group group footer
+    /// @param delim chunk group delimiter.
+    ///
+    ChunkGroup(iotdb::tsfile::ChunkGroupFooter&& group, iotdb::tsfile::common::Byte delim);
     ///
     /// @brief  Return the chunk delimiter
     ///
     /// @return Chunk delimiter
-    std::byte Delimiter() const;
+    iotdb::tsfile::common::Byte Delimiter() const;
     ///
     /// @brief  Add a new chunk to the chunkgroup, transfer ownership
     ///
@@ -60,41 +67,42 @@ class ChunkGroup {
     /// @brief Iterator
 
     /// @return Iterator
-    ChunkIterator begin();
+    iterator begin();
     ///
     /// @brief Iterator marker
     /// @return Iterator marker
 
-    ChunkIterator end();
+    iterator end();
     ///
     /// @brief Reverse Iterator
     /// @return reverse iterator
-    ReverseChunkIterator rbegin();
+    reverse_iterator rbegin();
     ///
     /// @brief Reverse Iterator marker
     /// @return reverse iterator
-    ReverseChunkIterator rend();
+    reverse_iterator rend();
     ///
     /// @brief  Const Iterator
     ///
-    ConstChunkIterator cbegin() const;
+    const_iterator cbegin() const;
     ///
     /// @brief Const Iterator
     ///
-    ConstChunkIterator cend() const;
+    const_iterator cend() const;
     ///
     /// @brief Reverse Const Iterator
     ///
-    ConstReverseChunkIterator crbegin() const;
+    const_reverse_iterator crbegin() const;
     ///
     /// @brief Reverse Const Iterator
     ///
-    ConstReverseChunkIterator crend() const;
+    const_reverse_iterator crend() const;
 
    private:
     std::vector<iotdb::tsfile::Chunk> chunks_;
-    std::byte byte_delimiter_;
+    iotdb::tsfile::common::Byte byte_delimiter_;
     ChunkGroupFooter footer_;
+   
 };
 }  // namespace iotdb::tsfile
 

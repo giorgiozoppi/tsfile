@@ -16,7 +16,8 @@
 *
 */
 
-#include "tsfile/model/chunk.h"
+#include <tsfile/common/algorithm.h>
+#include <tsfile/model/chunk.h>
 
 namespace iotdb::tsfile {
 

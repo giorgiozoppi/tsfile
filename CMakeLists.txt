@@ -27,6 +27,11 @@ include(${CMAKE_SOURCE_DIR}/cmake/unit_test.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/clang_tools.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/cppcheck.cmake)
 
+if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
+include(${CMAKE_SOURCE_DIR}/cmake/doxygen.cmake)
+endif()
+
+
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   # using Clang

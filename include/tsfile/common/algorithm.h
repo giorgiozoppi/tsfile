@@ -1,6 +1,10 @@
 #ifndef IOTDB_NATIVE_ALGORITHMS_H
 #define IOTDB_NATIVE_ALGORITHMS_H
 #include <tsfile/common/concepts.h>
+
+#include <algorithm>
+#include <vector>
+
 namespace iotdb::tsfile::common {
 template <typename Hashable>
 inline bool RemoveUsingHash(std::vector<Hashable>& container, const Hashable& value) {

@@ -111,28 +111,21 @@ template <typename T>
 class StatusResult {
    public:
     StatusResult(const T& result) { _error = result; }
-    StatusResult(const StatusResult& result) = default;
-    StatusResult& operator=(const StatusResult& result) = default;
     auto Result() const { return _error; }
-    StatusResult(StatusResult&& vr) { _error = std::move(vr._error); }
-    StatusResult& operator=(StatusResult&& vr) { _error = std::move(vr._error); }
 
    private:
     T _error;
 };
+///
+/// @brief Function used to extract a value and use in stuctured binding.
+/// @param v value result to convert in a tuple.
+///
 template <typename K, typename Z>
 std::tuple<K, Z> get(const ValueResult<K, Z>& v) {
     return {v._error, v._value.value()};
 }
 enum class BitError { OK = 0, OUT_RANGE = 1 };
 
-template <typename T>
-inline bool RemoveUsingHash(std::vector<T>& container, const T& value) {
-    auto hash_value = value.HashCode();
-    auto res = std::remove_if(std::begin(container), std::end(container),
-                              [=](auto current) { return current.HashCode() == hash_value; });
-    return res != container.end();
-}
 /// TsFile Markers
 constexpr Byte CHUNK_GROUP_FOOTER = Byte{0};
 constexpr Byte CHUNK_HEADER = Byte{1};

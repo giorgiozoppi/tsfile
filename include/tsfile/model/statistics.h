@@ -42,11 +42,13 @@ concept StatLikeHashable = StatLike<T> && Hashable<T>;
 template <StatLikeHashable StatisticsImpl>
 struct BaseStatistics : StatisticsImpl {};
 
+///
+/// @brief Generic class for statistics.
 template <typename T>
 class GenericStatistics {
-    long _count;
-    long _start_time;
-    long _end_time;
+    int64_t _count;
+    int64_t _start_time;
+    int64_t _end_time;
     std::optional<T> _min_value;
     std::optional<T> _max_value;
     std::optional<T> _first_value;
@@ -56,9 +58,9 @@ class GenericStatistics {
     uint64_t _hashcode;
 
    public:
-    long Count() const { return _count; }
-    long StartTime() const { return _start_time; }
-    long EndTime() const { return _end_time; }
+    auto Count() const { return _count; }
+    auto StartTime() const { return _start_time; }
+    auto EndTime() const { return _end_time; }
     auto MinValue() const { return _min_value; }
     auto MaxValue() const { return _max_value; }
 
@@ -79,6 +81,10 @@ using DoubleStatistics = BaseStatistics<generic_double>;
 using generic_binary = GenericStatistics<iotdb::tsfile::common::ByteBuffer>;
 using BinaryStatistics = BaseStatistics<generic_binary>;
 
+///
+/// @brief Statistics map that contains all kind of statistics.
+///
+
 class StatisticsMap {
     IntStatistics integer_stat_;
     FloatStatistics float_stat_;
@@ -88,27 +94,48 @@ class StatisticsMap {
     TsDataType type_;
 
    public:
+    ///
+    /// @brief Constructor
+    /// @param data data type to set. A TsDataType can be [ BOOLEAN, INT32, INT64, FLOAT, DOUBLE,
+    /// TEXT, BINARY ]
+    ///
     StatisticsMap(const TsDataType& data) : type_(data) {}
+    ///
+    /// @brief Constructor
+    ///
     StatisticsMap(StatisticsMap&& m) {
         type_ = std::move(m.type_);
         integer_stat_ = std::move(m.integer_stat_);
         float_stat_ = std::move(m.float_stat_);
+        double_stat_ = std::move(m.double_stat_);
+        binary_stat_ = std::move(m.binary_stat_);
     }
+    ///
+    /// @brief Constructor
+    ///
     StatisticsMap(const StatisticsMap& m) {
         type_ = m.type_;
         integer_stat_ = m.integer_stat_;
         float_stat_ = m.float_stat_;
+        double_stat_ = m.double_stat_;
+        binary_stat_ = m.binary_stat_;
     }
+    ///
+    /// @brief Constructor
+    ///
     StatisticsMap& operator=(const StatisticsMap& m) {
         if (this != &m) {
             type_ = m.type_;
             integer_stat_ = m.integer_stat_;
             float_stat_ = m.float_stat_;
+            double_stat_ = m.double_stat_;
+            binary_stat_ = m.binary_stat_;
         }
         return *this;
     }
-
-    ~StatisticsMap() = default;
+    ///
+    /// Get the value
+    ///
     template <StatLikeHashable StatisticsImpl>
     StatisticsImpl value() {
         switch (type_) {

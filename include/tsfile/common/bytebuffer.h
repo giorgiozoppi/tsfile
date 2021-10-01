@@ -90,9 +90,7 @@ class BasicByteBuffer {
     /// @param buffer BasicByteBuffer to copy
     //
     BasicByteBuffer& operator=(const BasicByteBuffer<T>& buffer) {
-        if (&this != buffer) {
-            bytes_ = buffer.bytes_;
-        }
+        bytes_ = buffer.bytes_;
         return *this;
     }
     ///
@@ -100,9 +98,7 @@ class BasicByteBuffer {
     /// @param buffer BasicByteBuffer to copy
     //
     BasicByteBuffer& operator=(BasicByteBuffer<T>&& buffer) {
-        if (&this != buffer) {
-            bytes_ = std::move(buffer.bytes_);
-        }
+        bytes_ = std::move(buffer.bytes_);
         return *this;
     }
     ///

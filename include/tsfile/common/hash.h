@@ -20,6 +20,8 @@
 #include <tsfile/common/bytebuffer.h>
 #include <tsfile/common/common.h>
 
+// @todo use static/dynamic polymorphism and an generate an hash function that get an
+// Hashable objet
 #include <optional>
 #if 0
 namespace iotdb::tsfile::common {

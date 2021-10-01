@@ -21,6 +21,7 @@
 #include <filesystem>
 #include <map>
 #include <utility>
+#if 0
 
 namespace iotdb::tsfile {
 class IMeasurementSchema {
@@ -78,5 +79,6 @@ class schema {
    private:
     std::map<std::filesystem::path, std::unique_ptr<measurement_schema>> _registered_timeseries;
 };
+#endif
 }  // namespace iotdb::tsfile
 #endif

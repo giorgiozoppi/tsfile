@@ -37,9 +37,9 @@ SCENARIO("Chunk should be initialized correctly", "[model]]") {
         std::string measure{"Temperature"};
         ChunkContext ctx{measure, 10, TsDataType::INT32, TsCompressionType::GZIP, 
         TsEncoding::GORILLA, 0, ONLY_ONE_PAGE_CHUNK_HEADER};
-        auto chunk = MakeUniqueChunk(ctx);
+        auto chunk = make_unique_chunk(ctx);
         for (int i = 0; i < NUM_PAGES; ++i) {
-            chunk->AddPage(MakePage(4096, 1024, TsDataType::INT32));
+            chunk->AddPage(make_page(4096, 1024, TsDataType::INT32));
         }
         WHEN("we access to the chunk") {
             THEN("all pages are correctly set") {

@@ -25,6 +25,8 @@
 #include <memory>
 
 namespace iotdb::tsfile::common {
+// @todo
+// Adapt from Cache Efficent Bloom filter implementation
 class BloomFilter {
    public:
     static constexpr int MINIMAL_SIZE = 256;

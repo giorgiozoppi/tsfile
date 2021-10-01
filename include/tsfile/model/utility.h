@@ -4,13 +4,18 @@
 #include <string>
 
 #include "tsfile/common/common.h"
-#include "tsfile/model/chunk.h"
-#include "tsfile/model/chunk_header.h"
-#include "tsfile/model/datatypes.h"
+#include "tsfile/model/chunk_group.h"
 
 using iotdb::tsfile::common::Byte;
 
 namespace iotdb::tsfile {
+
+inline std::unique_ptr<ChunkGroup> make_unique_chunk_group(const std::string_view& device_id,
+                                                           long data_size) {
+    auto footer = ChunkGroupFooter(device_id, data_size, 0);
+    return std::make_unique<ChunkGroup>(std::move(footer),
+                                        iotdb::tsfile::common::CHUNK_GROUP_FOOTER);
+}
 
 ///
 /// @brief ChunkContext context for chunk creation
@@ -28,7 +33,7 @@ struct ChunkContext {
 ///
 /// @brief Factory method for the chunk
 ///
-inline iotdb::tsfile::Chunk MakeChunk(const ChunkContext& context) {
+inline iotdb::tsfile::Chunk make_chunk(const ChunkContext& context) {
     iotdb::tsfile::ChunkHeader temp_chunk_header{context.MeasurementID, context.DataSize,
                                                  context.DataType,      context.CompressionType,
                                                  context.Encoding,      context.NumberOfPages};
@@ -39,53 +44,28 @@ inline iotdb::tsfile::Chunk MakeChunk(const ChunkContext& context) {
 ///
 /// @brief Factory method for an exclusive ownership Chunk
 ///
-inline std::unique_ptr<iotdb::tsfile::Chunk> MakeUniqueChunk(const ChunkContext& context) {
-    return std::make_unique<iotdb::tsfile::Chunk>(MakeChunk(context));
+inline std::unique_ptr<iotdb::tsfile::Chunk> make_unique_chunk(const ChunkContext& context) {
+    return std::make_unique<iotdb::tsfile::Chunk>(make_chunk(context));
 }
 
 /// @brief Factory method for the page
 ///
-inline Page MakePage(int uncompressed_size, int compressed_size, TsDataType statistics_type) {
+inline Page make_page(int uncompressed_size, int compressed_size, TsDataType statistics_type) {
     PageHeader header{uncompressed_size, compressed_size, statistics_type};
     header.SetStatistics(std::make_unique<StatisticsMap>(statistics_type));
     Page tmp(std::move(header));
 
     return tmp;
 }
-#if 0
 
-
-
-iotdb::tsfile::Chunk MakeChunk(const ChunkContext& context) {
-        iotdb::tsfile::ChunkHeader temp_chunk_header{
-            context.MeasurementID,
-            context.DataSize, 
-            context.DataType, 
-            context.CompressionType,
-            context.Encoding,
-            context.NumberOfPages};
-
-        return iotdb::tsfile::Chunk(std::move(temp_chunk_header), context.ChunkMarker); 
+/// @brief Factory method for  an exclusive ownership Page
+inline std::unique_ptr<Page> make_unique_page(int uncompressed_size, int compressed_size,
+                                              TsDataType statistics_type) {
+    PageHeader header{uncompressed_size, compressed_size, statistics_type};
+    header.SetStatistics(std::make_unique<StatisticsMap>(statistics_type));
+    Page tmp(std::move(header));
+    return std::make_unique<Page>(tmp);
 }
 
-
-///
-/// @brief Factory method for an shared ownership Chunk
-///
-inline std::shared_ptr<iotdb::tsfile::Chunk> MakeSharedChunk(const ChunkContext& context) {
-    return std::make_shared<iotdb::tsfile::Chunk>(MakeChunk(context));
-}
-
-/// @brief Factory method for the page
-///
-inline std::unique_ptr<Page> MakeUniquePage(int uncompressed_size, 
-                    int compressed_size,
-                    TsDataType statistics_type) {
-        PageHeader header{uncompressed_size, compressed_size, statistics_type};
-        header.SetStatistics(std::make_unique<StatisticsMap>(statistics_type));
-        Page tmp(std::move(header));
-        return std::make_unique<Page>(tmp);
-}
-#endif
 }  // namespace iotdb::tsfile
 #endif
