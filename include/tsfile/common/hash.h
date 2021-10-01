@@ -38,5 +38,17 @@ std::optional<ByteBuffer> Hash<ByteBuffer, SipHash>(const ByteBuffer& key) {
     return std::nullopt;
 }
 }  // namespace iotdb::tsfile::common
+class Hasher {
+   public:
+    template <typename T>
+    void Add(T data);
+    uint64_t Compute();
+
+   private:
+    void AddData(uint64_t data, std::vector<uint8_t>& value);
+    uint64_t GenerateKeyPart();
+    std::vector<uint8_t> _data;
+};
+
 #endif
 #endif

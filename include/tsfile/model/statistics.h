@@ -61,7 +61,7 @@ using generic_float = GenericStatistics<float>;
 using FloatStatistics = BaseStatistics<generic_float>;
 using generic_double = GenericStatistics<double>;
 using DoubleStatistics = BaseStatistics<generic_double>;
-using generic_binary = GenericStatistics<iotdb::common::bytebuffer>;
+using generic_binary = GenericStatistics<iotdb::common::ByteBuffer>;
 using BinaryStatistics = BaseStatistics<generic_binary>;
 
 class StatisticsMap {
@@ -97,17 +97,17 @@ class StatisticsMap {
     template <StatLikeHashable StatisticsImpl>
     StatisticsImpl value() {
         switch (type_) {
-            case ts_datatype::INT32: {
+            case TsDataType::INT32: {
                 return integer_stat_;
             }
-            case ts_datatype::DOUBLE: {
+            case TsDataType::DOUBLE: {
                 return double_stat_;
             }
 
-            case ts_datatype::BINARY: {
+            case TsDataType::BINARY: {
                 return binary_stat_;
             }
-            case ts_datatype::FLOAT: {
+            case TsDataType::FLOAT: {
                 return float_stat_;
             }
             default:

@@ -3,6 +3,10 @@ HEADER_FILES=$(shell find ./include -iname '*.h')
 PHONY: all
 all: format build
 
+.PHONY: stylecheck
+stylecheck:
+	@echo "Checking Google Style Guide"
+	@cd build && make stylelint
 
 .PHONY: format
 

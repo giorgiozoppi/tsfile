@@ -22,8 +22,6 @@
 #include <map>
 #include <utility>
 
-#include "schema.h"
-
 namespace iotdb::tsfile {
 class IMeasurementSchema {
    public:

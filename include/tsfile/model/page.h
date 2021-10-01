@@ -25,13 +25,28 @@
 #include <vector>
 
 namespace iotdb::tsfile {
+///
+/// @brief A Page stores a sequence of timeseries.
+/// It is the smallest unit in which a data block is deserialized.
+/// It contains a PageHeader and the actual data (encoded time-value pairs).
+///
 class Page {
     long hash_code_{0};
-    // page_header _page_header;
+    PageHeader _page_header;
 
    public:
-    // page(page_header&& header) { _page_header = std::move(header); }
-    // page_header header() const { return std::move(_page_header); }
+    ///
+    /// @brief Constructor
+    /// @param header  a page header
+    ///
+    Page(PageHeader&& header) { _page_header = std::move(header); }
+    ///
+    /// @brief Page Header
+    ///
+    PageHeader Header() const { return std::move(_page_header); }
+    ///
+    /// @brief HashCode of the page
+    ///
     uint64_t HashCode() const { return hash_code_; }
 };
 }  // namespace iotdb::tsfile

@@ -17,23 +17,28 @@
 */
 
 #include "catch2/catch.hpp"
+
 #include "tsfile/model/chunk.h"
 #include "tsfile/model/chunk_header.h"
 #include "tsfile/model/datatypes.h"
 #include "tsfile/model/statistics.h"
+#include "tsfile/model/common.h"
+
 
 using namespace iotdb::tsfile;
 
 SCENARIO("chunk should be initialized correctly", "[model]]") {
     GIVEN("a chunk with a header and a page") {
+        ChunkContext ctx{"temperature", 10, TsDataType::INT32, TsCompressionType::GZIP, 
+        TsEncoding::GORILLA, 1, ONLY_ONE_PAGE_CHUNK_HEADER};
         ChunkHeader temp_chunk_header{
-            "temperature", 10, ts_datatype::INT32, compression_type::GZIP, ts_encoding::GORILLA, 1};
+            "temperature", 10, TsDataType::INT32, TsCompressionType::GZIP, TsEncoding::GORILLA, 1};
         Chunk temp_chunk{temp_chunk_header, iotdb::tsfile::ONLY_ONE_PAGE_CHUNK_HEADER};
         PageHeader temp_page_header{4096, 1024};
-        auto s = std::make_unique<stat_container>(ts_datatype::INT32);
-        temp_page_header.set_statistics(std::move(s));
-        page temp_page{std::move(temp_page_header)};
-        temp_chunk.add_page(std::move(temp_page));
+        auto s = std::make_unique<StatisticsMap>(TsDataType::INT32);
+        temp_page_header.SetStatistics(std::move(s));
+        Page temp_page{std::move(temp_page_header)};
+        temp_chunk.AddPage(std::move(temp_page));
         WHEN("we access to values") {
             THEN("the correct pages are accessed correctly") {
                 int items{0};
@@ -46,10 +51,10 @@ SCENARIO("chunk should be initialized correctly", "[model]]") {
                 REQUIRE(1 == items);
             }
             THEN("the chunk header values are correct") {
-                auto headers = temp_chunk.header();
-                REQUIRE(compression_type::GZIP == headers.get_compression_type());
-                REQUIRE(ts_datatype::INT32 == headers.get_ts_datatype());
-                REQUIRE(ts_encoding::GORILLA == headers.get_ts_encoding());
+                auto headers = temp_chunk.Header();
+                REQUIRE(TsCompressionType::GZIP == headers.get_TsCompressionType());
+                REQUIRE(TsDataType::INT32 == headers.get_ts_datatype());
+                REQUIRE(TsEncoding::GORILLA == headers.get_TsEncoding());
                 REQUIRE(1 == headers.get_num_of_pages());
             }
         }

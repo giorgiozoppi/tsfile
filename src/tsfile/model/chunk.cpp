@@ -42,7 +42,7 @@ void chunk::add_page(iotdb::tsfile::page&& source) {
     _hash_code = hasher.compute();
 }
 bool chunk::remove_page(const iotdb::tsfile::page& page) {
-    auto ret = iotdb::util::remove_byhash(_pages, page);
+    auto ret = iotdb::util::RemoveUsingHash(_pages, page);
     if (ret) {
         hasher hasher;
         hasher.add(_header.hash_code());

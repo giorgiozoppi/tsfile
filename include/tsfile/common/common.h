@@ -124,5 +124,13 @@ std::tuple<K, Z> get(const ValueResult<K, Z>& v) {
 }
 enum class BitError { OK = 0, OUT_RANGE = 1 };
 
+template <typename T>
+inline bool RemoveUsingHash(std::vector<T>& container, const T& value) {
+    auto hash_value = value.hash_code();
+    auto res = std::remove_if(std::begin(container), std::end(container),
+                              [=](auto current) { return current.hash_code() == hash_value; });
+    return res != container.end();
+}
+
 }  // namespace iotdb::tsfile::common
 #endif

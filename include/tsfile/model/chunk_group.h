@@ -25,6 +25,8 @@
 #include "chunk.h"
 #include "chunk_group_footer.h"
 namespace iotdb::tsfile {
+
+    
 using ChunkIterator = std::vector<iotdb::tsfile::Chunk>::iterator;
 using ReverseChunkIterator = std::vector<iotdb::tsfile::Chunk>::reverse_iterator;
 using ConstChunkIterator = std::vector<iotdb::tsfile::Chunk>::const_iterator;
@@ -56,35 +58,37 @@ class ChunkGroup {
     /// @return Chunk group footer.
     ChunkGroupFooter Footer() const;
     ///
-    ///
-    ///
+    /// @brief Iterator
+
+    /// @return Iterator
     ChunkIterator begin();
     ///
-    ///
-    ///
+    /// @brief Iterator marker
+    /// @return Iterator marker
+
     ChunkIterator end();
     ///
-    ///
-    ///
+    /// @brief Reverse Iterator
+    /// @return reverse iterator
     ReverseChunkIterator rbegin();
     ///
-    ///
-    ///
+    /// @brief Reverse Iterator marker
+    /// @return reverse iterator
     ReverseChunkIterator rend();
     ///
-    ///
+    /// @brief  Const Iterator
     ///
     ConstChunkIterator cbegin() const;
     ///
-    ///
+    /// @brief Const Iterator
     ///
     ConstChunkIterator cend() const;
     ///
-    ///
+    /// @brief Reverse Const Iterator
     ///
     ConstReverseChunkIterator crbegin() const;
     ///
-    ///
+    /// @brief Reverse Const Iterator
     ///
     ConstReverseChunkIterator crend() const;
 

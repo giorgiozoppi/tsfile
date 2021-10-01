@@ -18,6 +18,7 @@
 #ifndef IOTDB_NATIVE_CHUNK_H
 #define IOTDB_NATIVE_CHUNK_H
 
+#include <tsfile/common/common.h>
 #include <tsfile/model/chunk_header.h>
 #include <tsfile/model/page.h>
 
@@ -32,29 +33,81 @@ using ConstPageIterator = std::vector<iotdb::tsfile::Page>::const_iterator;
 using ReversePageIterator = std::vector<iotdb::tsfile::Page>::reverse_iterator;
 using ConstReversePageIterator = std::vector<iotdb::tsfile::Page>::const_reverse_iterator;
 using UniquePagePtr = std::unique_ptr<iotdb::tsfile::Page>;
-
+///
+/// @brief Class that holds the responsibility to model a chunk
+///
 class Chunk {
    public:
-    Chunk(iotdb::tsfile::ChunkHeader&& header, const std::byte& marker);
+    ///
+    /// @brief Constructor
+    /// @param header header of the chunk
+    /// @param marker marker
+    ///
+    Chunk(iotdb::tsfile::ChunkHeader&& header, const Byte& marker) noexcept;
+    ///
+    /// @brief Equality comparison operator
+    ///
     friend bool operator==(const Chunk& lhs, const Chunk& rhs);
+    ///
+    /// @brief Ordering comparison operator
+    ///
     friend bool operator<(const Chunk& lhs, const Chunk& rhs);
+    ///
+    /// @brief Ordering comparison operator
+    ///
     friend bool operator==(const Chunk& lhs, const Chunk& rhs);
 
-    // getter
+    ///
+    ///  @brief Return the header.
+    ///  @return the header of chunk
     ChunkHeader Header() const noexcept;
+    ///
+    /// @brief Return the file marker
+    /// @return marker of the chunk
     std::byte Marker() const noexcept;
-    // add a Page to a chunk.
-    void AddPage(iotdb::tsfile::Page&& Page);
-    bool RemovePage(const iotdb::tsfile::Page& Page);
-    // Page interator
+    ///
+    /// @brief Add a page to the chunk.
+    /// @param page to add.
+    ///
+    void AddPage(iotdb::tsfile::Page&& page);
+    ///
+    /// @brief Remove a page from a chunk
+    /// @param page to remove.
+    bool RemovePage(const iotdb::tsfile::Page& page);
+    ///
+    /// @brief Page forward iterator
+    ///
     PageIterator begin();
+    ///
+    /// @brief Page forward  mark iterator
+    ///
     PageIterator end();
+    ///
+    /// @brief Page const forward iterator
+    ///
     ConstPageIterator cbegin() const;
+    ///
+    /// @brief Page forward  mark iterator
+    ///
     ConstPageIterator cend() const;
+    ///
+    /// @brief Page backward iterator
+    ///
     ReversePageIterator rbegin();
+    ///
+    /// @brief Page backward mark iterator
+    ///
     ReversePageIterator rend();
+    ///
+    /// @brief Reverse const forward iterator
+    ///
     ConstReversePageIterator crbegin() const;
+    ///
+    /// @brief Reverse const forward iterator
+    ///
     ConstReversePageIterator crend() const;
+    /// @brief Object hash
+    ///
     uint64_t HashCode() const;
 
    private:
