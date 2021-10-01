@@ -53,7 +53,7 @@ using std::ostream;
 template <typename T>
 class BasicByteBuffer {
    public:
-    static constexpr unsigned int DEFAULT_SIZE = 1024;
+    static constexpr unsigned int kBufferDefaultSize = 1024;
     using internal_buffer = typename std::vector<T>;
     using value_type = T;
     using iterator = typename internal_buffer::iterator;
@@ -64,7 +64,7 @@ class BasicByteBuffer {
     ///
     /// @brief Default constructor
     ///
-    BasicByteBuffer() { bytes_.reserve(DEFAULT_SIZE); }
+    BasicByteBuffer() { bytes_.reserve(kBufferDefaultSize); }
 
     ///
     /// @brief Construct a byte array of predefined size

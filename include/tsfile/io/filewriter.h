@@ -15,6 +15,7 @@
 * limitations under the License.
 *
 */
+
 #if 0
 #ifndef IOTDB_NATIVE_WRITER_H
 #define IOTDB_NATIVE_WRITER_H

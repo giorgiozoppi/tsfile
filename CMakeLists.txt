@@ -16,12 +16,12 @@ endif()
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 include_directories(include)
 file(GLOB_RECURSE INCLUDE_FILES ${CMAKE_SOURCE_DIR}/include/tsfile/*.h ${CMAKE_SOURCE_DIR}/include/tsfile/common/*.h)
-file(GLOB_RECURSE SOURCE_FILES_NO_MAIN ${CMAKE_SOURCE_DIR}/src/tsfile/*.cpp)
+file(GLOB_RECURSE SOURCE_FILES_NO_MAIN ${CMAKE_SOURCE_DIR}/src/tsfile/*.cc)
 # for using catch we don't need the main
-list(FILTER SOURCE_FILES_NO_MAIN EXCLUDE REGEX ".*main.cpp$")
-file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/src/tsfile/common/*.cpp \ 
-              ${CMAKE_SOURCE_DIR}/src/tsfile/model/*.cpp \ 
-              ${CMAKE_SOURCE_DIR}/src/tsfile/io/*.cpp)
+list(FILTER SOURCE_FILES_NO_MAIN EXCLUDE REGEX ".*main.cc$")
+file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/src/tsfile/common/*.cc \ 
+              ${CMAKE_SOURCE_DIR}/src/tsfile/model/*.cc \ 
+              ${CMAKE_SOURCE_DIR}/src/tsfile/io/*.cc)
 add_library(tsfile STATIC ${SOURCES})
 include(${CMAKE_SOURCE_DIR}/cmake/unit_test.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/clang_tools.cmake)

@@ -63,7 +63,7 @@ constexpr uint64_t to_big_endian(uint64_t x) {
 /// @brief Suffix/Extension of the TSFile
 ///
 
-constexpr std::string_view TSFILE_SUFFIX = ".tsfile";
+constexpr std::string_view kTsFileSuffix = ".tsfile";
 
 template <typename T>
 constexpr bool IsOk(T t) {
@@ -127,12 +127,12 @@ std::tuple<K, Z> get(const ValueResult<K, Z>& v) {
 enum class BitError { OK = 0, OUT_RANGE = 1 };
 
 /// TsFile Markers
-constexpr Byte CHUNK_GROUP_FOOTER = Byte{0};
-constexpr Byte CHUNK_HEADER = Byte{1};
-constexpr Byte SEPARATOR = Byte{2};
-constexpr Byte VERSION = Byte{3};
-constexpr Byte OPERATION_INDEX_RANGE = Byte{4};
-constexpr Byte ONLY_ONE_PAGE_CHUNK_HEADER = Byte{5};
+constexpr Byte kChunkGroupFooter = Byte{0};
+constexpr Byte kChunkHeader = Byte{1};
+constexpr Byte kSeparator = Byte{2};
+constexpr Byte kVersion = Byte{3};
+constexpr Byte kOperationIndexRange = Byte{4};
+constexpr Byte kOnlyOnePageChunkHeader = Byte{5};
 
 }  // namespace iotdb::tsfile::common
 #endif

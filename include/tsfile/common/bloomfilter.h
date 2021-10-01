@@ -1,13 +1,13 @@
 /**
- * Copyright (c) 2021 Giorgio Zoppi <giorgio.zoppi@iotdbe.com>
- * All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
+* Copyright (c) 2021 Giorgio Zoppi <giorgio.zoppi@iotdbe.com>
+* All rights reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,21 +29,20 @@ namespace iotdb::tsfile::common {
 // Adapt from Cache Efficent Bloom filter implementation
 class BloomFilter {
    public:
-    static constexpr int MINIMAL_SIZE = 256;
-    static constexpr int MAXIMAL_HASH_FUNCTION_SIZE = 8;
-    static constexpr std::array<int, MAXIMAL_HASH_FUNCTION_SIZE> SEEDS = {5,  7,  11, 19,
+    static constexpr int kMinimalSize = 256;
+    static constexpr int kMaximalHashFunctionSize = 8;
+    static constexpr std::array<int, kMaximalHashFunctionSize> SEEDS = {5,  7,  11, 19,
                                                                           31, 37, 43, 59};
 
-    IOTDB_NATIVE_DISALLOW_COPY_AND_ASSIGN(BloomFilter);
 };
 }  // namespace iotdb::tsfile::common
 #ifdef 0
 
 class HashFunction {};
 class BloomFilter {
-    static constexpr int MINIMAL_SIZE = 256;
-    static constexpr int MAXIMAL_HASH_FUNCTION_SIZE = 8;
-    static constexpr std::array<int, MAXIMAL_HASH_FUNCTION_SIZE> SEEDS = {5,  7,  11, 19,
+    static constexpr int kMinimalSize = 256;
+    static constexpr int kMaximalHashFunctionSize = 8;
+    static constexpr std::array<int, kMaximalHashFunctionSize> SEEDS = {5,  7,  11, 19,
                                                                           31, 37, 43, 59};
     int size_;
     int hash_function_size_;
