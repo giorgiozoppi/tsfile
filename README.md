@@ -13,7 +13,8 @@ The target of TsFile project is to support: high ingestion rate up to tens of mi
 
 ## Current Code.
 
-We've just started so for the moment is just an exercise in C++ 20 but we plan to work on it deeply in the next weeks.
+
+We've just started so for the moment, this is just an exercise in C++ 20 but we plan to work on it deeply in the next weeks.
 
 ### Code Coverage
 
