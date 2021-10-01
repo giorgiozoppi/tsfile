@@ -61,3 +61,11 @@ $ sudo apt-get -y install clang-13 clang-tools-13 libclang-common-13-dev libclan
 ```
 Then you might want to copy vscode_cpp.json in your ```.vscode/c_cpp_properties.json```.
 
+# Documentation / Doxygen
+We support doxygen in the Release target. So you might need to install:
+```
+$ apt-get install doxygen graphviz
+$ make docs
+```
+The above command will generate the html documentation in build.
+
