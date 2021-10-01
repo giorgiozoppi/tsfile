@@ -15,18 +15,13 @@
 * limitations under the License.
 *
 */
-#ifndef IOTDB_NATIVE_UTIL_HASHER_H
-#define IOTDB_NATIVE_UTIL_HASHER_H
-#include <vector>
-namespace iotdb::util {
+#include "tsfile/model/chunk_group_footer.h"
 
-// extend with concepts.
-template <typename T>
-inline bool remove_byhash(std::vector<T>& container, const T& value) {
-    auto hash_value = value.hash_code();
-    auto res = std::remove_if(std::begin(container), std::end(container),
-                              [=](auto current) { return current.hash_code() == hash_value; });
-    return res != container.end();
+namespace iotdb::tsfile {
+ChunkGroupFooter::ChunkGroupFooter(const std::string_view& device_id, long data_size,
+                                       int number_of_chunks)
+    : device_id_(device_id), data_size_(data_size), number_of_chunks_(number_of_chunks) {}
+std::string ChunkGroupFooter::DeviceId() const { return device_id_; }
+long ChunkGroupFooter::DataSize() const { return data_size_; }
+int ChunkGroupFooter::NumberOfChunks() const { return number_of_chunks_; }
 }
-}  // namespace iotdb::util
-#endif

@@ -15,52 +15,106 @@
 * limitations under the License.
 *
 */
-
 #ifndef IOTDB_NATIVE_CHUNK_H
 #define IOTDB_NATIVE_CHUNK_H
+
+#include <tsfile/common/common.h>
+#include <tsfile/common/concepts.h>
+#include <tsfile/model/chunk_header.h>
+#include <tsfile/model/page.h>
 
 #include <cstddef>
 #include <memory>
 #include <numeric>
 #include <vector>
 
-#include "model/chunk_header.h"
-#include "model/page.h"
 namespace iotdb::tsfile {
-using page_iterator = std::vector<iotdb::tsfile::page>::iterator;
-using const_page_iterator = std::vector<iotdb::tsfile::page>::const_iterator;
-using reverse_page_iterator = std::vector<iotdb::tsfile::page>::reverse_iterator;
-using const_reverse_page_iterator = std::vector<iotdb::tsfile::page>::const_reverse_iterator;
-using unique_page_ptr = std::unique_ptr<iotdb::tsfile::page>;
 
-class chunk {
-    iotdb::tsfile::chunk_header _header;
-    std::byte _marker{0};
-    std::vector<iotdb::tsfile::page> _pages;
-    uint64_t _hash_code{0};
-
+/// @brief Class that holds the responsibility to model a chunk
+///
+class Chunk {
    public:
-    chunk(const iotdb::tsfile::chunk_header& header, const std::byte& marker);
-    friend bool operator==(const chunk& lhs, const chunk& rhs);
-    friend bool operator<(const chunk& lhs, const chunk& rhs);
-    friend bool operator==(const chunk& lhs, const chunk& rhs);
+    using iterator = std::vector<iotdb::tsfile::Page>::iterator;
+    using const_iterator = std::vector<iotdb::tsfile::Page>::const_iterator;
+    using reverse_iterator = std::vector<iotdb::tsfile::Page>::reverse_iterator;
+    using const_reverse_iterator = std::vector<iotdb::tsfile::Page>::const_reverse_iterator;
+    using UniquePagePtr = std::unique_ptr<iotdb::tsfile::Page>;
+    using Byte = iotdb::tsfile::common::Byte;
 
-    // getter
-    chunk_header header() const noexcept;
-    std::byte marker() const noexcept;
-    // add a page to a chunk.
-    void add_page(iotdb::tsfile::page&& page);
-    bool remove_page(const iotdb::tsfile::page& page);
-    // page interator
-    page_iterator begin();
-    page_iterator end();
-    const_page_iterator cbegin() const;
-    const_page_iterator cend() const;
-    reverse_page_iterator rbegin();
-    reverse_page_iterator rend();
-    const_reverse_page_iterator crbegin() const;
-    const_reverse_page_iterator crend() const;
-    uint64_t hash_code() const;
+    ///
+    /// @brief Constructor
+    /// @param header header of the chunk
+    /// @param marker marker
+    ///
+    Chunk(iotdb::tsfile::ChunkHeader&& header, const Byte& marker);
+    ///
+    /// @brief Equality comparison operator
+    ///
+    template <Hashable>
+    friend bool operator==(const Hashable auto& lhs, const Hashable auto& rhs);
+    ///
+    /// @brief Ordering comparison operator
+    template <Hashable>
+    friend bool operator>(const Hashable auto& lhs, const Hashable auto& rhs);
+
+    ///
+    ///  @brief Return the header.
+    ///  @return the header of chunk
+    ChunkHeader Header() const noexcept;
+    ///
+    /// @brief Return the file marker
+    /// @return marker of the chunk
+    Byte Marker() const noexcept;
+    ///
+    /// @brief Add a page to the chunk.
+    /// @param page to add.
+    ///
+    void AddPage(iotdb::tsfile::Page&& page);
+    ///
+    /// @brief Remove a page from a chunk
+    /// @param page to remove.
+    bool RemovePage(const iotdb::tsfile::Page& page);
+    ///
+    /// @brief Page forward iterator
+    ///
+    iterator begin();
+    ///
+    /// @brief Page forward  mark iterator
+    ///
+    iterator end();
+    ///
+    /// @brief Page const forward iterator
+    ///
+    const_iterator cbegin() const;
+    ///
+    /// @brief Page forward  mark iterator
+    ///
+    const_iterator cend() const;
+    ///
+    /// @brief Page backward iterator
+    ///
+    reverse_iterator rbegin();
+    ///
+    /// @brief Page backward mark iterator
+    ///
+    reverse_iterator rend();
+    ///
+    /// @brief Reverse const forward iterator
+    ///
+    const_reverse_iterator crbegin() const;
+    ///
+    /// @brief Reverse const forward iterator
+    ///
+    const_reverse_iterator crend() const;
+    /// @brief Object hash
+    ///
+    uint64_t HashCode() const;
+
+   private:
+    iotdb::tsfile::ChunkHeader header_;
+    iotdb::tsfile::common::Byte marker_{0};
+    std::vector<iotdb::tsfile::Page> pages_;
+    uint64_t hash_code_{0};
 };
 
 }  // namespace iotdb::tsfile

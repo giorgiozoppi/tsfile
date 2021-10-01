@@ -16,6 +16,8 @@
 *
 */
 
+#if 0
+
 #include "tsfile/common/hasher.h"
 
 #include <cstdint>
@@ -97,3 +99,5 @@ uint64_t hasher::compute() {
     return output.data;
 }
 }  // namespace iotdb::tsfile
+#endif
+

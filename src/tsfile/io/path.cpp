@@ -15,6 +15,7 @@
 * limitations under the License.
 *
 */
+#if 0
 #include "tsfile/io/path.h"
 
 namespace iotdb::tsfile::io {
@@ -29,3 +30,5 @@ std::string path::str() const { return _fullpath.c_str(); }
 std::string path::measurement() const { return _measurement; }
 void path::set_measurement(const std::string& measure) { _measurement = measure; }
 }  // namespace iotdb::tsfile::io
+
+#endif

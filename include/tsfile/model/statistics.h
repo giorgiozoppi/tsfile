@@ -17,22 +17,38 @@
 */
 #ifndef IOTDB_NATIVE_STATISTICS_H
 #define IOTDB_NATIVE_STATISTICS_H
+#include <tsfile/common/bytebuffer.h>
+#include <tsfile/common/concepts.h>
+#include <tsfile/model/datatypes.h>
+
 #include <optional>
 
-#include "tsfile/common/bytebuffer.h"
-#include "tsfile/common/tsconcepts.h"
-#include "tsfile/model/datatypes.h"
-
 namespace iotdb::tsfile {
+template <typename T>
+concept StatLike = requires(T a) {
+    std::declval<T>().Count();
+    std::declval<T>().StartTime();
+    std::declval<T>().MinValue();
+    std::declval<T>().MaxValue();
+    std::declval<T>().FirstValue();
+    std::declval<T>().LastValue();
+    std::declval<T>().SumValue();
+    std::declval<T>().Extreme();
+};
+
+template <typename T>
+concept StatLikeHashable = StatLike<T> && Hashable<T>;
 
 template <StatLikeHashable StatisticsImpl>
 struct BaseStatistics : StatisticsImpl {};
 
+///
+/// @brief Generic class for statistics.
 template <typename T>
 class GenericStatistics {
-    long _count;
-    long _start_time;
-    long _end_time;
+    int64_t _count;
+    int64_t _start_time;
+    int64_t _end_time;
     std::optional<T> _min_value;
     std::optional<T> _max_value;
     std::optional<T> _first_value;
@@ -42,79 +58,105 @@ class GenericStatistics {
     uint64_t _hashcode;
 
    public:
-    long count() const { return _count; }
-    long start_time() const { return _start_time; }
-    long end_time() const { return _end_time; }
-    auto min_value() const { return _min_value; }
-    auto max_value() const { return _max_value; }
+    auto Count() const { return _count; }
+    auto StartTime() const { return _start_time; }
+    auto EndTime() const { return _end_time; }
+    auto MinValue() const { return _min_value; }
+    auto MaxValue() const { return _max_value; }
 
-    auto first_value() const { return _first_value; }
-    auto last_value() const { return _last_value; }
-    auto sum_value() const { return _sum_value; }
-    auto extreme() const { return _extreme; }
+    auto FirstValue() const { return _first_value; }
+    auto LastValue() const { return _last_value; }
+    auto SumValue() const { return _sum_value; }
+    auto Extreme() const { return _extreme; }
 
-    uint64_t hash_code() { return _hashcode; };
+    uint64_t HashCode() { return _hashcode; };
 };
+
 using generic_int = GenericStatistics<int>;
-using statistics_int = BaseStatistics<generic_int>;
+using IntStatistics = BaseStatistics<generic_int>;
 using generic_float = GenericStatistics<float>;
-using statistics_float = BaseStatistics<generic_float>;
+using FloatStatistics = BaseStatistics<generic_float>;
 using generic_double = GenericStatistics<double>;
-using statistics_double = BaseStatistics<generic_double>;
-using generic_binary = GenericStatistics<iotdb::common::bytebuffer>;
-using statistics_binary = BaseStatistics<generic_binary>;
+using DoubleStatistics = BaseStatistics<generic_double>;
+using generic_binary = GenericStatistics<iotdb::tsfile::common::ByteBuffer>;
+using BinaryStatistics = BaseStatistics<generic_binary>;
 
-class stat_container {
-    statistics_int _integer_stat;
-    statistics_float _float_stat;
-    statistics_double _double_stat;
-    statistics_binary _binary_stat;
+///
+/// @brief Statistics map that contains all kind of statistics.
+///
 
-    ts_datatype _type;
+class StatisticsMap {
+    IntStatistics integer_stat_;
+    FloatStatistics float_stat_;
+    DoubleStatistics double_stat_;
+    BinaryStatistics binary_stat_;
+
+    TsDataType type_;
 
    public:
-    stat_container(const ts_datatype& data) : _type(data) {}
-    stat_container(stat_container&& m) {
-        _type = std::move(m._type);
-        _integer_stat = std::move(m._integer_stat);
-        _float_stat = std::move(m._float_stat);
+    ///
+    /// @brief Constructor
+    /// @param data data type to set. A TsDataType can be [ BOOLEAN, INT32, INT64, FLOAT, DOUBLE,
+    /// TEXT, BINARY ]
+    ///
+    StatisticsMap(const TsDataType& data) : type_(data) {}
+    ///
+    /// @brief Constructor
+    ///
+    StatisticsMap(StatisticsMap&& m) {
+        type_ = std::move(m.type_);
+        integer_stat_ = std::move(m.integer_stat_);
+        float_stat_ = std::move(m.float_stat_);
+        double_stat_ = std::move(m.double_stat_);
+        binary_stat_ = std::move(m.binary_stat_);
     }
-    stat_container(const stat_container& m) {
-        _type = m._type;
-        _integer_stat = m._integer_stat;
-        _float_stat = m._float_stat;
+    ///
+    /// @brief Constructor
+    ///
+    StatisticsMap(const StatisticsMap& m) {
+        type_ = m.type_;
+        integer_stat_ = m.integer_stat_;
+        float_stat_ = m.float_stat_;
+        double_stat_ = m.double_stat_;
+        binary_stat_ = m.binary_stat_;
     }
-    stat_container& operator=(const stat_container& m) {
+    ///
+    /// @brief Constructor
+    ///
+    StatisticsMap& operator=(const StatisticsMap& m) {
         if (this != &m) {
-            _type = m._type;
-            _integer_stat = m._integer_stat;
-            _float_stat = m._float_stat;
+            type_ = m.type_;
+            integer_stat_ = m.integer_stat_;
+            float_stat_ = m.float_stat_;
+            double_stat_ = m.double_stat_;
+            binary_stat_ = m.binary_stat_;
         }
         return *this;
     }
-
-    ~stat_container() = default;
+    ///
+    /// Get the value
+    ///
     template <StatLikeHashable StatisticsImpl>
     StatisticsImpl value() {
-        switch (_type) {
-            case ts_datatype::INT32: {
-                return _integer_stat;
+        switch (type_) {
+            case TsDataType::INT32: {
+                return integer_stat_;
             }
-            case ts_datatype::DOUBLE: {
-                return _double_stat;
+            case TsDataType::DOUBLE: {
+                return double_stat_;
             }
 
-            case ts_datatype::BINARY: {
-                return _binary_stat;
+            case TsDataType::BINARY: {
+                return binary_stat_;
             }
-            case ts_datatype::FLOAT: {
-                return _float_stat;
+            case TsDataType::FLOAT: {
+                return float_stat_;
             }
             default:
-                return _float_stat;
+                return float_stat_;
         }
 
-        return _integer_stat;
+        return integer_stat_;
     }
 };
 

@@ -18,6 +18,7 @@
 
 #ifndef IOTDB_NATIVE_TSFILE_H
 #define IOTDB_NATIVE_TSFILE_H
+#if 0
 #include <array>
 #include <cstddef>
 #include <memory>
@@ -40,5 +41,6 @@ class tsfile {
     const std::string magic_string() const { return _magic_string; }
 };
 }  // namespace iotdb::tsfile
+#endif
 
 #endif  // TSFILE_TSFILE_H

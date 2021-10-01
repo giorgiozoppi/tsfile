@@ -17,7 +17,7 @@
 */
 #ifndef IOTDB__TSFILE__READ__SEQUENCE_READER__H
 #define IOTDB__TSFILE__READ__SEQUENCE_READER__H
-
+#if 0
 #include <filesystem>
 #include <optional>
 
@@ -117,3 +117,4 @@ class sequence_reader {
 }  // namespace iotdb::tsfile
 
 #endif  // IOTDB__TSFILE__READ__SEQUENCE_READER__H
+#endif

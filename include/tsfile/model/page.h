@@ -18,20 +18,36 @@
 
 #ifndef IOTDB_NATIVE_PAGE_H
 #define IOTDB_NATIVE_PAGE_H
+#include <tsfile/common/common.h>
+#include <tsfile/model/page_header.h>
+
 #include <memory>
 #include <vector>
 
-#include "datatypes.h"
-#include "page_header.h"
 namespace iotdb::tsfile {
-class page {
-    long _hash_code{0};
-    page_header _page_header;
+///
+/// @brief A Page stores a sequence of timeseries.
+/// It is the smallest unit in which a data block is deserialized.
+/// It contains a PageHeader and the actual data (encoded time-value pairs).
+///
+class Page {
+    long hash_code_{0};
+    PageHeader _page_header;
 
    public:
-    page(page_header&& header) { _page_header = std::move(header); }
-    page_header header() const { return std::move(_page_header); }
-    uint64_t hash_code() const { return _hash_code; }
+    ///
+    /// @brief Constructor
+    /// @param header  a page header
+    ///
+    Page(PageHeader&& header) { _page_header = std::move(header); }
+    ///
+    /// @brief Page Header
+    ///
+    PageHeader Header() const { return std::move(_page_header); }
+    ///
+    /// @brief HashCode of the page
+    ///
+    uint64_t HashCode() const { return hash_code_; }
 };
 }  // namespace iotdb::tsfile
 #endif

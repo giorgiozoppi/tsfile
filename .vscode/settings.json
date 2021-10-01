@@ -1,4 +1,5 @@
 {
+     "doxygen_runner.configuration_file_override": "${workspaceFolder}/some/path/to/your/documentation/Doxyfile",
     "files.associations": {
         "array": "cpp",
         "limits": "cpp",

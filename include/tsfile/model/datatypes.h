@@ -19,17 +19,26 @@
 #ifndef IOTDB_NATIVE_METADATA_H
 #define IOTDB_NATIVE_METADATA_H
 namespace iotdb::tsfile {
-enum class endian_type { IOTDB_BIG_ENDIAN, IOTDB_LITTLE_ENDIAN };
+enum class EndianType { IOTDB_NATIVE_BIG_ENDIAN, IOTDB_NATIVE_LITTLE_ENDIAN };
 
 #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-constexpr endian_type byte_order = endian_type::IOTDB_LITTLE_ENDIAN;
+constexpr EndianType byte_order = EndianType::IOTDB_NATIVE_LITTLE_ENDIAN;
 #else
-constexpr endian_type byte_order = endian_type::IOTDB_BIG_ENDIAN;
+constexpr EndianType byte_order = EndianType::IOTDB_NATIVE_BIG_ENDIAN;
 #endif
+///
+/// @brief Supported compression types
+///
+enum class TsCompressionType { UNCOMPRESSED, SNAPPY, GZIP, LZO, SDT, PAA, PLA };
+///
+/// @brief Supported data type for the time series
+///
+enum class TsDataType { BOOLEAN, INT32, INT64, FLOAT, DOUBLE, TEXT, BINARY };
+///
+/// @brief Supported encoding type
+///
+enum class TsEncoding { PLAIN, PLAIN_DICTIONARY, RLE, DIFF, TS_2DIFF, BITMAP, GORILLA, REGULAR };
 
-enum class compression_type { UNCOMPRESSED, SNAPPY, GZIP, LZO, SDT, PAA, PLA };
-enum class ts_datatype { BOOLEAN, INT32, INT64, FLOAT, DOUBLE, TEXT, BINARY };
-enum class ts_encoding { PLAIN, PLAIN_DICTIONARY, RLE, DIFF, TS_2DIFF, BITMAP, GORILLA, REGULAR };
 }  // namespace iotdb::tsfile
 
 #endif  // IOTDB_NATIVE_METADATA_H
