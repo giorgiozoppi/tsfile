@@ -41,10 +41,10 @@ class MetadataIndexNode {
     using const_iterator = typename internal_buffer::const_iterator;
 
    private:
-    std::vector<MetadataIndexEntry> children;
-    int64_t end_offset;
+    std::vector<MetadataIndexEntry> children_;
+    int64_t end_offset_;
 
-    MetadataIndexNodeType node_type;
+    MetadataIndexNodeType node_type_;
 };
 
 ///
@@ -59,5 +59,5 @@ class TsFileMetadata {
     // offset of MetaMarker.SEPARATOR
     uint64_t meta_offset_;
 };
-}  // namespace iotdb::tsfile
+}  // namespace tsfile
 #endif

@@ -13,5 +13,5 @@ inline bool RemoveUsingHash(std::vector<Hashable>& container, const Hashable& va
                               [=](auto current) { return current.HashCode() == hash_value; });
     return res != container.end();
 }
-}  // namespace iotdb::tsfile::common
+}  // namespace tsfile
 #endif

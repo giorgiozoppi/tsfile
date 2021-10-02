@@ -1,4 +1,4 @@
-FILES=$(shell find ./include -iname '*.cpp')
+FILES=$(shell find ./include -iname '*.cc')
 HEADER_FILES=$(shell find ./include -iname '*.h')
 PHONY: all
 all: format build
@@ -57,7 +57,16 @@ format:
 	@clang-format -i $(FILES)
 	@clang-format -i $(HEADER_FILES)
 
-.PHONY: view-cover
-view_cover:
+.PHONY: test
+
+test:
+	./build/unit_test
+
+.PHONY: viewcoverage
+viewcoverage:
+	lcov --capture --directory ./build --output-file coverage.info
 	firefox $(shell pwd)/build/coverage/index.html
 
+.PHONY: viewdocs
+viewdocs:
+	firefox $(shell pwd)/build/docs/html/index.html

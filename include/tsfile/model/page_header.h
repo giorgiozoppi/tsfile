@@ -87,5 +87,5 @@ class PageHeader {
     TsDataType page_type_{TsDataType::INT32};
     unique_statistics_ptr stat_{nullptr};
 };
-}  // namespace iotdb::tsfile
+}  // namespace tsfile
 #endif

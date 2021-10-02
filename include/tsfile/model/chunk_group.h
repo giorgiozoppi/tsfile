@@ -102,8 +102,7 @@ class ChunkGroup {
     std::vector<Chunk> chunks_;
     Byte byte_delimiter_;
     ChunkGroupFooter footer_;
-   
 };
-}  // namespace iotdb::tsfile
+}  // namespace tsfile
 
 #endif  // TSFILE_CHUNK_GROUP_H

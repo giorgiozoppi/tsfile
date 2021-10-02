@@ -134,5 +134,5 @@ constexpr Byte kVersion = Byte{3};
 constexpr Byte kOperationIndexRange = Byte{4};
 constexpr Byte kOnlyOnePageChunkHeader = Byte{5};
 
-}  // namespace iotdb::tsfile::common
+}  // namespace tsfile
 #endif

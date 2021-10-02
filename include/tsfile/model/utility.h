@@ -6,14 +6,12 @@
 #include "tsfile/common/common.h"
 #include "tsfile/model/chunk_group.h"
 
-
 namespace tsfile {
 
 inline std::unique_ptr<ChunkGroup> make_unique_chunk_group(const std::string_view& device_id,
                                                            long data_size) {
     auto footer = ChunkGroupFooter(device_id, data_size, 0);
-    return std::make_unique<ChunkGroup>(std::move(footer),
-                                        kChunkGroupFooter);
+    return std::make_unique<ChunkGroup>(std::move(footer), kChunkGroupFooter);
 }
 
 ///
@@ -33,9 +31,8 @@ struct ChunkContext {
 /// @brief Factory method for the chunk
 ///
 inline Chunk make_chunk(const ChunkContext& context) {
-    ChunkHeader temp_chunk_header{context.MeasurementID, context.DataSize,
-                                                 context.DataType,      context.CompressionType,
-                                                 context.Encoding,      context.NumberOfPages};
+    ChunkHeader temp_chunk_header{context.MeasurementID,   context.DataSize, context.DataType,
+                                  context.CompressionType, context.Encoding, context.NumberOfPages};
 
     return Chunk(std::move(temp_chunk_header), context.ChunkMarker);
 }
@@ -66,5 +63,5 @@ inline std::unique_ptr<Page> make_unique_page(int uncompressed_size, int compres
     return std::make_unique<Page>(tmp);
 }
 
-}  // namespace iotdb::tsfile
+}  // namespace tsfile
 #endif

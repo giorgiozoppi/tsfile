@@ -6,31 +6,50 @@
 
 #include "catch2/catch.hpp"
 
-
-
 namespace tsfile {
 
 constexpr int kBitMapSize = 256;
 
-SCENARIO("Should check boundaries", "[bytebuffer]") {
+SCENARIO("Should creation and copy be fine", "[bitmap]") {
+    GIVEN("A bytebuffer with predefined size of 256 bits") {
+        BitMap m{256};
+        WHEN("we mark 200th bit and copy") {
+            m.Mark(200);
+            BitMap k(m);
+            BitMap f{1};
+            f = m;
+            THEN("the copy shall be have the same bit set") {
+                REQUIRE(k[200].Value() == 1);
+                REQUIRE(f[200].Value() == 1);
+            }
+            WHEN("we mark the 50th bit and move") {
+                THEN("the transferred ownership is respected") {
+                    m.Reset();
+                    m.Mark(100);
+                    BitMap g = std::move(m);
+                    BitMap h{1};
+                    REQUIRE(g[100].Value() == 1);
+                    h = g;
+                    REQUIRE(h[100].Value() == 1);
+                }
+            }
+        }
+    }
+}
+SCENARIO("Should check boundaries", "[bitmap]") {
     GIVEN("A bytebuffer with predefined size of 256 bits") {
         BitMap map{kBitMapSize};
         WHEN("we ask to set the bit 300") {
             auto result = map.Mark(300);
             THEN("we get out of range error") { REQUIRE(BitError::OUT_RANGE == result.Result()); }
         }
-    }
-}
-SCENARIO("Should be able to set the bit correctly", "[bytebuffer]") {
-    GIVEN("A bytebuffer with predefined size of 256 bits") {
-        BitMap map{kBitMapSize};
-        WHEN("we ask to set the bit 300") {
+        WHEN("we ask to set the bit 200") {
             auto result = map.Mark(200);
-            THEN("we get out of range error") { REQUIRE(BitError::OK == result.Result()); }
+            THEN("we get ok") { REQUIRE(BitError::OK == result.Result()); }
         }
     }
 }
-SCENARIO("Should be able to mark all bits", "[bytebuffer]") {
+SCENARIO("Should be able to mark all bits", "[bitmap]") {
     GIVEN("A bytebuffer with predefined size of 256 bits") {
         BitMap map{kBitMapSize};
         WHEN("we ask to set to mark all") {
@@ -45,7 +64,7 @@ SCENARIO("Should be able to mark all bits", "[bytebuffer]") {
         }
     }
 }
-SCENARIO("Should be able to mark and unmark all bits", "[bytebuffer]") {
+SCENARIO("Should be able to mark and unmark all bits", "[bitmap]") {
     GIVEN("A bytebuffer with predefined size of 256 bits") {
         BitMap map{kBitMapSize};
         WHEN("we ask to set to mark all") {
@@ -61,14 +80,12 @@ SCENARIO("Should be able to mark and unmark all bits", "[bytebuffer]") {
         WHEN("we ask to mark and reset") {
             map.MarkAll();
             map.Reset();
-            THEN("we get zero value at an arbitrary given bit") {
-                REQUIRE(0 == map[10].Value());
-            }
+            THEN("we get zero value at an arbitrary given bit") { REQUIRE(0 == map[10].Value()); }
         }
     }
 }
 
-SCENARIO("Should be able to get the bit correctly", "[bytebuffer]") {
+SCENARIO("Should be able to get the bit correctly", "[bitmap]") {
     GIVEN("A bytebuffer with predefined size of 256 bits") {
         BitMap map{kBitMapSize};
         WHEN("we ask to get/set several bits") {
@@ -84,4 +101,4 @@ SCENARIO("Should be able to get the bit correctly", "[bytebuffer]") {
         }
     }
 }
-}  // namespace iotdb::tsfile::test
+}  // namespace tsfile

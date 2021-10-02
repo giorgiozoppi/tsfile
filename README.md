@@ -30,6 +30,12 @@ First, build the project with coverage and run the test suite
 - ``` gem install coveralls-lcov```  (you need ruby)
 - ``` coveralls-lcov --repo-token "COVERALL_TOKEN" coverage.info```
 
+To see the coverage locally:
+```
+user@host:~/tsfile$ make debug
+user@host:~/tsfile$ make cover
+user@host:~/tsfile$ make viewcoverage 
+```
 ## Features
 The features of TsFile is as follow:
 
@@ -66,6 +72,7 @@ We support doxygen in the Release target. So you might need to install:
 ```
 $ apt-get install doxygen graphviz
 $ make docs
+$ make viewdocs
 ```
 The above command will generate the html documentation in build.
 

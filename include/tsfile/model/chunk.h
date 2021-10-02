@@ -39,18 +39,17 @@ class Chunk {
     using reverse_iterator = std::vector<Page>::reverse_iterator;
     using const_reverse_iterator = std::vector<Page>::const_reverse_iterator;
     using unique_page_ptr = std::unique_ptr<Page>;
-    
 
-   ///nsructor
-    /// @paramth chunk
-   ///
-    Chunk(ChunkHeader&& header, const Byte& marker);
+    /// nsructor
+    ///  @paramth chunk
+    ///
+    explicit Chunk(ChunkHeader&& header, const Byte& marker);
     ///
     /// @brief Equality comparison operator
     ///
     template <Hashable>
     friend bool operator==(const Hashable auto& lhs, const Hashable auto& rhs);
-   ///
+    ///
     /// @brief Ordering comparison operator
     template <Hashable>
     friend bool operator>(const Hashable auto& lhs, const Hashable auto& rhs);
@@ -75,7 +74,7 @@ class Chunk {
     //// @brief Page forward iterator
     ///
     iterator begin();
-    ///geforward  mark iterator
+    /// geforward  mark iterator
     ///
     iterator end();
     ///
@@ -111,9 +110,7 @@ class Chunk {
     Byte marker_{0};
     std::vector<Page> pages_;
     uint64_t hash_code_;
-
 };
 
-}   // TSFILE_CHUNK_H
+}  // namespace tsfile
 #endif
-

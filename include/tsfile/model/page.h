@@ -31,23 +31,24 @@ namespace tsfile {
 /// It contains a PageHeader and the actual data (encoded time-value pairs).
 ///
 class Page {
-    long hash_code_{0};
-    PageHeader _page_header;
-
    public:
     ///
     /// @brief Constructor
     /// @param header  a page header
     ///
-    Page(PageHeader&& header) { _page_header = std::move(header); }
+    Page(PageHeader&& header) { page_header_ = std::move(header); }
     ///
     /// @brief Page Header
     ///
-    PageHeader Header() const { return std::move(_page_header); }
+    PageHeader Header() const { return std::move(page_header_); }
     ///
     /// @brief HashCode of the page
     ///
     uint64_t HashCode() const { return hash_code_; }
+
+   private:
+    long hash_code_{0};
+    PageHeader page_header_;
 };
-}  // namespace iotdb::tsfile
+}  // namespace tsfile
 #endif

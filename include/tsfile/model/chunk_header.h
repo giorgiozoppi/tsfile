@@ -124,5 +124,5 @@ class ChunkHeader {
     int num_of_pages_;
     uint64_t hashcode_;
 };
-}  // namespace iotdb::tsfile
+}  // namespace tsfile
 #endif  // IOTDB_NATIVE_CHUNK_HEADER_H

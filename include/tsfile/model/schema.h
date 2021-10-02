@@ -80,5 +80,5 @@ class schema {
     std::map<std::filesystem::path, std::unique_ptr<measurement_schema>> _registered_timeseries;
 };
 #endif
-}  // namespace iotdb::tsfile
+}  // namespace tsfile
 #endif

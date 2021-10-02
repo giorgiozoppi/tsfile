@@ -53,11 +53,11 @@ class ChunkGroupFooter {
     /// @return number of chunks
     ///
     int NumberOfChunks() const;
-    
+
    private:
     std::string device_id_;
     long data_size_;
     int number_of_chunks_;
 };
-}  // namespace iotdb::tsfile
+}  // namespace tsfile
 #endif  // IOTDB_NATIVE_CHUNK_GROUP_FOOTER_H

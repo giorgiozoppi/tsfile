@@ -214,6 +214,6 @@ bool operator==(const BasicByteBuffer<T>& lhs, const BasicByteBuffer<T>& rhs) {
     return lhs.hex().compare(rhs.hex()) == 0;
 }
 typedef BasicByteBuffer<Byte> ByteBuffer;
-}  // namespace iotdb::tsfile::common
+}  // namespace tsfile
 
 #endif  // IOTDB__UTIL__BYTEBUFFER
