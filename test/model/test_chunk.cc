@@ -26,8 +26,7 @@
 
 
 
-using namespace iotdb::tsfile;
-using namespace iotdb::tsfile::common;
+namespace tsfile  {
 
 
 
@@ -62,4 +61,5 @@ SCENARIO("Chunk should be initialized correctly", "[model]]") {
             }
         }
     }
+}
 }

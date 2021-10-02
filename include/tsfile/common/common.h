@@ -20,7 +20,7 @@
 #include <string_view>
 #include <vector>
 
-namespace iotdb::tsfile::common {
+namespace tsfile {
 typedef uint8_t Byte;
 /// Endianess
 

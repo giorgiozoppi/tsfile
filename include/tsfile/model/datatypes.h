@@ -18,7 +18,7 @@
 
 #ifndef IOTDB_NATIVE_METADATA_H
 #define IOTDB_NATIVE_METADATA_H
-namespace iotdb::tsfile {
+namespace tsfile {
 enum class EndianType { IOTDB_NATIVE_BIG_ENDIAN, IOTDB_NATIVE_LITTLE_ENDIAN };
 
 #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__

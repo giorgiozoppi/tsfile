@@ -24,7 +24,7 @@
 #include <memory>
 #include <vector>
 
-namespace iotdb::tsfile {
+namespace tsfile {
 ///
 /// @brief A Page stores a sequence of timeseries.
 /// It is the smallest unit in which a data block is deserialized.

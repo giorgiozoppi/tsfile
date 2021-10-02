@@ -18,7 +18,7 @@
 
 #include <tsfile/model/page_header.h>
 
-namespace iotdb::tsfile {
+namespace tsfile {
 
 PageHeader::PageHeader() = default;
 
@@ -74,11 +74,11 @@ int PageHeader::UncompressedSize() const { return uncompressed_size_; }
 
 int PageHeader::CompressedSize() const { return compressed_size_; }
 
-void PageHeader::SetStatistics(UniqueStatisticsPtr&& statistics) noexcept {
+void PageHeader::SetStatistics(unique_statistics_ptr&& statistics) noexcept {
     stat_ = std::move(statistics);
 }
 
-UniqueStatisticsPtr PageHeader::Statistics() const {
+unique_statistics_ptr PageHeader::Statistics() const {
     auto tmp = std::make_unique<StatisticsMap>(*stat_);
     return tmp;
 }

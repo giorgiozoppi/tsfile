@@ -19,8 +19,8 @@
 #include <tsfile/common/algorithm.h>
 #include <tsfile/model/chunk_group.h>
 
-namespace iotdb::tsfile {
-iotdb::tsfile::common::Byte ChunkGroup::Delimiter() const { return byte_delimiter_; }
+namespace tsfile {
+Byte ChunkGroup::Delimiter() const { return byte_delimiter_; }
 ChunkGroupFooter ChunkGroup::Footer() const { return footer_; }
 ChunkGroup::iterator ChunkGroup::begin() { return chunks_.begin(); }
 ChunkGroup::iterator ChunkGroup::end() { return chunks_.end(); }
@@ -30,7 +30,7 @@ ChunkGroup::const_iterator ChunkGroup::cbegin() const { return chunks_.cbegin();
 ChunkGroup::const_iterator ChunkGroup::cend() const { return chunks_.cend(); }
 void ChunkGroup::AddChunk(Chunk&& chunk) { chunks_.push_back(std::move(chunk)); }
 bool ChunkGroup::RemoveChunk(const Chunk& input) {
-    return iotdb::tsfile::common::RemoveUsingHash(chunks_, input);
+    return RemoveUsingHash(chunks_, input);
 }
 
 ChunkGroup::const_reverse_iterator ChunkGroup::crbegin() const { return chunks_.crbegin(); }

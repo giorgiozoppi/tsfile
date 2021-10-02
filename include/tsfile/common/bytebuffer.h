@@ -27,7 +27,7 @@
 #include <sstream>
 #include <vector>
 
-namespace iotdb::tsfile::common {
+namespace tsfile {
 
 using std::istream;
 using std::ostream;

@@ -6,15 +6,14 @@
 #include "tsfile/common/common.h"
 #include "tsfile/model/chunk_group.h"
 
-using iotdb::tsfile::common::Byte;
 
-namespace iotdb::tsfile {
+namespace tsfile {
 
 inline std::unique_ptr<ChunkGroup> make_unique_chunk_group(const std::string_view& device_id,
                                                            long data_size) {
     auto footer = ChunkGroupFooter(device_id, data_size, 0);
     return std::make_unique<ChunkGroup>(std::move(footer),
-                                        iotdb::tsfile::common::kChunkGroupFooter);
+                                        kChunkGroupFooter);
 }
 
 ///
@@ -33,19 +32,19 @@ struct ChunkContext {
 ///
 /// @brief Factory method for the chunk
 ///
-inline iotdb::tsfile::Chunk make_chunk(const ChunkContext& context) {
-    iotdb::tsfile::ChunkHeader temp_chunk_header{context.MeasurementID, context.DataSize,
+inline Chunk make_chunk(const ChunkContext& context) {
+    ChunkHeader temp_chunk_header{context.MeasurementID, context.DataSize,
                                                  context.DataType,      context.CompressionType,
                                                  context.Encoding,      context.NumberOfPages};
 
-    return iotdb::tsfile::Chunk(std::move(temp_chunk_header), context.ChunkMarker);
+    return Chunk(std::move(temp_chunk_header), context.ChunkMarker);
 }
 
 ///
 /// @brief Factory method for an exclusive ownership Chunk
 ///
-inline std::unique_ptr<iotdb::tsfile::Chunk> make_unique_chunk(const ChunkContext& context) {
-    return std::make_unique<iotdb::tsfile::Chunk>(make_chunk(context));
+inline std::unique_ptr<Chunk> make_unique_chunk(const ChunkContext& context) {
+    return std::make_unique<Chunk>(make_chunk(context));
 }
 
 /// @brief Factory method for the page

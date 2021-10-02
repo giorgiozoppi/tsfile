@@ -6,12 +6,9 @@
 
 #include "catch2/catch.hpp"
 
-using iotdb::tsfile::common::BitError;
-using iotdb::tsfile::common::BitMap;
-using iotdb::tsfile::common::Byte;
-using iotdb::tsfile::common::ValueResult;
 
-namespace iotdb::tsfile::test {
+
+namespace tsfile {
 
 constexpr int kBitMapSize = 256;
 

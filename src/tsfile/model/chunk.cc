@@ -19,20 +19,20 @@
 #include <tsfile/common/algorithm.h>
 #include <tsfile/model/chunk.h>
 
-namespace iotdb::tsfile {
+namespace tsfile {
 
-Chunk::Chunk(iotdb::tsfile::ChunkHeader&& header, const iotdb::tsfile::common::Byte& marker)
+Chunk::Chunk(ChunkHeader&& header, const Byte& marker)
     : header_(std::move(header)), marker_(marker) {}
 
 ChunkHeader Chunk::Header() const noexcept { return header_; }
-iotdb::tsfile::common::Byte Chunk::Marker() const noexcept { return marker_; }
-void Chunk::AddPage(iotdb::tsfile::Page&& source) {
+Byte Chunk::Marker() const noexcept { return marker_; }
+void Chunk::AddPage(Page&& source) {
     pages_.push_back(std::move(source));
     header_.SetNumOfPages(header_.NumOfPages() +1);
     hash_code_ = 10219219280182L;
 }
-bool Chunk::RemovePage(const iotdb::tsfile::Page& page) {
-    return iotdb::tsfile::common::RemoveUsingHash(pages_, page);
+bool Chunk::RemovePage(const Page& page) {
+    return RemoveUsingHash(pages_, page);
 }
 Chunk::iterator Chunk::begin() { return pages_.begin(); }
 Chunk::iterator Chunk::end() { return pages_.end(); }

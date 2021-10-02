@@ -24,7 +24,7 @@
 #include <cstring>
 #include <memory>
 
-namespace iotdb::tsfile::common {
+namespace tsfile {
 ///
 /// @brief A bitmap is a variable array of bits. It can be constructed from a generic set of bytes.
 ///
@@ -108,5 +108,5 @@ class BitMap {
     std::unique_ptr<Byte[]> bytes_;
 };
 
-}  // namespace iotdb::tsfile::common
+}  // namespace tsfile
 #endif

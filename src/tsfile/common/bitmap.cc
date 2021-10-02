@@ -20,7 +20,7 @@
 #include <cmath>
 #include <iterator>
 
-namespace iotdb::tsfile::common {
+namespace tsfile {
 
 BitMap::BitMap(const size_t& siz)  {
     auto num_bytes = std::round(siz / 8.0);

@@ -23,7 +23,7 @@
 
 #include <optional>
 
-namespace iotdb::tsfile {
+namespace tsfile {
 template <typename T>
 concept StatLike = requires(T a) {
     std::declval<T>().Count();
@@ -78,7 +78,7 @@ using generic_float = GenericStatistics<float>;
 using FloatStatistics = BaseStatistics<generic_float>;
 using generic_double = GenericStatistics<double>;
 using DoubleStatistics = BaseStatistics<generic_double>;
-using generic_binary = GenericStatistics<iotdb::tsfile::common::ByteBuffer>;
+using generic_binary = GenericStatistics<ByteBuffer>;
 using BinaryStatistics = BaseStatistics<generic_binary>;
 
 ///
@@ -160,5 +160,5 @@ class StatisticsMap {
     }
 };
 
-}  // namespace iotdb::tsfile
+}  // namespace tsfile
 #endif

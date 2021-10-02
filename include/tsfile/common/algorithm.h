@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <vector>
 
-namespace iotdb::tsfile::common {
+namespace tsfile {
 template <typename Hashable>
 inline bool RemoveUsingHash(std::vector<Hashable>& container, const Hashable& value) {
     auto hash_value = value.HashCode();

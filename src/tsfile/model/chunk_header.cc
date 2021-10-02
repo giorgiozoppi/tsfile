@@ -18,7 +18,7 @@
 
 #include "tsfile/model/chunk_header.h"
 
-namespace iotdb::tsfile {
+namespace tsfile {
 
 ChunkHeader::ChunkHeader(const std::string& measurementID, int dataSize, TsDataType dataType,
                          TsCompressionType compressionType, TsEncoding encoding, int numOfPages)

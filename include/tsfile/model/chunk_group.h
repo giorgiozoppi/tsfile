@@ -25,7 +25,7 @@
 #include <cstddef>
 #include <memory>
 #include <vector>
-namespace iotdb::tsfile {
+namespace tsfile {
 
 ///
 /// @brief A ChunkGroup stores the data of an entity for a period of time.
@@ -33,31 +33,31 @@ namespace iotdb::tsfile {
 ///
 class ChunkGroup {
    public:
-    using iterator = std::vector<iotdb::tsfile::Chunk>::iterator;
-    using reverse_iterator = std::vector<iotdb::tsfile::Chunk>::reverse_iterator;
-    using const_iterator = std::vector<iotdb::tsfile::Chunk>::const_iterator;
-    using const_reverse_iterator = std::vector<iotdb::tsfile::Chunk>::const_reverse_iterator;
+    using iterator = std::vector<Chunk>::iterator;
+    using reverse_iterator = std::vector<Chunk>::reverse_iterator;
+    using const_iterator = std::vector<Chunk>::const_iterator;
+    using const_reverse_iterator = std::vector<Chunk>::const_reverse_iterator;
     ///
     /// @brief Constructor
     /// @param group group footer
     /// @param delim chunk group delimiter.
     ///
-    ChunkGroup(iotdb::tsfile::ChunkGroupFooter&& group, iotdb::tsfile::common::Byte delim);
+    ChunkGroup(ChunkGroupFooter&& group, Byte delim);
     ///
     /// @brief  Return the chunk delimiter
     ///
     /// @return Chunk delimiter
-    iotdb::tsfile::common::Byte Delimiter() const;
+    Byte Delimiter() const;
     ///
     /// @brief  Add a new chunk to the chunkgroup, transfer ownership
     ///
     /// @return chunk Chunk
-    void AddChunk(iotdb::tsfile::Chunk&& chunk);
+    void AddChunk(Chunk&& chunk);
     ///
     /// @brief Remove a chunk from the chunkgroup
     ///
     /// @return true if it's removed.
-    bool RemoveChunk(const iotdb::tsfile::Chunk& chunk);
+    bool RemoveChunk(const Chunk& chunk);
     ///
     /// @brief Get the chunk group footer
     ///
@@ -99,8 +99,8 @@ class ChunkGroup {
     const_reverse_iterator crend() const;
 
    private:
-    std::vector<iotdb::tsfile::Chunk> chunks_;
-    iotdb::tsfile::common::Byte byte_delimiter_;
+    std::vector<Chunk> chunks_;
+    Byte byte_delimiter_;
     ChunkGroupFooter footer_;
    
 };

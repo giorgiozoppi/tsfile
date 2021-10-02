@@ -21,7 +21,7 @@
 #include <string>
 #include <string_view>
 
-namespace iotdb::tsfile {
+namespace tsfile {
 //
 // @brief  ChunkGroupFooter. Each ChunkGroup in a TsFile has a footer.
 //

@@ -23,10 +23,9 @@
 
 #include <memory>
 #include <vector>
-namespace iotdb::tsfile {
-using UniqueStatisticsPtr = std::unique_ptr<StatisticsMap>;
+namespace tsfile {
 
-using UniqueStatisticsPtr = std::unique_ptr<StatisticsMap>;
+using unique_statistics_ptr = std::unique_ptr<StatisticsMap>;
 ///
 /// @brief PageHeader defines the kind of infomation of the Page: Compressed Size, Uncompressed
 /// Size, Page Statistics.
@@ -76,17 +75,17 @@ class PageHeader {
     /// @brief Set the statistics
     /// @param Pointer to the statistics
     ///
-    void SetStatistics(UniqueStatisticsPtr&& statistics) noexcept;
+    void SetStatistics(unique_statistics_ptr&& statistics) noexcept;
     ///
     /// @brief Get to the statistics
     ///
-    UniqueStatisticsPtr Statistics() const;
+    unique_statistics_ptr Statistics() const;
 
    private:
     int uncompressed_size_{0};
     int compressed_size_{0};
     TsDataType page_type_{TsDataType::INT32};
-    UniqueStatisticsPtr stat_{nullptr};
+    unique_statistics_ptr stat_{nullptr};
 };
 }  // namespace iotdb::tsfile
 #endif

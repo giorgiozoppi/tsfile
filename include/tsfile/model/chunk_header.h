@@ -21,7 +21,7 @@
 #include <tsfile/model/datatypes.h>
 
 #include <string>
-namespace iotdb::tsfile {
+namespace tsfile {
 ///
 /// @brief Class that holds the responsibility to model a chunk header
 ///

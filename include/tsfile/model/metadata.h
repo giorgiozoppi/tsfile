@@ -25,7 +25,7 @@
 #include <string>
 #include <tuple>
 
-namespace iotdb::tsfile {
+namespace tsfile {
 
 typedef std::tuple<std::string, int64_t> MetadataIndexEntry;
 
@@ -53,7 +53,7 @@ class MetadataIndexNode {
 class TsFileMetadata {
    private:
     // bloom filter
-    std::unique_ptr<iotdb::tsfile::common::BloomFilter> bloom_filter_;
+    std::unique_ptr<BloomFilter> bloom_filter_;
     // List of <name, offset, childMetadataIndexType>
     std::unique_ptr<MetadataIndexNode> metadata_index_;
     // offset of MetaMarker.SEPARATOR

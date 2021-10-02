@@ -24,7 +24,7 @@
 #include <cstddef>
 #include <memory>
 
-namespace iotdb::tsfile::common {
+namespace tsfile {
 // @todo
 // Adapt from Cache Efficent Bloom filter implementation
 class BloomFilter {
