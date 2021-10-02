@@ -30,7 +30,7 @@ ChunkGroup::const_iterator ChunkGroup::cbegin() const { return chunks_.cbegin();
 ChunkGroup::const_iterator ChunkGroup::cend() const { return chunks_.cend(); }
 void ChunkGroup::AddChunk(Chunk&& chunk) { chunks_.push_back(std::move(chunk)); }
 bool ChunkGroup::RemoveChunk(const Chunk& input) {
-    return RemoveUsingHash(chunks_, input);
+    return EraseUsingHash(chunks_, input);
 }
 
 ChunkGroup::const_reverse_iterator ChunkGroup::crbegin() const { return chunks_.crbegin(); }

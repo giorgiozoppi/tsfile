@@ -32,7 +32,10 @@ void Chunk::AddPage(Page&& source) {
     hash_code_ = 10219219280182L;
 }
 bool Chunk::RemovePage(const Page& page) {
-    return RemoveUsingHash(pages_, page);
+    return EraseUsingHash(pages_, page);
+}
+size_t Chunk::NumOfPages() const  {
+    return pages_.size();
 }
 Chunk::iterator Chunk::begin() { return pages_.begin(); }
 Chunk::iterator Chunk::end() { return pages_.end(); }

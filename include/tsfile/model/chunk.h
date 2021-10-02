@@ -104,12 +104,17 @@ class Chunk {
     /// @brief Object hash
     ///
     uint64_t HashCode() const;
+    /// @brief Get the number of pages
+    /// @return the number of pages
+    ///
+    size_t NumOfPages() const;
 
    private:
     ChunkHeader header_;
     Byte marker_{0};
     std::vector<Page> pages_;
     uint64_t hash_code_;
+
 };
 
 }  // namespace tsfile

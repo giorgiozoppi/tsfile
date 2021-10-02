@@ -17,6 +17,7 @@
 */
 
 #include "catch2/catch.hpp"
+#include "tsfile/common/algorithm.h"
 #include "tsfile/model/datatypes.h"
 #include "tsfile/model/statistics.h"
 #include "tsfile/model/chunk_header.h"
@@ -37,8 +38,18 @@ SCENARIO("Chunk should be initialized correctly", "[model]]") {
         ChunkContext ctx{measure, 10, TsDataType::INT32, TsCompressionType::GZIP, 
         TsEncoding::GORILLA, 0, kOnlyOnePageChunkHeader};
         auto chunk = make_unique_chunk(ctx);
+        auto sample_page = make_page(4096, 1024, TsDataType::INT32);
         for (int i = 0; i < kNumPages; ++i) {
             chunk->AddPage(make_page(4096, 1024, TsDataType::INT32));
+        }
+
+        WHEN("we remove a page") {
+            ///auto pages = chunk->NumOfPages();
+            chunk->RemovePage(*chunk->begin());
+            THEN("the page array size is correct") {
+                // @todo implement the hash
+                REQUIRE(chunk->NumOfPages() == 0);
+            }
         }
         WHEN("we access to the chunk") {
             THEN("all pages are correctly set") {
