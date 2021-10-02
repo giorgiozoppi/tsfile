@@ -15,14 +15,31 @@
 * limitations under the License.
 *
 */
-#if 0
+
 #include <tsfile/common/bytebuffer.h>
 
 #include "catch2/catch.hpp"
 
-namespace iotdb::tsfile::test {
-using iotdb::tsfile::common::Byte;
-using iotdb::tsfile::common::ByteBuffer;
+namespace tsfile {
+
+SCENARIO("We should copy and get a hex representation", "[byetbuffer]") {
+    GIVEN("a bytebuffer with predefined values") {
+        ByteBuffer buffer{1, 25, 32};
+        WHEN("coverting to hex") {
+            THEN("we get the right results") {
+                auto s = buffer.Hex();
+                REQUIRE("011920" == s);
+            }
+        }
+        WHEN("copy the value") {
+            THEN("we get the hex right results") {
+                auto s = buffer;
+                auto first_hex_value = s.Hex();
+                REQUIRE("011920" == first_hex_value);
+            }
+        }
+    }
+}
 
 SCENARIO("bytebuffer should be initialized correctly", "[bytebuffer]") {
     GIVEN("a bytebuffer with predefined values") {
@@ -83,5 +100,4 @@ SCENARIO("We should be able to write and read correctly in a byte buffer") {
         }
     }
 }
-}  // namespace iotdb::tsfile::test
-#endif
+}  // namespace tsfile

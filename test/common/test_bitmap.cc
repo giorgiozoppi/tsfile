@@ -22,7 +22,7 @@ SCENARIO("Should creation and copy be fine", "[bitmap]") {
                 REQUIRE(k[200].Value() == 1);
                 REQUIRE(f[200].Value() == 1);
             }
-            WHEN("we mark the 50th bit and move") {
+            WHEN("we mark the 100th bit and move") {
                 THEN("the transferred ownership is respected") {
                     m.Reset();
                     m.Mark(100);
@@ -31,6 +31,9 @@ SCENARIO("Should creation and copy be fine", "[bitmap]") {
                     REQUIRE(g[100].Value() == 1);
                     h = g;
                     REQUIRE(h[100].Value() == 1);
+                    m = std::move(h);
+                    REQUIRE(m[100].Value() == 1);
+                    
                 }
             }
         }

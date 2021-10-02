@@ -21,7 +21,7 @@ debug-clang:
 	cmake -DCMAKE_BUILD_TYPE=Release cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++-13  .. && \
 	make
 .PHONY: cover
-cover:
+cover:	test
 	cd $(shell pwd)/build && make coverage-report
 
 .PHONY: build
