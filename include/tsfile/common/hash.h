@@ -17,40 +17,85 @@
 */
 #ifndef IOTDB_NATIVE_HASH_H
 #define IOTDB_NATIVE_HASH_H
+#include <tsfile/common/siphash.h>
+#include <tsfile/common/concepts.h>
 #include <tsfile/common/bytebuffer.h>
-#include <tsfile/common/common.h>
+
+#include <array>
+#include <limits>
+#include <random>
+#include <type_traits>
+
 
 // @todo use static/dynamic polymorphism and an generate an hash function that get an
 // Hashable objet
-#include <optional>
-#if 0
-namespace iotdb::tsfile::common {
-struct SipHash {};
-struct MurmurHash3 {};
-template <typename KeyType, typename AlgorithmKind>
-std::optional<ByteBuffer> Hash(const KeyType& key) {
-    return std::nullopt;
-}
-template <>
-std::optional<ByteBuffer> Hash<ByteBuffer, MurmurHash3>(const ByteBuffer& key) {
-    return std::nullopt;
-}
-template <>
-std::optional<ByteBuffer> Hash<ByteBuffer, SipHash>(const ByteBuffer& key) {
-    return std::nullopt;
-}
-}  // namespace iotdb::tsfile::common
-class Hasher {
-   public:
-    template <typename T>
-    void Add(T data);
-    uint64_t Compute();
-
-   private:
-    void AddData(uint64_t data, std::vector<uint8_t>& value);
-    uint64_t GenerateKeyPart();
-    std::vector<uint8_t> _data;
+namespace tsfile {
+    template <typename Key, typename RetValue>
+struct MurmurHash3 {
+    RetValue operator()(Key const& s) const noexcept {
+        RetValue v;
+        return v;
+    }
 };
+template <>
+struct MurmurHash3<ByteBuffer, ByteBuffer> {
+    ByteBuffer operator()(ByteBuffer const& s) {
+        ByteBuffer out(16);
+        ByteBuffer key(s);
+        std::random_device rd;
+        std::mt19937 e{rd()};
+        std::uniform_int_distribution<unsigned int> dist{0, 10000};
+        auto seed = dist(e);
+        MurmurHash3_x86_128(key.Data(), key.Size(), seed, out.Data());
+        return out;
+    }
+};
+struct SipHash {
+    ByteBuffer operator()(ByteBuffer const& s) {
+        ByteBuffer out(8);
+        ByteBuffer local(s);
+        std::random_device rd;
+        std::mt19937 e{rd()};
+        std::uniform_int_distribution<int> dist{0, 255};
+        ByteBuffer key;
+        for (size_t k = 0; k < 4; k++) {
+            key.Append(dist(e));
+        }
+        SipHashFunction(static_cast<void*>(local.Data()), local.Size(),
+                        static_cast<void*>(key.Data()), static_cast<uint8_t*>(out.Data()),
+                        out.Size());
+        return out;
+    }
+};
+template <typename Function, typename Key, typename ReturnValue>
+struct Hash {
+    ReturnValue operator()(Key const& s) const noexcept { return Function()(s); }
+};
+template <>
+struct Hash<MurmurHash3<ByteBuffer, size_t>, ByteBuffer, ByteBuffer> {
+    size_t operator()(ByteBuffer const& s) const noexcept { return 0; };
 
-#endif
+};  // namespace tsfile
+using ByteMurmurHash3 = Hash<MurmurHash3<ByteBuffer, ByteBuffer>, ByteBuffer, ByteBuffer>;
+using ByteSipHash = Hash<SipHash, ByteBuffer, ByteBuffer>;  //
+/*
+template <Serializable T>
+struct ObjectHasher {
+    std::string operator()(Serializable T& value) {
+        ByteBuffer outbuffer;
+        std::apply(
+            [&outbuffer](Serializable const&... tupleArgs) {
+                size_t tsize = std::tuple_size(tupleArgs);
+                for (size_t i = 0; i < tsize; i++) {
+                    auto val = std::get<i>(tupleArgs);
+                    outbuffer.Append(val);
+                }
+            },
+            value.Members());
+        auto hashBuffer = ByteSipHash{}(outbuffer);
+        return hashBuffer.Hex();
+    }
+};
+*/
+}  // namespace tsfile
 #endif

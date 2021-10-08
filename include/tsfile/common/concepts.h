@@ -32,7 +32,11 @@ concept HexConvertible = requires(T a) {
 template <typename T>
 concept Hashable = requires(T a) {
     std::declval<T>().HashCode();
+    std::declval<T>().ByteHash();
 };
+template <typename T>
+concept TsObject = Serializable<T> && Hashable<T>;
+
 
 template <typename T, typename S>
 struct is_string {

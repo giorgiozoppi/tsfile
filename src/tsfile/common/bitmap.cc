@@ -23,7 +23,7 @@
 namespace tsfile {
 
 BitMap::BitMap(const size_t& siz)  {
-    auto num_bytes = std::round(siz / 8.0);
+    auto num_bytes = static_cast<size_t>(std::round(siz / 8.0));
     count_ = num_bytes;
     bytes_ = std::make_unique<Byte[]>(num_bytes);
    

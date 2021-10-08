@@ -77,7 +77,7 @@ extern "C" {
 #define TRACE
 #endif
 
-int SipHash(const void* in, const size_t inlen, const void* k, uint8_t* out, const size_t outlen) {
+int SipHashFunction(const void* in, const size_t inlen, const void* k, uint8_t* out, const size_t outlen) {
     const unsigned char* ni = (const unsigned char*)in;
     const unsigned char* kk = (const unsigned char*)k;
 

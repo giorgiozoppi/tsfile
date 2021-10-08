@@ -19,11 +19,14 @@
 #define IOTDB_COMMON_BYTEBUFFER
 
 #include <tsfile/common/common.h>
+#include <tsfile/common/endian.h>
+#include <tsfile/common/murmurhash3.h>
 
 #include <cstddef>
 #include <cstring>
 #include <iostream>
 #include <iterator>
+#include <random>
 #include <sstream>
 #include <vector>
 
@@ -35,6 +38,8 @@ using std::ostream;
 ///  @brief ByteBuffer/BasicByteBuffer are an abstraction for an array of bytes.
 ///         the data are backed now within a STL vector but it might change in the future,
 ///         the interface will remain the same.
+///         We store always the arithmetic_types: float, double, int, long, unsigned long in big
+///         endian.
 ///   Example usage:
 ///   ByteBuffer buffer{10, 29, 31, 40, 6};
 ///   for(auto& i: buffer) {
@@ -147,6 +152,26 @@ class BasicByteBuffer {
     ///
     void Append(const BasicByteBuffer& data) { bytes_.emplace_back(data); }
     ///
+    ///  @brief Append an integer converting to big endian when needed.
+    ///  @param v integer value
+    ///
+    void Append(const int& v) { bytes_.emplace_back(endian_aware<int>(v)); }
+    ///
+    ///  @brief Append a float converting to big endian when needed.
+    ///  @param v float value
+    ///
+    void Append(const float& v) { bytes_.emplace_back(endian_aware<float>(v)); }
+    ///
+    ///  @brief Append a double converting to big endian when needed.
+    ///  @param v double value
+    ///
+    void Append(const double& v) { bytes_.emplace_back(endian_aware<double>(v)); }
+    ///
+    ///  @brief Append a string to the buffer.
+    ///  @param v string value
+    ///
+    void Append(const std::string& v) { bytes_.emplace_back(v); }
+    ///
     /// @brief Add an item to the buffer
     /// @param data item to add.
     ///
@@ -185,7 +210,25 @@ class BasicByteBuffer {
         }
         return out.str();
     }
-
+    ///
+    /// @brief Supprot for the Hashable concept;
+    /// @return hexdecimal string of the bytebuffer
+    ///
+    std::string HashCode() const noexcept { return Hex(); }
+    ///
+    /// @brief Support for the Hashable concept
+    /// @return bytebuffer of the hash.
+    /*
+    ByteBuffer ByteHash() const noexcept {
+        ByteBuffer out(16);
+        std::random_device rd;
+        std::mt19937 e{rd()};
+        std::uniform_int_distribution<uint32_t> dist{0, std::numeric_limits<uint32_t>::max() - 1};
+        auto seed = dist(e);
+        MurmurHash3_x86_128(bytes_.size(), bytes_.size(), seed, out.Data());
+        return out;
+    }
+    */
     ///
     /// @brief Return the byte by random access
     /// @param idx index of the byte
@@ -202,7 +245,7 @@ class BasicByteBuffer {
     /// @brief Return content hd the buffer
     /// @return value of the byte
     ///
-    const T* Data() { return bytes_.data(); }
+    T* Data() { return bytes_.data(); }
 
    private:
     std::vector<T> bytes_;
