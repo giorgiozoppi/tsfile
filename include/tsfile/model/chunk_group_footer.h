@@ -34,8 +34,7 @@ class ChunkGroupFooter {
     /// @param data_size        data dimension
     /// @param number_of_chunks number of chunks
     ///
-    ChunkGroupFooter(const std::string_view& device_id, long data_size,
-                                       int number_of_chunks)
+    ChunkGroupFooter(const std::string_view& device_id, long data_size, int number_of_chunks)
         : device_id_(device_id), data_size_(data_size), number_of_chunks_(number_of_chunks) {}
     ///
     /// @brief Get the device id object

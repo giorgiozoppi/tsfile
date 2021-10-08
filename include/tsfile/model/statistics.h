@@ -136,8 +136,9 @@ class StatisticsMap {
     ///
     /// Get the value
     ///
-    
-    template <StatLikeHashable T>  T value() {
+
+    template <StatLikeHashable T>
+    T value() {
         switch (type_) {
             case TsDataType::INT32: {
                 return integer_stat_;

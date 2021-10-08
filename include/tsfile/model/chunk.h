@@ -114,7 +114,6 @@ class Chunk {
     Byte marker_{0};
     std::vector<Page> pages_;
     uint64_t hash_code_;
-
 };
 
 }  // namespace tsfile

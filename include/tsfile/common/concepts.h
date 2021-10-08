@@ -37,7 +37,6 @@ concept Hashable = requires(T a) {
 template <typename T>
 concept TsObject = Serializable<T> && Hashable<T>;
 
-
 template <typename T, typename S>
 struct is_string {
     static const bool value = false;

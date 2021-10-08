@@ -55,4 +55,4 @@ void ChunkHeader::SetNumOfPages(const int& num_of_pages) noexcept { num_of_pages
 
 uint64_t ChunkHeader::HashCode() const { return hashcode_; }
 
-}  // namespace iotdb::tsfile
+}  // namespace tsfile

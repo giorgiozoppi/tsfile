@@ -17,20 +17,19 @@
 */
 #ifndef IOTDB_NATIVE_HASH_H
 #define IOTDB_NATIVE_HASH_H
-#include <tsfile/common/siphash.h>
-#include <tsfile/common/concepts.h>
 #include <tsfile/common/bytebuffer.h>
+#include <tsfile/common/concepts.h>
+#include <tsfile/common/siphash.h>
 
 #include <array>
 #include <limits>
 #include <random>
 #include <type_traits>
 
-
 // @todo use static/dynamic polymorphism and an generate an hash function that get an
 // Hashable objet
 namespace tsfile {
-    template <typename Key, typename RetValue>
+template <typename Key, typename RetValue>
 struct MurmurHash3 {
     RetValue operator()(Key const& s) const noexcept {
         RetValue v;

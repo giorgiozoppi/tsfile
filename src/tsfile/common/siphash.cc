@@ -16,11 +16,10 @@
  */
 
 extern "C" {
-#include <tsfile/common/siphash.h>
-
 #include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <tsfile/common/siphash.h>
 
 /* default: SipHash-2-4 */
 #ifndef cROUNDS
@@ -77,7 +76,8 @@ extern "C" {
 #define TRACE
 #endif
 
-int SipHashFunction(const void* in, const size_t inlen, const void* k, uint8_t* out, const size_t outlen) {
+int SipHashFunction(const void* in, const size_t inlen, const void* k, uint8_t* out,
+                    const size_t outlen) {
     const unsigned char* ni = (const unsigned char*)in;
     const unsigned char* kk = (const unsigned char*)k;
 

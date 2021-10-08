@@ -1,7 +1,7 @@
 #ifndef ENDIAN_H
 #define ENDIAN_H
-#include <cstdlib>
 #include <cstdint>
+#include <cstdlib>
 /// Endianess
 namespace {
 // here we handle endianess.
