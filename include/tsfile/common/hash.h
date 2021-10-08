@@ -45,7 +45,7 @@ struct MurmurHash3<ByteBuffer, ByteBuffer> {
         std::mt19937 e{rd()};
         std::uniform_int_distribution<unsigned int> dist{0, 10000};
         auto seed = dist(e);
-        MurmurHash3_x86_128(key.Data(), key.Size(), seed, out.Data());
+        MurmurHash3_x86_128(key.Data(), static_cast<int>(key.Size()), seed, out.Data());
         return out;
     }
 };
@@ -57,9 +57,11 @@ struct SipHash {
         std::mt19937 e{rd()};
         std::uniform_int_distribution<int> dist{0, 255};
         ByteBuffer key;
+        /*
         for (size_t k = 0; k < 4; k++) {
-            key.Append(dist(e));
+            key.Append(pack(dist(e)));
         }
+        */
         SipHashFunction(static_cast<void*>(local.Data()), local.Size(),
                         static_cast<void*>(key.Data()), static_cast<uint8_t*>(out.Data()),
                         out.Size());

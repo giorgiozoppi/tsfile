@@ -87,11 +87,23 @@ SCENARIO("Reverse iterating a bytebuffer should work", "[bytebuffer]") {
         }
     }
 }
-
+SCENARIO("We should always store primitive data in big endian") {
+    GIVEN("an empty bytebuffer") {
+        ByteBuffer intBuffer;
+        WHEN("We append an integer") {
+            THEN("Its big endian value is correct") {
+                intBuffer.Append(pack<int>(static_cast<int>(1000)));
+                auto int_value = intBuffer[0];
+                REQUIRE(1000 == int_value);
+                intBuffer.Clear();
+            }
+        }
+    }
+}
+#if 0
 SCENARIO("We should always store primitive data in big endian") {
     GIVEN("an empty bytbuffer") {
         ByteBuffer buffer;
-        #if 0
         WHEN("We append a short") {
             THEN("Its big endian value is correct") {
                 buffer.Append(10);
@@ -108,8 +120,7 @@ SCENARIO("We should always store primitive data in big endian") {
                 buffer.Clear();
             }
         }
-        #endif
-        WHEN("We append an double") {
+               WHEN("We append an double") {
             THEN("Its big endian value is correct") {
                 constexpr double max_double_value= 9828192891.12123;
                 buffer.Append(max_double_value);
@@ -122,10 +133,12 @@ SCENARIO("We should always store primitive data in big endian") {
                 buffer.Clear();
             }
         }
+
+
         WHEN("We append an float") {
             THEN("Its big endian value is correct") {
-                constexpr float max_float_value = 10.02f;
-                buffer.Append(max_float_value);
+                float max_float_value{10.02f};
+                buffer.Append(pack(max_float_value));
                 char bytes_1[4];
                 std::memcpy(bytes_1, &buffer[0], 4);
                 std::reverse(std::begin(bytes_1), std::end(bytes_1));
@@ -158,4 +171,5 @@ SCENARIO("We should be able to write and read correctly in a byte buffer") {
         }
     }
 }
+#endif
 }  // namespace tsfile

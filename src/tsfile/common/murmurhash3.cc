@@ -113,14 +113,17 @@ void MurmurHash3_x86_32(const void* key, int len, uint32_t seed, void* out) {
     switch (len & 3) {
         case 3:
             k1 ^= tail[2] << 16;
+            
         case 2:
             k1 ^= tail[1] << 8;
+         
         case 1:
             k1 ^= tail[0];
             k1 *= c1;
             k1 = ROTL32(k1, 15);
             k1 *= c2;
             h1 ^= k1;
+            
     };
 
     //----------
@@ -218,7 +221,7 @@ void MurmurHash3_x86_128(const void* key, const size_t len, uint32_t seed, void*
             k4 = ROTL32(k4, 18);
             k4 *= c1;
             h4 ^= k4;
-
+            
         case 12:
             k3 ^= tail[11] << 24;
         case 11:

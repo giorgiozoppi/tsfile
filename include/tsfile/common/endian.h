@@ -79,15 +79,6 @@ float to_big_endian(float value, Endianess order) {
     return static_cast<float>(tmp);
 }
 
-template <typename T>
-T endian_aware(T r)  // template funzione
-{
-    if (sizeof(T) == 1) {
-        return r;
-    }
-    return to_big_endian(r, ByteOrder);
-}
-
 #endif
 }  // namespace
 #endif  //

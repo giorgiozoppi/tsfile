@@ -32,8 +32,6 @@
 
 namespace tsfile {
 
-using std::istream;
-using std::ostream;
 ///
 ///  @brief ByteBuffer/BasicByteBuffer are an abstraction for an array of bytes.
 ///         the data are backed now within a STL vector but it might change in the future,
@@ -152,26 +150,6 @@ class BasicByteBuffer {
     ///
     void Append(const BasicByteBuffer& data) { bytes_.emplace_back(data); }
     ///
-    ///  @brief Append an integer converting to big endian when needed.
-    ///  @param v integer value
-    ///
-    void Append(const int& v) { bytes_.emplace_back(endian_aware<int>(v)); }
-    ///
-    ///  @brief Append a float converting to big endian when needed.
-    ///  @param v float value
-    ///
-    void Append(const float& v) { bytes_.emplace_back(endian_aware<float>(v)); }
-    ///
-    ///  @brief Append a double converting to big endian when needed.
-    ///  @param v double value
-    ///
-    void Append(const double& v) { bytes_.emplace_back(endian_aware<double>(v)); }
-    ///
-    ///  @brief Append a string to the buffer.
-    ///  @param v string value
-    ///
-    void Append(const std::string& v) { bytes_.emplace_back(v); }
-    ///
     /// @brief Add an item to the buffer
     /// @param data item to add.
     ///
@@ -257,6 +235,71 @@ bool operator==(const BasicByteBuffer<T>& lhs, const BasicByteBuffer<T>& rhs) {
     return lhs.hex().compare(rhs.hex()) == 0;
 }
 typedef BasicByteBuffer<Byte> ByteBuffer;
+template <typename T>
+inline ByteBuffer pack(T value) {
+    ByteBuffer data;
+    return data;
+}
+
+template <>
+inline ByteBuffer pack<int>(int value) {
+    ByteBuffer data(4);
+    auto new_value = to_big_endian(value, ByteOrder);
+    std::memcpy(data.Data(), &new_value, 4);
+    return data;
+}  // namespace pack
+#if 0
+
+
+template <>
+ByteBuffer pack<int>(int value) {
+    ByteBuffer data;
+    return data;
+}
+template <>
+ByteBuffer pack<float>(float value) {
+    ByteBuffer data(sizeof(float));
+    auto endian_value = to_big_endian(value, ByteOrder);
+    std::memcpy(data.Data(), &endian_value, sizeof(float));
+    return data;
+}
+template <>
+ByteBuffer pack<double>(double value) {
+    ByteBuffer data(sizeof(double));
+    auto endian_double = to_big_endian(value, ByteOrder);
+    std::memcpy(data.Data(), &endian_double, sizeof(double));
+    return data;
+}
+#endif
+
+#if 0
+struct ByteView {
+    ByteBuffer buffer;
+    ///
+    ///  @brief Append an integer converting to big endian when needed.
+    ///  @param v integer value
+    ///
+    void Append(int v) {
+        buffer.Append(pack(v));
+    }
+    ///
+    ///  @brief Append a float converting to big endian when needed.
+    ///  @param v float value
+    ///
+    void Append(float v) { buffer.Append(pack(v));}
+    ///
+    ///  @brief Append a double converting to big endian when needed.
+    ///  @param v double value
+    ///
+    void Append(double v) { buffer.Append(pack(v)); }
+    ///
+    ///  @brief Append a string to the buffer.
+    ///  @param v string value
+    ///
+ //   void Append([[maybe_unused]] std::string& v) { }
+};
+#endif
+
 }  // namespace tsfile
 
 #endif  // IOTDB__UTIL__BYTEBUFFER
