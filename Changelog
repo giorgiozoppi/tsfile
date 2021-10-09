@@ -26,3 +26,4 @@
 	* Added support for packing/unpacking primitive types
 	* Added tests for packing/unpacking
 	* Added initial hashing and support for fallthrough
+	* Adding initial bloomfilter infrastructure.
