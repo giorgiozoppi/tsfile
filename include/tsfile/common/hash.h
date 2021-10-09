@@ -74,7 +74,7 @@ struct Hash {
 };
 template <>
 struct Hash<MurmurHash3<ByteBuffer, size_t>, ByteBuffer, ByteBuffer> {
-    size_t operator()(ByteBuffer const& s) const noexcept { return 0; };
+    size_t operator()([[maybe_unused]] ByteBuffer const& s) const noexcept { return 0; };
 
 };  // namespace tsfile
 using ByteMurmurHash3 = Hash<MurmurHash3<ByteBuffer, ByteBuffer>, ByteBuffer, ByteBuffer>;

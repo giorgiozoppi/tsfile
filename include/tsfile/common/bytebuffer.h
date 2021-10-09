@@ -19,7 +19,6 @@
 #define IOTDB_COMMON_BYTEBUFFER
 
 #include <tsfile/common/common.h>
-#include <tsfile/common/endian.h>
 #include <tsfile/common/murmurhash3.h>
 
 #include <cstddef>
@@ -149,6 +148,14 @@ class BasicByteBuffer {
     /// @param  data  buffer to append
     ///
     void Append(const BasicByteBuffer& data) { bytes_.emplace_back(data); }
+
+    void Append(const std::vector<unsigned char>& data) {
+        if (std::is_same_v<T, unsigned char>) {
+            std::copy(std::begin(data), std::end(data), std::back_inserter(bytes_));
+        } else {
+            throw std::invalid_argument("cannot push incompatible data");
+        }
+    }
     ///
     /// @brief Add an item to the buffer
     /// @param data item to add.
@@ -235,70 +242,6 @@ bool operator==(const BasicByteBuffer<T>& lhs, const BasicByteBuffer<T>& rhs) {
     return lhs.hex().compare(rhs.hex()) == 0;
 }
 typedef BasicByteBuffer<Byte> ByteBuffer;
-template <typename T>
-inline ByteBuffer pack(T value) {
-    ByteBuffer data;
-    return data;
-}
-
-template <>
-inline ByteBuffer pack<int>(int value) {
-    ByteBuffer data(4);
-    auto new_value = to_big_endian(value, ByteOrder);
-    std::memcpy(data.Data(), &new_value, 4);
-    return data;
-}  // namespace pack
-#if 0
-
-
-template <>
-ByteBuffer pack<int>(int value) {
-    ByteBuffer data;
-    return data;
-}
-template <>
-ByteBuffer pack<float>(float value) {
-    ByteBuffer data(sizeof(float));
-    auto endian_value = to_big_endian(value, ByteOrder);
-    std::memcpy(data.Data(), &endian_value, sizeof(float));
-    return data;
-}
-template <>
-ByteBuffer pack<double>(double value) {
-    ByteBuffer data(sizeof(double));
-    auto endian_double = to_big_endian(value, ByteOrder);
-    std::memcpy(data.Data(), &endian_double, sizeof(double));
-    return data;
-}
-#endif
-
-#if 0
-struct ByteView {
-    ByteBuffer buffer;
-    ///
-    ///  @brief Append an integer converting to big endian when needed.
-    ///  @param v integer value
-    ///
-    void Append(int v) {
-        buffer.Append(pack(v));
-    }
-    ///
-    ///  @brief Append a float converting to big endian when needed.
-    ///  @param v float value
-    ///
-    void Append(float v) { buffer.Append(pack(v));}
-    ///
-    ///  @brief Append a double converting to big endian when needed.
-    ///  @param v double value
-    ///
-    void Append(double v) { buffer.Append(pack(v)); }
-    ///
-    ///  @brief Append a string to the buffer.
-    ///  @param v string value
-    ///
- //   void Append([[maybe_unused]] std::string& v) { }
-};
-#endif
 
 }  // namespace tsfile
 

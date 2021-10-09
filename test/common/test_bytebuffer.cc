@@ -26,6 +26,7 @@
 
 #include <tsfile/common/bytebuffer.h>
 #include <tsfile/common/hash.h>
+#include <tsfile/common/pack.h>
 
 #include "catch2/catch.hpp"
 
@@ -87,6 +88,7 @@ SCENARIO("Reverse iterating a bytebuffer should work", "[bytebuffer]") {
         }
     }
 }
+#if 0
 SCENARIO("We should always store primitive data in big endian") {
     GIVEN("an empty bytebuffer") {
         ByteBuffer intBuffer;
@@ -100,20 +102,54 @@ SCENARIO("We should always store primitive data in big endian") {
         }
     }
 }
-#if 0
+#endif
+
 SCENARIO("We should always store primitive data in big endian") {
     GIVEN("an empty bytbuffer") {
         ByteBuffer buffer;
         WHEN("We append a short") {
             THEN("Its big endian value is correct") {
-                buffer.Append(10);
-                auto short_value = ntohl(buffer[0]);
+                auto value_bytes = tsfile::Unpack(short(10));
+                buffer.Append(value_bytes);
+                REQUIRE(int(value_bytes[0]) == 0x00);
+                REQUIRE(int(value_bytes[1]) == 0x0A);
+                auto short_value =
+                    tsfile::PackShort(std::tuple{buffer[0], buffer[1]}, ByteOrder);
                 REQUIRE(10 == short_value);
                 buffer.Clear();
             }
+
+            WHEN("We append an integer") {
+                THEN("Its big endian value is correct") {
+                    auto value_bytes = tsfile::Unpack(1000);
+                    buffer.Append(value_bytes);
+                    auto int_value = tsfile::PackInt(
+                        std::tuple{buffer[0], buffer[1], buffer[2], buffer[3]},
+                        ByteOrder);
+                    REQUIRE(1000 == int_value);
+                    buffer.Clear();
+                }
+            }
+
+            WHEN("We append an double") {
+                THEN("Its big endian value is correct") {
+                    constexpr double max_double_value = 98.12123;
+                    auto value_bytes = tsfile::Unpack(max_double_value);
+                    buffer.Append(value_bytes);
+                    auto out_double_value = tsfile::PackDouble(
+                        std::tuple{buffer[0], buffer[1], buffer[2], buffer[3],
+                                   buffer[4], buffer[5], buffer[6], buffer[7]},
+                        ByteOrder);
+                    REQUIRE(out_double_value == max_double_value);
+                    buffer.Clear();
+                }
+            }
         }
+
+#if 0
         WHEN("We append an integer") {
             THEN("Its big endian value is correct") {
+                auto value
                 buffer.Append(1000);
                 auto int_value = ntohl(buffer[0]);
                 REQUIRE(1000 == int_value);
@@ -148,8 +184,10 @@ SCENARIO("We should always store primitive data in big endian") {
                 buffer.Clear();
             }
         }
+#endif
     }
 }
+#if 0
 SCENARIO("We should be able to write and read correctly in a byte buffer") {
     ByteBuffer buffer;
     WHEN(" We assign bytes to the byte buffer") {
