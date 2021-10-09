@@ -183,8 +183,13 @@ inline pack_byte2 EndianBytes2(T value) {
 template <typename T>
 inline pack_byte4 EndianBytes4(T value) {
     pack_byte4 v, out;
-    v.ivalue = value;
-    out.ivalue = value;
+    if (std::is_same<T, float>::value){
+        v.fvalue = value;
+        out.fvalue = value;
+    } else {
+        v.ivalue = value;
+        out.fvalue = value;
+    }
     if (ByteOrder != Endianess::BigEndian) {
         out.byte[0] = v.byte[3];
         out.byte[1] = v.byte[2];

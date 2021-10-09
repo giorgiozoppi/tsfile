@@ -113,8 +113,7 @@ SCENARIO("We should always store primitive data in big endian") {
                 buffer.Append(value_bytes);
                 REQUIRE(int(value_bytes[0]) == 0x00);
                 REQUIRE(int(value_bytes[1]) == 0x0A);
-                auto short_value =
-                    tsfile::PackShort(std::tuple{buffer[0], buffer[1]}, ByteOrder);
+                auto short_value = tsfile::PackShort(std::tuple{buffer[0], buffer[1]}, ByteOrder);
                 REQUIRE(10 == short_value);
                 buffer.Clear();
             }
@@ -124,8 +123,7 @@ SCENARIO("We should always store primitive data in big endian") {
                     auto value_bytes = tsfile::Unpack(1000);
                     buffer.Append(value_bytes);
                     auto int_value = tsfile::PackInt(
-                        std::tuple{buffer[0], buffer[1], buffer[2], buffer[3]},
-                        ByteOrder);
+                        std::tuple{buffer[0], buffer[1], buffer[2], buffer[3]}, ByteOrder);
                     REQUIRE(1000 == int_value);
                     buffer.Clear();
                 }
@@ -136,58 +134,29 @@ SCENARIO("We should always store primitive data in big endian") {
                     constexpr double max_double_value = 98.12123;
                     auto value_bytes = tsfile::Unpack(max_double_value);
                     buffer.Append(value_bytes);
-                    auto out_double_value = tsfile::PackDouble(
-                        std::tuple{buffer[0], buffer[1], buffer[2], buffer[3],
-                                   buffer[4], buffer[5], buffer[6], buffer[7]},
-                        ByteOrder);
+                    auto out_double_value =
+                        tsfile::PackDouble(std::tuple{buffer[0], buffer[1], buffer[2], buffer[3],
+                                                      buffer[4], buffer[5], buffer[6], buffer[7]},
+                                           ByteOrder);
                     REQUIRE(out_double_value == max_double_value);
+                    buffer.Clear();
+                }
+            }
+            WHEN("We append an float") {
+                THEN("Its big endian value is correct") {
+                    float max_float_value{10.02f};
+                    auto value_bytes = tsfile::Unpack(max_float_value);
+                    buffer.Append(value_bytes);
+                    auto out_float_value = tsfile::PackFloat(
+                        std::tuple{buffer[0], buffer[1], buffer[2], buffer[3]}, ByteOrder);
+                    REQUIRE(out_float_value == max_float_value);
                     buffer.Clear();
                 }
             }
         }
 
-#if 0
-        WHEN("We append an integer") {
-            THEN("Its big endian value is correct") {
-                auto value
-                buffer.Append(1000);
-                auto int_value = ntohl(buffer[0]);
-                REQUIRE(1000 == int_value);
-                buffer.Clear();
-            }
-        }
-               WHEN("We append an double") {
-            THEN("Its big endian value is correct") {
-                constexpr double max_double_value= 9828192891.12123;
-                buffer.Append(max_double_value);
-                char bytes[8];
-                double out_double_value{0};
-                std::memcpy(bytes, &buffer[0], 8);
-                std::reverse(std::begin(bytes), std::end(bytes));
-                std::memcpy(&out_double_value, bytes, 8);
-                REQUIRE(out_double_value == max_double_value);
-                buffer.Clear();
-            }
-        }
-
-
-        WHEN("We append an float") {
-            THEN("Its big endian value is correct") {
-                float max_float_value{10.02f};
-                buffer.Append(pack(max_float_value));
-                char bytes_1[4];
-                std::memcpy(bytes_1, &buffer[0], 4);
-                std::reverse(std::begin(bytes_1), std::end(bytes_1));
-                float out_float_value;
-                std::memcpy(&out_float_value, bytes_1, 4);
-                REQUIRE(out_float_value == max_float_value);
-                buffer.Clear();
-            }
-        }
-#endif
     }
 }
-#if 0
 SCENARIO("We should be able to write and read correctly in a byte buffer") {
     ByteBuffer buffer;
     WHEN(" We assign bytes to the byte buffer") {
@@ -209,5 +178,4 @@ SCENARIO("We should be able to write and read correctly in a byte buffer") {
         }
     }
 }
-#endif
 }  // namespace tsfile
