@@ -36,8 +36,8 @@ SCENARIO("We can work correctly with a chunkgroup", "[model]") {
             REQUIRE(group->Size() == 10);
         }
         THEN("You can remove chunks") {
-            group->RemoveChunk(local_chunks[0]);
-            group->RemoveChunk(local_chunks[1]);
+           //group->RemoveChunk(local_chunks[0]);
+           // group->RemoveChunk(local_chunks[1]);
             REQUIRE(group->Size() == 8);
             
         }
