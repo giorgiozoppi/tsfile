@@ -12,20 +12,28 @@
 - Sep 24 2021 10:04:44	Giorgio Zoppi <giorgio.zoppi@gmail.com>
 	* C++20 Concepts with static polimorphism in statistics
 	* Statistics now is container indipendent from the value types.
-	
+
 - Sep 25 2021 19:45:55	Giorgio Zoppi <giorgio.zoppi@gmail.com>
 	* Added e2e suite skeleton in java
 	* Fixed build in page_header.h
- Sep 27 2021 14:31:45	Giorgio Zoppi <giorgio.zoppi@gmail.com>
+
+- Sep 27 2021 14:31:45	Giorgio Zoppi <giorgio.zoppi@gmail.com>
 	* add tablet and record classes
 	* add datapoint class.
- Oct 01 2021 20:13:52	Giorgio Zoppi <giorgio.zoppi@gmail.com>
+
+- Oct 01 2021 20:13:52	Giorgio Zoppi <giorgio.zoppi@gmail.com>
 	* Added doxygen support
 	* Added hashes : Murmur3 and siphash.
- Oct 09 2021 17:46:17	Giorgio Zoppi <giorgio.zoppi@gmail.com>
+
+- Oct 09 2021 17:46:17	Giorgio Zoppi <giorgio.zoppi@gmail.com>
 	* Added support for packing/unpacking primitive types
 	* Added tests for packing/unpacking
 	* Added initial hashing and support for fallthrough
 	* Adding initial bloomfilter infrastructure.
- Oct 09 2021 19:34:32	Giorgio Zoppi <giorgio.zoppi@gmail.com>
-	* - Removing StatusResult, doing everything with Expected
+
+- Oct 09 2021 19:34:32	Giorgio Zoppi <giorgio.zoppi@gmail.com>
+	* Removing StatusResult, doing everything with Expected
+
+- Oct 09 2021 21:45:46	Giorgio Zoppi <giorgio.zoppi@gmail.com>
+	* Adding new tests for chunkgroup
+	* Fixed move semantics for buffer, now we just transfer until the end.
