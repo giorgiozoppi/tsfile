@@ -100,4 +100,3 @@ uint64_t hasher::compute() {
 }
 }  // namespace iotdb::tsfile
 #endif
-

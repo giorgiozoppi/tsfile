@@ -9,7 +9,8 @@ namespace tsfile {
 template <typename Hashable>
 inline bool EraseUsingHash(std::vector<Hashable>& container, const Hashable& value) {
     auto hash_value = value.HashCode();
-    auto res = std::erase_if(container,[hash_value](auto current) { return current.HashCode() == hash_value; });
+    auto res = std::erase_if(
+        container, [hash_value](auto current) { return current.HashCode() == hash_value; });
     return res;
 }
 }  // namespace tsfile

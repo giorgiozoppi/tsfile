@@ -29,10 +29,8 @@ ChunkGroup::reverse_iterator ChunkGroup::rend() { return chunks_.rend(); }
 ChunkGroup::const_iterator ChunkGroup::cbegin() const { return chunks_.cbegin(); }
 ChunkGroup::const_iterator ChunkGroup::cend() const { return chunks_.cend(); }
 void ChunkGroup::AddChunk(Chunk&& chunk) { chunks_.push_back(std::move(chunk)); }
-bool ChunkGroup::RemoveChunk(const Chunk& input) {
-    return EraseUsingHash(chunks_, input);
-}
+bool ChunkGroup::RemoveChunk(const Chunk& input) { return EraseUsingHash(chunks_, input); }
 
 ChunkGroup::const_reverse_iterator ChunkGroup::crbegin() const { return chunks_.crbegin(); }
 ChunkGroup::const_reverse_iterator ChunkGroup::crend() const { return chunks_.crend(); }
-}  // namespace iotdb::tsfile
+}  // namespace tsfile

@@ -22,11 +22,10 @@
 
 namespace tsfile {
 
-BitMap::BitMap(const size_t& siz)  {
-    auto num_bytes = std::round(siz / 8.0);
+BitMap::BitMap(const size_t& siz) {
+    auto num_bytes = static_cast<size_t>(std::round(siz / 8.0));
     count_ = num_bytes;
     bytes_ = std::make_unique<Byte[]>(num_bytes);
-   
 }
 
 BitMap::BitMap(const BitMap& map) {
@@ -68,16 +67,16 @@ StatusResult<BitError> BitMap::Mark(size_t index) {
     return StatusResult<BitError>(BitError::OUT_RANGE);
 }
 StatusResult<BitError> BitMap::MarkAll() {
-     for (size_t i = 0; i < count_; ++i) {
-         bytes_.get()[i] = 0xFF;
-     }
-     return StatusResult<BitError>(BitError::OK); 
+    for (size_t i = 0; i < count_; ++i) {
+        bytes_.get()[i] = 0xFF;
+    }
+    return StatusResult<BitError>(BitError::OK);
 }
 StatusResult<BitError> BitMap::Reset() {
-     for (size_t i = 0; i < count_; ++i) {
-         bytes_.get()[i] = 0x00;
-     }
-     return StatusResult<BitError>(BitError::OK); 
+    for (size_t i = 0; i < count_; ++i) {
+        bytes_.get()[i] = 0x00;
+    }
+    return StatusResult<BitError>(BitError::OK);
 }
 ValueResult<BitError, short> BitMap::operator[](size_t index) const {
     auto numbits = count_ * 8;
@@ -109,5 +108,4 @@ bool operator==(const BitMap& lhs, const BitMap& rhs) {
     return false;
 }
 
-
-}  // namespace iotdb::tsfile::common
+}  // namespace tsfile

@@ -34,7 +34,8 @@ class ChunkGroupFooter {
     /// @param data_size        data dimension
     /// @param number_of_chunks number of chunks
     ///
-    ChunkGroupFooter(const std::string_view& device_id, int64_t data_size, int number_of_chunks);
+    ChunkGroupFooter(const std::string_view& device_id, long data_size, int number_of_chunks)
+        : device_id_(device_id), data_size_(data_size), number_of_chunks_(number_of_chunks) {}
     ///
     /// @brief Get the device id object
     ///
@@ -46,7 +47,7 @@ class ChunkGroupFooter {
     ///
     /// @return Data dimension
     ///
-    int64_t DataSize() const;
+    size_t DataSize() const;
     ///
     /// @brief Get the number of chunks object
     ///
@@ -56,7 +57,7 @@ class ChunkGroupFooter {
 
    private:
     std::string device_id_;
-    long data_size_;
+    size_t data_size_;
     int number_of_chunks_;
 };
 }  // namespace tsfile

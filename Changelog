@@ -21,4 +21,9 @@
 	* add datapoint class.
  Oct 01 2021 20:13:52	Giorgio Zoppi <giorgio.zoppi@gmail.com>
 	* Added doxygen support
-	* Cleaned all
+	* Added hashes : Murmur3 and siphash.
+ Oct 09 2021 17:46:17	Giorgio Zoppi <giorgio.zoppi@gmail.com>
+	* Added support for packing/unpacking primitive types
+	* Added tests for packing/unpacking
+	* Added initial hashing and support for fallthrough
+	* Adding initial bloomfilter infrastructure.

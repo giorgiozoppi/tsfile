@@ -16,7 +16,17 @@
 *
 */
 
+#include <iterator>
+#include <limits>
+#if defined(_WIN32)
+#include <winsock.h>
+#else
+#include <arpa/inet.h>
+#endif  //
+
 #include <tsfile/common/bytebuffer.h>
+#include <tsfile/common/hash.h>
+#include <tsfile/common/pack.h>
 
 #include "catch2/catch.hpp"
 
@@ -72,11 +82,79 @@ SCENARIO("Reverse iterating a bytebuffer should work", "[bytebuffer]") {
         THEN(" the iteration is performed correctly") {
             int last{8};
             for (auto i = buffer.rbegin(); i != buffer.rend(); i++) {
-            
                 REQUIRE(*i == last);
                 last--;
             }
         }
+    }
+}
+#if 0
+SCENARIO("We should always store primitive data in big endian") {
+    GIVEN("an empty bytebuffer") {
+        ByteBuffer intBuffer;
+        WHEN("We append an integer") {
+            THEN("Its big endian value is correct") {
+                intBuffer.Append(pack<int>(static_cast<int>(1000)));
+                auto int_value = intBuffer[0];
+                REQUIRE(1000 == int_value);
+                intBuffer.Clear();
+            }
+        }
+    }
+}
+#endif
+
+SCENARIO("We should always store primitive data in big endian") {
+    GIVEN("an empty bytbuffer") {
+        ByteBuffer buffer;
+        WHEN("We append a short") {
+            THEN("Its big endian value is correct") {
+                auto value_bytes = tsfile::Unpack(short(10));
+                buffer.Append(value_bytes);
+                REQUIRE(int(value_bytes[0]) == 0x00);
+                REQUIRE(int(value_bytes[1]) == 0x0A);
+                auto short_value = tsfile::PackShort(std::tuple{buffer[0], buffer[1]}, ByteOrder);
+                REQUIRE(10 == short_value);
+                buffer.Clear();
+            }
+
+            WHEN("We append an integer") {
+                THEN("Its big endian value is correct") {
+                    auto value_bytes = tsfile::Unpack(1000);
+                    buffer.Append(value_bytes);
+                    auto int_value = tsfile::PackInt(
+                        std::tuple{buffer[0], buffer[1], buffer[2], buffer[3]}, ByteOrder);
+                    REQUIRE(1000 == int_value);
+                    buffer.Clear();
+                }
+            }
+
+            WHEN("We append an double") {
+                THEN("Its big endian value is correct") {
+                    constexpr double max_double_value = 98.12123;
+                    auto value_bytes = tsfile::Unpack(max_double_value);
+                    buffer.Append(value_bytes);
+                    auto out_double_value =
+                        tsfile::PackDouble(std::tuple{buffer[0], buffer[1], buffer[2], buffer[3],
+                                                      buffer[4], buffer[5], buffer[6], buffer[7]},
+                                           ByteOrder);
+                    REQUIRE(out_double_value == max_double_value);
+                    buffer.Clear();
+                }
+            }
+            WHEN("We append an float") {
+                THEN("Its big endian value is correct") {
+                    float max_float_value{10.02f};
+                    auto value_bytes = tsfile::Unpack(max_float_value);
+                    buffer.Append(value_bytes);
+                    auto out_float_value = tsfile::PackFloat(
+                        std::tuple{buffer[0], buffer[1], buffer[2], buffer[3]}, ByteOrder);
+                    REQUIRE(out_float_value == max_float_value);
+                    buffer.Clear();
+                }
+            }
+        }
+
     }
 }
 SCENARIO("We should be able to write and read correctly in a byte buffer") {

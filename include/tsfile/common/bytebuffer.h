@@ -19,22 +19,24 @@
 #define IOTDB_COMMON_BYTEBUFFER
 
 #include <tsfile/common/common.h>
+#include <tsfile/common/murmurhash3.h>
 
 #include <cstddef>
 #include <cstring>
 #include <iostream>
 #include <iterator>
+#include <random>
 #include <sstream>
 #include <vector>
 
 namespace tsfile {
 
-using std::istream;
-using std::ostream;
 ///
 ///  @brief ByteBuffer/BasicByteBuffer are an abstraction for an array of bytes.
 ///         the data are backed now within a STL vector but it might change in the future,
 ///         the interface will remain the same.
+///         We store always the arithmetic_types: float, double, int, long, unsigned long in big
+///         endian.
 ///   Example usage:
 ///   ByteBuffer buffer{10, 29, 31, 40, 6};
 ///   for(auto& i: buffer) {
@@ -146,6 +148,14 @@ class BasicByteBuffer {
     /// @param  data  buffer to append
     ///
     void Append(const BasicByteBuffer& data) { bytes_.emplace_back(data); }
+
+    void Append(const std::vector<unsigned char>& data) {
+        if (std::is_same_v<T, unsigned char>) {
+            std::copy(std::begin(data), std::end(data), std::back_inserter(bytes_));
+        } else {
+            throw std::invalid_argument("cannot push incompatible data");
+        }
+    }
     ///
     /// @brief Add an item to the buffer
     /// @param data item to add.
@@ -185,7 +195,25 @@ class BasicByteBuffer {
         }
         return out.str();
     }
-
+    ///
+    /// @brief Supprot for the Hashable concept;
+    /// @return hexdecimal string of the bytebuffer
+    ///
+    std::string HashCode() const noexcept { return Hex(); }
+    ///
+    /// @brief Support for the Hashable concept
+    /// @return bytebuffer of the hash.
+    /*
+    ByteBuffer ByteHash() const noexcept {
+        ByteBuffer out(16);
+        std::random_device rd;
+        std::mt19937 e{rd()};
+        std::uniform_int_distribution<uint32_t> dist{0, std::numeric_limits<uint32_t>::max() - 1};
+        auto seed = dist(e);
+        MurmurHash3_x86_128(bytes_.size(), bytes_.size(), seed, out.Data());
+        return out;
+    }
+    */
     ///
     /// @brief Return the byte by random access
     /// @param idx index of the byte
@@ -202,7 +230,7 @@ class BasicByteBuffer {
     /// @brief Return content hd the buffer
     /// @return value of the byte
     ///
-    const T* Data() { return bytes_.data(); }
+    T* Data() { return bytes_.data(); }
 
    private:
     std::vector<T> bytes_;
@@ -214,6 +242,7 @@ bool operator==(const BasicByteBuffer<T>& lhs, const BasicByteBuffer<T>& rhs) {
     return lhs.hex().compare(rhs.hex()) == 0;
 }
 typedef BasicByteBuffer<Byte> ByteBuffer;
+
 }  // namespace tsfile
 
 #endif  // IOTDB__UTIL__BYTEBUFFER

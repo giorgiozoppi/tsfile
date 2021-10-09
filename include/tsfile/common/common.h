@@ -22,42 +22,6 @@
 
 namespace tsfile {
 typedef uint8_t Byte;
-/// Endianess
-
-// here we handle endianess.
-// note that in java we've signed bytes as default.
-enum class Endianess { LittleEndian = 0, BigEndian };
-
-#if defined(__BYTE_ORDER) && __BYTE_ORDER == __BIG_ENDIAN || defined(__BIG_ENDIAN__) ||         \
-    defined(__ARMEB__) || defined(__THUMBEB__) || defined(__AARCH64EB__) || defined(_MIBSEB) || \
-    defined(__MIBSEB) || defined(__MIBSEB__)
-#define IOTDB_BIG_ENDIAN 1
-
-constexpr Endianess ByteOrder = Endianess::BigEndian;
-constexpr uint16_t to_big_endian(uint16_t n) { return n; }
-constexpr uint32_t to_big_endian(uint32_t n) { return n; }
-constexpr uint64_t to_big_endian(uint64_t n) { return n; }
-
-#else
-#define IOTDB_BIG_ENDIAN 0
-// @todo
-constexpr Endianess ByteOrder = Endianess::LittleEndian;
-
-constexpr uint16_t to_big_endian(uint16_t x) {
-    return ((__uint16_t)((((x) >> 8) & 0xff) | (((x)&0xff) << 8)));
-}
-constexpr uint32_t to_big_endian(uint32_t x) {
-    return ((((x)&0xff000000u) >> 24) | (((x)&0x00ff0000u) >> 8) | (((x)&0x0000ff00u) << 8) |
-            (((x)&0x000000ffu) << 24));
-}
-constexpr uint64_t to_big_endian(uint64_t x) {
-    return ((((x)&0xff00000000000000ull) >> 56) | (((x)&0x00ff000000000000ull) >> 40) |
-            (((x)&0x0000ff0000000000ull) >> 24) | (((x)&0x000000ff00000000ull) >> 8) |
-            (((x)&0x00000000ff000000ull) << 8) | (((x)&0x0000000000ff0000ull) << 24) |
-            (((x)&0x000000000000ff00ull) << 40) | (((x)&0x00000000000000ffull) << 56));
-}
-
-#endif
 
 ///
 /// @brief Suffix/Extension of the TSFile

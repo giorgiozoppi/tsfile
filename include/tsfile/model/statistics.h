@@ -39,7 +39,7 @@ concept StatLike = requires(T a) {
 template <typename T>
 concept StatLikeHashable = StatLike<T> && Hashable<T>;
 
-template <StatLikeHashable StatisticsImpl>
+template <StatLike StatisticsImpl>
 struct BaseStatistics : StatisticsImpl {};
 
 ///
@@ -136,8 +136,9 @@ class StatisticsMap {
     ///
     /// Get the value
     ///
-    
-    template <StatLikeHashable T>  T value() {
+
+    template <StatLikeHashable T>
+    T value() {
         switch (type_) {
             case TsDataType::INT32: {
                 return integer_stat_;

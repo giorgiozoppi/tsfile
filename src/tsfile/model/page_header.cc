@@ -82,4 +82,4 @@ unique_statistics_ptr PageHeader::Statistics() const {
     auto tmp = std::make_unique<StatisticsMap>(*stat_);
     return tmp;
 }
-}  // namespace iotdb::tsfile
+}  // namespace tsfile
