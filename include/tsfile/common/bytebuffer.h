@@ -147,7 +147,7 @@ class BasicByteBuffer {
     /// @brief Append a buffer inside the byte buffer
     /// @param  data  buffer to append
     ///
-    void Append(const BasicByteBuffer& data) { bytes_.emplace_back(data); }
+    void Append(const BasicByteBuffer& data) { bytes_.emplace_back(std::move(data)); }
 
     void Append(const std::vector<unsigned char>& data) {
         if (std::is_same_v<T, unsigned char>) {
@@ -156,6 +156,14 @@ class BasicByteBuffer {
             throw std::invalid_argument("cannot push incompatible data");
         }
     }
+    void Append(std::vector<unsigned char>&& data) {
+        if (std::is_same_v<T, unsigned char>) {
+            bytes_.emplace_back(std::move(data));
+        } else {
+            throw std::invalid_argument("cannot push incompatible data");
+        }
+    }
+
     ///
     /// @brief Add an item to the buffer
     /// @param data item to add.

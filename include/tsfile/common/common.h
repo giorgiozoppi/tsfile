@@ -49,43 +49,58 @@ constexpr bool IsOk(T t) {
 /// }
 ///
 template <typename T, typename V>
-class ValueResult {
+class Expected {
    public:
-    ValueResult(const T& result, const V& value) {
+    Expected(const T& result) {
+        _value = std::nullopt;
+        _error = result;
+    }
+    Expected(const T& result, const V& value) {
         _value = std::make_optional(value);
         _error = result;
     }
-    auto Value() const { return _value; }
-    T Result() const { return _error; }
-    ValueResult(ValueResult&& vr) {
+    Expected(const Expected& source) : _value(source._value), _error(source._value) {}
+    Expected& operator=(const Expected& source) {
+        if (this != &source) {
+            _value = source._value;
+            _error = source._error;
+        }
+        return *this;
+    }
+    Expected& operator=(Expected&& source) {
+        if (this != &source) {
+            _value = std::move(source._value);
+            _error = std::move(source._error);
+        }
+        return *this;
+    }
+    Expected(Expected&& vr) {
         _value = std::move(vr._value);
         _error = std::move(vr._error);
     }
+    ~Expected() = default;
+    auto Value() const { return _value.value(); }
+    bool HasValue() const { return _value.has_value(); }
+    T Result() const { return _error; }
 
    private:
     template <typename K, typename Z>
-    friend std::tuple<K, Z> get(const ValueResult<K, Z>& v);
+    friend std::tuple<K, Z> get(const Expected<K, Z>& v);
     std::optional<V> _value{std::nullopt};
     T _error;
 };
-///
-/// @brief StatusResult return  a result.
-///
-template <typename T>
-class StatusResult {
-   public:
-    StatusResult(const T& result) { _error = result; }
-    auto Result() const { return _error; }
 
-   private:
-    T _error;
-};
+template<typename T> using StatusResult =  Expected<T, std::byte>;
+
+///using Expected<T, void>
+/// typedef template<typename T, typename = void>  Expected<T, void> StatusResult ;
+
 ///
 /// @brief Function used to extract a value and use in stuctured binding.
 /// @param v value result to convert in a tuple.
 ///
 template <typename K, typename Z>
-std::tuple<K, Z> get(const ValueResult<K, Z>& v) {
+std::tuple<K, Z> get(const Expected<K, Z>& v) {
     return {v._error, v._value.value()};
 }
 enum class BitError { OK = 0, OUT_RANGE = 1 };

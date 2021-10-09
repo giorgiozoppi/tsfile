@@ -96,7 +96,7 @@ class BitMap {
     /// @param index position in the bitmap to retrieve.
     /// @return A tuple ValueResult = (error, bit value).
 
-    ValueResult<BitError, short> operator[](size_t index) const;
+    Expected<BitError, short> operator[](size_t index) const;
     ///
     /// @brief Destructor
     ///
