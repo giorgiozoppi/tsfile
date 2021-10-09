@@ -16,17 +16,12 @@
 *
 */
 
-#include <iterator>
-#include <limits>
-#if defined(_WIN32)
-#include <winsock.h>
-#else
-#include <arpa/inet.h>
-#endif  //
-
 #include <tsfile/common/bytebuffer.h>
 #include <tsfile/common/hash.h>
 #include <tsfile/common/pack.h>
+
+#include <iterator>
+#include <limits>
 
 #include "catch2/catch.hpp"
 
@@ -88,29 +83,15 @@ SCENARIO("Reverse iterating a bytebuffer should work", "[bytebuffer]") {
         }
     }
 }
-#if 0
-SCENARIO("We should always store primitive data in big endian") {
-    GIVEN("an empty bytebuffer") {
-        ByteBuffer intBuffer;
-        WHEN("We append an integer") {
-            THEN("Its big endian value is correct") {
-                intBuffer.Append(pack<int>(static_cast<int>(1000)));
-                auto int_value = intBuffer[0];
-                REQUIRE(1000 == int_value);
-                intBuffer.Clear();
-            }
-        }
-    }
-}
-#endif
 
 SCENARIO("We should always store primitive data in big endian") {
     GIVEN("an empty bytbuffer") {
         ByteBuffer buffer;
+
         WHEN("We append a short") {
             THEN("Its big endian value is correct") {
                 auto value_bytes = tsfile::Unpack(short(10));
-                buffer.Append(value_bytes);
+                buffer.Append(std::move(value_bytes));
                 REQUIRE(int(value_bytes[0]) == 0x00);
                 REQUIRE(int(value_bytes[1]) == 0x0A);
                 auto short_value = tsfile::PackShort(std::tuple{buffer[0], buffer[1]}, ByteOrder);
@@ -121,19 +102,19 @@ SCENARIO("We should always store primitive data in big endian") {
             WHEN("We append an integer") {
                 THEN("Its big endian value is correct") {
                     auto value_bytes = tsfile::Unpack(1000);
-                    buffer.Append(value_bytes);
+                    buffer.Append(std::move(value_bytes));
                     auto int_value = tsfile::PackInt(
                         std::tuple{buffer[0], buffer[1], buffer[2], buffer[3]}, ByteOrder);
                     REQUIRE(1000 == int_value);
                     buffer.Clear();
                 }
             }
-
             WHEN("We append an double") {
                 THEN("Its big endian value is correct") {
                     constexpr double max_double_value = 98.12123;
                     auto value_bytes = tsfile::Unpack(max_double_value);
-                    buffer.Append(std::move(value_bytes));
+                    std::vector<Byte> test{2, 3, 1};
+                    buffer.Append(std::move(test));
                     auto out_double_value =
                         tsfile::PackDouble(std::tuple{buffer[0], buffer[1], buffer[2], buffer[3],
                                                       buffer[4], buffer[5], buffer[6], buffer[7]},
@@ -146,7 +127,7 @@ SCENARIO("We should always store primitive data in big endian") {
                 THEN("Its big endian value is correct") {
                     float max_float_value{10.02f};
                     auto value_bytes = tsfile::Unpack(max_float_value);
-                    buffer.Append(value_bytes);
+                    buffer.Append(std::move(value_bytes));
                     auto out_float_value = tsfile::PackFloat(
                         std::tuple{buffer[0], buffer[1], buffer[2], buffer[3]}, ByteOrder);
                     REQUIRE(out_float_value == max_float_value);
@@ -154,7 +135,6 @@ SCENARIO("We should always store primitive data in big endian") {
                 }
             }
         }
-
     }
 }
 SCENARIO("We should be able to write and read correctly in a byte buffer") {
@@ -175,6 +155,17 @@ SCENARIO("We should be able to write and read correctly in a byte buffer") {
                 REQUIRE(j == v);
                 j++;
             }
+        }
+        buffer.Clear();
+    }
+    WHEN("We create a buffer with the same elements") {
+        std::iota(std::begin(buffer), std::end(buffer), 2);
+        ByteBuffer secondBuffer;
+        std::iota(std::begin(secondBuffer), std::end(secondBuffer), 2);
+        
+
+        THEN("the two buffer are equals") {
+            REQUIRE(buffer == secondBuffer);
         }
     }
 }

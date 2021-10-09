@@ -85,22 +85,23 @@ class Expected {
 
    private:
     template <typename K, typename Z>
-    friend std::tuple<K, Z> get(const Expected<K, Z>& v);
+    friend std::tuple<K, Z> to_tuple(const Expected<K, Z>& v);
     std::optional<V> _value{std::nullopt};
     T _error;
 };
 
-template<typename T> using StatusResult =  Expected<T, std::byte>;
+template <typename T>
+using StatusResult = Expected<T, std::byte>;
 
-///using Expected<T, void>
-/// typedef template<typename T, typename = void>  Expected<T, void> StatusResult ;
+/// using Expected<T, void>
+///  typedef template<typename T, typename = void>  Expected<T, void> StatusResult ;
 
 ///
 /// @brief Function used to extract a value and use in stuctured binding.
 /// @param v value result to convert in a tuple.
 ///
 template <typename K, typename Z>
-std::tuple<K, Z> get(const Expected<K, Z>& v) {
+std::tuple<K, Z> to_tuple(const Expected<K, Z>& v) {
     return {v._error, v._value.value()};
 }
 enum class BitError { OK = 0, OUT_RANGE = 1 };

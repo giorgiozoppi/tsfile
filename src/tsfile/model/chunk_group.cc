@@ -18,9 +18,12 @@
 
 #include <tsfile/common/algorithm.h>
 #include <tsfile/model/chunk_group.h>
+#include <tsfile/model/chunk_group_footer.h>
+
 
 namespace tsfile {
-Byte ChunkGroup::Delimiter() const { return byte_delimiter_; }
+ChunkGroup::ChunkGroup(ChunkGroupFooter&& group, Byte delim): footer_(std::move(group)), byte_delimiter_(delim) {}
+ChunkGroup::ChunkGroup(const ChunkGroupFooter& group, Byte delim): footer_(group), byte_delimiter_(delim) {}
 ChunkGroupFooter ChunkGroup::Footer() const { return footer_; }
 ChunkGroup::iterator ChunkGroup::begin() { return chunks_.begin(); }
 ChunkGroup::iterator ChunkGroup::end() { return chunks_.end(); }
@@ -30,7 +33,7 @@ ChunkGroup::const_iterator ChunkGroup::cbegin() const { return chunks_.cbegin();
 ChunkGroup::const_iterator ChunkGroup::cend() const { return chunks_.cend(); }
 void ChunkGroup::AddChunk(Chunk&& chunk) { chunks_.push_back(std::move(chunk)); }
 bool ChunkGroup::RemoveChunk(const Chunk& input) { return EraseUsingHash(chunks_, input); }
-
+Byte ChunkGroup::Delimiter() const { return byte_delimiter_; }
 ChunkGroup::const_reverse_iterator ChunkGroup::crbegin() const { return chunks_.crbegin(); }
 ChunkGroup::const_reverse_iterator ChunkGroup::crend() const { return chunks_.crend(); }
 }  // namespace tsfile

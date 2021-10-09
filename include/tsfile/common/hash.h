@@ -19,6 +19,7 @@
 #define IOTDB_NATIVE_HASH_H
 #include <tsfile/common/bytebuffer.h>
 #include <tsfile/common/concepts.h>
+#include <tsfile/common/pack.h>
 #include <tsfile/common/siphash.h>
 
 #include <array>
@@ -59,9 +60,9 @@ struct SipHash {
         ByteBuffer key;
         /*
         for (size_t k = 0; k < 4; k++) {
-            key.Append(pack(dist(e)));
-        }
-        */
+            auto random_bytes = Unpack(dist(e));
+            key.Append(std::move(random_bytes));
+        } */
         SipHashFunction(static_cast<void*>(local.Data()), local.Size(),
                         static_cast<void*>(key.Data()), static_cast<uint8_t*>(out.Data()),
                         out.Size());

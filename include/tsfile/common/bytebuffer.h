@@ -92,7 +92,9 @@ class BasicByteBuffer {
     /// @param buffer BasicByteBuffer to copy
     //
     BasicByteBuffer& operator=(const BasicByteBuffer<T>& buffer) {
-        bytes_ = buffer.bytes_;
+        if (this != &buffer) {
+            bytes_ = buffer.bytes_;
+        }
         return *this;
     }
     ///
@@ -100,7 +102,9 @@ class BasicByteBuffer {
     /// @param buffer BasicByteBuffer to copy
     //
     BasicByteBuffer& operator=(BasicByteBuffer<T>&& buffer) {
-        bytes_ = std::move(buffer.bytes_);
+        if (this != &buffer) {
+            bytes_ = std::move(buffer.bytes_);
+        }
         return *this;
     }
     ///
@@ -147,7 +151,13 @@ class BasicByteBuffer {
     /// @brief Append a buffer inside the byte buffer
     /// @param  data  buffer to append
     ///
-    void Append(const BasicByteBuffer& data) { bytes_.emplace_back(std::move(data)); }
+    void Append(const BasicByteBuffer& data) {
+        std::copy(std::begin(data), std::end(data), std::back_inserter(bytes_));
+    }
+    ///
+    /// @brief Append a buffer inside the byte buffer
+    /// @param  data  buffer to append
+    ///
 
     void Append(const std::vector<unsigned char>& data) {
         if (std::is_same_v<T, unsigned char>) {
@@ -156,9 +166,14 @@ class BasicByteBuffer {
             throw std::invalid_argument("cannot push incompatible data");
         }
     }
-    void Append(std::vector<unsigned char>&& data) {
-        if (std::is_same_v<T, unsigned char>) {
-            bytes_.emplace_back(std::move(data));
+    ///
+    /// @brief Append a buffer inside the byte buffer avoiding temporary
+    /// @param  data  buffer to append
+    ///
+
+    void Append(std::vector<Byte>&& data) {
+        if (std::is_same_v<T, Byte>) {
+            std::copy(std::begin(data), std::end(data), std::back_inserter(bytes_));
         } else {
             throw std::invalid_argument("cannot push incompatible data");
         }
@@ -247,7 +262,7 @@ class BasicByteBuffer {
 };
 template <typename T>
 bool operator==(const BasicByteBuffer<T>& lhs, const BasicByteBuffer<T>& rhs) {
-    return lhs.hex().compare(rhs.hex()) == 0;
+    return lhs.Hex().compare(rhs.Hex()) == 0;
 }
 typedef BasicByteBuffer<Byte> ByteBuffer;
 

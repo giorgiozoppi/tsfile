@@ -183,7 +183,7 @@ inline pack_byte2 EndianBytes2(T value) {
 template <typename T>
 inline pack_byte4 EndianBytes4(T value) {
     pack_byte4 v, out;
-    if (std::is_same<T, float>::value){
+    if (std::is_same<T, float>::value) {
         v.fvalue = value;
         out.fvalue = value;
     } else {

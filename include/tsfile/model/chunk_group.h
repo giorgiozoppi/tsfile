@@ -37,6 +37,7 @@ class ChunkGroup {
     using reverse_iterator = std::vector<Chunk>::reverse_iterator;
     using const_iterator = std::vector<Chunk>::const_iterator;
     using const_reverse_iterator = std::vector<Chunk>::const_reverse_iterator;
+    ChunkGroup(const ChunkGroupFooter& group, Byte delim);
     ///
     /// @brief Constructor
     /// @param group group footer
@@ -58,6 +59,12 @@ class ChunkGroup {
     ///
     /// @return true if it's removed.
     bool RemoveChunk(const Chunk& chunk);
+
+    ///
+    /// @brief Return the size
+    /// @return the return the number of items.
+    ///
+    size_t Size() const;
     ///
     /// @brief Get the chunk group footer
     ///
@@ -100,8 +107,8 @@ class ChunkGroup {
 
    private:
     std::vector<Chunk> chunks_;
-    Byte byte_delimiter_;
     ChunkGroupFooter footer_;
+    Byte byte_delimiter_;
 };
 }  // namespace tsfile
 
