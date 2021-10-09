@@ -164,7 +164,7 @@ unsigned long long PackUnsignedLongLong(const std::tuple<Args...>& t, Endianess 
 }
 
 template <typename T>
-inline std::vector<uint8_t> Unpack(T value) {
+inline std::vector<uint8_t> Unpack([[maybe_unused]] T value) {
     std::vector<uint8_t> data;
     return data;
 }

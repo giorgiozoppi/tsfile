@@ -27,6 +27,7 @@ ChunkGroup::ChunkGroup(const ChunkGroupFooter& group, Byte delim): footer_(group
 ChunkGroupFooter ChunkGroup::Footer() const { return footer_; }
 ChunkGroup::iterator ChunkGroup::begin() { return chunks_.begin(); }
 ChunkGroup::iterator ChunkGroup::end() { return chunks_.end(); }
+size_t ChunkGroup::Size() const { return chunks_.size(); }
 ChunkGroup::reverse_iterator ChunkGroup::rbegin() { return chunks_.rbegin(); }
 ChunkGroup::reverse_iterator ChunkGroup::rend() { return chunks_.rend(); }
 ChunkGroup::const_iterator ChunkGroup::cbegin() const { return chunks_.cbegin(); }

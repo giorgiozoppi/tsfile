@@ -32,7 +32,7 @@
 namespace tsfile {
 template <typename Key, typename RetValue>
 struct MurmurHash3 {
-    RetValue operator()(Key const& s) const noexcept {
+    RetValue operator()([[maybe_unused]] Key const& s) const noexcept {
         RetValue v;
         return v;
     }
