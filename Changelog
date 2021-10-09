@@ -27,3 +27,5 @@
 	* Added tests for packing/unpacking
 	* Added initial hashing and support for fallthrough
 	* Adding initial bloomfilter infrastructure.
+ Oct 09 2021 19:34:32	Giorgio Zoppi <giorgio.zoppi@gmail.com>
+	* - Removing StatusResult, doing everything with Expected

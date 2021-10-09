@@ -164,7 +164,7 @@ unsigned long long PackUnsignedLongLong(const std::tuple<Args...>& t, Endianess 
 }
 
 template <typename T>
-inline std::vector<uint8_t> Unpack(T value) {
+inline std::vector<uint8_t> Unpack([[maybe_unused]] T value) {
     std::vector<uint8_t> data;
     return data;
 }
@@ -183,7 +183,7 @@ inline pack_byte2 EndianBytes2(T value) {
 template <typename T>
 inline pack_byte4 EndianBytes4(T value) {
     pack_byte4 v, out;
-    if (std::is_same<T, float>::value){
+    if (std::is_same<T, float>::value) {
         v.fvalue = value;
         out.fvalue = value;
     } else {

@@ -33,7 +33,6 @@ SCENARIO("Should creation and copy be fine", "[bitmap]") {
                     REQUIRE(h[100].Value() == 1);
                     m = std::move(h);
                     REQUIRE(m[100].Value() == 1);
-                    
                 }
             }
         }

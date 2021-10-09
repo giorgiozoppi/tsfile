@@ -78,7 +78,7 @@ StatusResult<BitError> BitMap::Reset() {
     }
     return StatusResult<BitError>(BitError::OK);
 }
-ValueResult<BitError, short> BitMap::operator[](size_t index) const {
+Expected<BitError, short> BitMap::operator[](size_t index) const {
     auto numbits = count_ * 8;
     if (index < numbits) {
         auto byte_pos = index / 8;
@@ -86,9 +86,9 @@ ValueResult<BitError, short> BitMap::operator[](size_t index) const {
         auto current = bytes_.get()[byte_pos];
         std::bitset<8> v(current);
 
-        return ValueResult<BitError, short>(BitError::OK, v.test(rest_pos) ? 1 : 0);
+        return Expected<BitError, short>(BitError::OK, v.test(rest_pos) ? 1 : 0);
     }
-    return ValueResult<BitError, short>(BitError::OUT_RANGE, 0);
+    return Expected<BitError, short>(BitError::OUT_RANGE, 0);
 }
 ///
 /// @brief compare two bitmaps
