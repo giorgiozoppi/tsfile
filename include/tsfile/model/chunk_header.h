@@ -18,6 +18,7 @@
 
 #ifndef IOTDB_NATIVE_CHUNK_HEADER_H
 #define IOTDB_NATIVE_CHUNK_HEADER_H
+#include <tsfile/common/common.h>
 #include <tsfile/model/datatypes.h>
 
 #include <string>
@@ -105,6 +106,8 @@ class ChunkHeader {
     /// Return object hashcode
     ///
     uint64_t HashCode() const;
+
+    EXPOSE_MEMBERS(measurement_id_, data_size_, compression_type_, encoding_type_, num_of_pages_)
 
    private:
     ///

@@ -20,10 +20,11 @@
 #include <tsfile/model/chunk_group.h>
 #include <tsfile/model/chunk_group_footer.h>
 
-
 namespace tsfile {
-ChunkGroup::ChunkGroup(ChunkGroupFooter&& group, Byte delim): footer_(std::move(group)), byte_delimiter_(delim) {}
-ChunkGroup::ChunkGroup(const ChunkGroupFooter& group, Byte delim): footer_(group), byte_delimiter_(delim) {}
+ChunkGroup::ChunkGroup(ChunkGroupFooter&& group, Byte delim)
+    : footer_(std::move(group)), byte_delimiter_(delim) {}
+ChunkGroup::ChunkGroup(const ChunkGroupFooter& group, Byte delim)
+    : footer_(group), byte_delimiter_(delim) {}
 ChunkGroupFooter ChunkGroup::Footer() const { return footer_; }
 ChunkGroup::iterator ChunkGroup::begin() { return chunks_.begin(); }
 ChunkGroup::iterator ChunkGroup::end() { return chunks_.end(); }

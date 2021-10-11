@@ -93,6 +93,29 @@ class Expected {
 template <typename T>
 using StatusResult = Expected<T, std::byte>;
 
+#include <boost/preprocessor.hpp>
+#include <type_traits>
+
+#if defined(__GNUC__)
+#define PP_FUNCTION __PRETTY_FUNCTION__
+#elif defined(_MSC_VER)
+#define PP_FUNCTION __FUNCSIG__
+#else
+#define PP_FUNCTION __func__
+#endif
+
+#define PP_QUOTE(x) #x
+#define PP_STRINGIZE(x) PP_QUOTE(x)
+#define PP_WHERE __FILE__ ":" PP_STRINGIZE(__LINE__)
+
+#define EXPOSE_MEMBERS(...)                                                 \
+    auto members() { return std::forward_as_tuple(__VA_ARGS__); }           \
+    auto members() const { return std::forward_as_tuple(__VA_ARGS__); }     \
+    static constexpr auto names() {                                         \
+        return std::make_array(BOOST_PP_LIST_ENUM(BOOST_PP_LIST_TRANSFORM(  \
+            EXPOSE_MEMBERS_Q, @, BOOST_PP_VARIADIC_TO_LIST(__VA_ARGS__)))); \
+    }
+
 /// using Expected<T, void>
 ///  typedef template<typename T, typename = void>  Expected<T, void> StatusResult ;
 

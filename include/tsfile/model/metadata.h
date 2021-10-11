@@ -20,6 +20,7 @@
 #define IOTDB_MODEL_METADATA
 
 #include <tsfile/common/bloomfilter.h>
+#include <tsfile/model/statistics.h>
 
 #include <memory>
 #include <string>
@@ -29,21 +30,80 @@ namespace tsfile {
 
 typedef std::tuple<std::string, int64_t> MetadataIndexEntry;
 
-class MetadataIndexNodeType {};
+enum class MetadataIndexNodeType {
+    INTERNAL_DEVICE = 0,
+    LEAF_DEVICE = 1,
+    INTERNAL_MEASUREMENT = 2,
+    LEAF_MEASUREMENT = 3
+};
+
+class ChunkMetadataComponent {
+    virtual StatisticsMap* Statistics() const = 0;
+
+    boolIsModified() const = 0;
+
+    void setModified(boolean modified);
+
+    boolean isSeq();
+
+    void setSeq(boolean seq);
+
+    long getVersion();
+
+    void setVersion(long version);
+
+    long getOffsetOfChunkHeader();
+
+    long getStartTime();
+
+    long getEndTime();
+
+    boolean isFromOldTsFile();
+
+    IChunkLoader getChunkLoader();
+
+    boolean needSetChunkLoader();
+
+    void setChunkLoader(IChunkLoader chunkLoader);
+
+    void setFilePath(String filePath);
+
+    void setClosed(boolean closed);
+
+    TSDataType getDataType();
+
+    String getMeasurementUid();
+
+    void insertIntoSortedDeletions(long startTime, long endTime);
+
+    List<TimeRange> getDeleteIntervalList();
+
+    int serializeTo(OutputStream outputStream, boolean serializeStatistic) throws IOException;
+
+    byte getMask();
+
+    boolean isTimeColumn();
+
+    boolean isValueColumn();
+};
+class ChunkMetadata : public ChunkMetadataComponent {}
+
+};
+class ChunkMetadataComposite : public ChunkMetadataComponent {};
 
 class MetadataIndexNode {
    public:
-    using internal_buffer = typename std::vector<MetadataIndexEntry>;
-    using value_type = MetadataIndexEntry;
-    using iterator = typename internal_buffer::iterator;
-    using reverse_iterator = typename internal_buffer::reverse_iterator;
-    using const_reverse_iterator = typename internal_buffer::const_reverse_iterator;
-    using const_iterator = typename internal_buffer::const_iterator;
+    MetadataIndexNode(std::vector<std::unique_ptr<MetadataIndexEntry>>&& children, int64_t offset,
+                      MetadataIndexNodeType node_type)
+        : children_(std::move(children)), end_offset_(offset), node_type_(node_type) {}
+    MetadataIndexNode(const std::vector<std::unique_ptr<MetadataIndexEntry>>& children,
+                      int64_t offset, MetadataIndexNodeType node_type)
+        : children_(std::move(children)), end_offset_(offset), node_type_(node_type) {}
+    MetadataIndexNode(const MetadataIndexNodeType& node_type) : node_type_(node_type) {}
 
    private:
-    std::vector<MetadataIndexEntry> children_;
+    std::vector<std::unique_ptr<MetadataIndexEntry>> children_;
     int64_t end_offset_;
-
     MetadataIndexNodeType node_type_;
 };
 

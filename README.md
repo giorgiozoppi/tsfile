@@ -72,4 +72,15 @@ $ make docs
 $ make viewdocs
 ```
 The above command will generate the html documentation in build.
+## Author
+
+👤 **Giorgio Zoppi**
+
+* Twitter: [@zoppigiorgio](https://twitter.com/zoppigiorgio)
+* Github: [@https:\/\/github.com\/giorgiozoppi\/tsfile](https://github.com/giorgiozoppi/tsfile)
+* LinkedIn: [@https:\/\/www.linkedin.com\/in\/jozoppi](https://linkedin.com/in/jozoppi)
+
+## Show your support
+
+Give a ⭐️ if this project helped you!
 

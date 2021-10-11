@@ -1,5 +1,3 @@
-FILES=$(shell find ./include -iname '*.cc')
-HEADER_FILES=$(shell find ./include -iname '*.h')
 PHONY: all
 all: format build
 
@@ -54,8 +52,8 @@ stylecheck:
 
 format:
 	@echo "Formatting files with clang"
-	@clang-format -i $(FILES)
-	@clang-format -i $(HEADER_FILES)
+	clang-format -i $(shell find ./src -iname '*.cc')
+	clang-format -i $(shell find ./include -iname '*.h')
 
 .PHONY: test
 
@@ -70,3 +68,4 @@ viewcoverage:
 .PHONY: viewdocs
 viewdocs:
 	firefox $(shell pwd)/build/docs/html/index.html
+
