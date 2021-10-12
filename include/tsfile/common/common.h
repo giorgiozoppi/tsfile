@@ -19,6 +19,8 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include <boost/preprocessor.hpp>
+
 
 namespace tsfile {
 typedef uint8_t Byte;

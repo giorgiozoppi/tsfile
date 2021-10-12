@@ -80,7 +80,8 @@ class PageHeader {
     /// @brief Get to the statistics
     ///
     unique_statistics_ptr Statistics() const;
-
+    
+    EXPOSE_MEMBERS(uncompressed_size_, compressed_size_, page_type_, stat_)
    private:
     int uncompressed_size_{0};
     int compressed_size_{0};
