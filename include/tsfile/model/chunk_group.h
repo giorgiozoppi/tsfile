@@ -105,6 +105,8 @@ class ChunkGroup {
     ///
     const_reverse_iterator crend() const;
 
+    EXPOSE_MEMBERS(chunks_, footer_, byte_delimiter_)
+
    private:
     std::vector<Chunk> chunks_;
     ChunkGroupFooter footer_;

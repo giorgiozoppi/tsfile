@@ -15,9 +15,12 @@
 
 // include file zone.
 
+#include <boost/preprocessor.hpp>
 #include <optional>
 #include <string>
 #include <string_view>
+#include <tuple>
+#include <type_traits>
 #include <vector>
 
 namespace tsfile {
@@ -93,8 +96,21 @@ class Expected {
 template <typename T>
 using StatusResult = Expected<T, std::byte>;
 
-/// using Expected<T, void>
-///  typedef template<typename T, typename = void>  Expected<T, void> StatusResult ;
+#if defined(__GNUC__)
+#define PP_FUNCTION __PRETTY_FUNCTION__
+#elif defined(_MSC_VER)
+#define PP_FUNCTION __FUNCSIG__
+#else
+#define PP_FUNCTION __func__
+#endif
+
+#define PP_QUOTE(x) #x
+#define PP_STRINGIZE(x) PP_QUOTE(x)
+#define PP_WHERE __FILE__ ":" PP_STRINGIZE(__LINE__)
+
+#define EXPOSE_MEMBERS(...)                                       \
+    auto Members() { return std::forward_as_tuple(__VA_ARGS__); } \
+    auto Members() const { return std::forward_as_tuple(__VA_ARGS__); }
 
 ///
 /// @brief Function used to extract a value and use in stuctured binding.
@@ -104,6 +120,8 @@ template <typename K, typename Z>
 std::tuple<K, Z> to_tuple(const Expected<K, Z>& v) {
     return {v._error, v._value.value()};
 }
+/// @brief Defines an error when looking an item in a BitMap.
+
 enum class BitError { OK = 0, OUT_RANGE = 1 };
 
 /// TsFile Markers

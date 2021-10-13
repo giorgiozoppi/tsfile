@@ -109,6 +109,8 @@ class Chunk {
     ///
     size_t NumOfPages() const;
 
+    EXPOSE_MEMBERS(header_, marker_, pages_);
+
    private:
     ChunkHeader header_;
     Byte marker_{0};
