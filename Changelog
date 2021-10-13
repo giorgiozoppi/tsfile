@@ -37,3 +37,7 @@
 - Oct 09 2021 21:45:46	Giorgio Zoppi <giorgio.zoppi@gmail.com>
 	* Adding new tests for chunkgroup
 	* Fixed move semantics for buffer, now we just transfer until the end.
+
+- Oct 13 2021 10:45:02	Giorgio Zoppi <giorgio.zoppi@gmail.com>
+	* Adding test skeleton
+	* Adding metadata structure
