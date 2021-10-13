@@ -15,12 +15,13 @@
 
 // include file zone.
 
+#include <boost/preprocessor.hpp>
+#include <type_traits>
 #include <optional>
 #include <string>
 #include <string_view>
 #include <vector>
-#include <boost/preprocessor.hpp>
-
+#include <tuple>
 
 namespace tsfile {
 typedef uint8_t Byte;
@@ -95,8 +96,6 @@ class Expected {
 template <typename T>
 using StatusResult = Expected<T, std::byte>;
 
-#include <boost/preprocessor.hpp>
-#include <type_traits>
 
 #if defined(__GNUC__)
 #define PP_FUNCTION __PRETTY_FUNCTION__
@@ -111,15 +110,9 @@ using StatusResult = Expected<T, std::byte>;
 #define PP_WHERE __FILE__ ":" PP_STRINGIZE(__LINE__)
 
 #define EXPOSE_MEMBERS(...)                                                 \
-    auto members() { return std::forward_as_tuple(__VA_ARGS__); }           \
-    auto members() const { return std::forward_as_tuple(__VA_ARGS__); }     \
-    static constexpr auto names() {                                         \
-        return std::make_array(BOOST_PP_LIST_ENUM(BOOST_PP_LIST_TRANSFORM(  \
-            EXPOSE_MEMBERS_Q, @, BOOST_PP_VARIADIC_TO_LIST(__VA_ARGS__)))); \
-    }
-
-/// using Expected<T, void>
-///  typedef template<typename T, typename = void>  Expected<T, void> StatusResult ;
+    auto Members() { return std::forward_as_tuple(__VA_ARGS__); }           \
+    auto Members() const { return std::forward_as_tuple(__VA_ARGS__); }     \
+  
 
 ///
 /// @brief Function used to extract a value and use in stuctured binding.
@@ -129,6 +122,8 @@ template <typename K, typename Z>
 std::tuple<K, Z> to_tuple(const Expected<K, Z>& v) {
     return {v._error, v._value.value()};
 }
+/// @brief Defines an error when looking an item in a BitMap.
+
 enum class BitError { OK = 0, OUT_RANGE = 1 };
 
 /// TsFile Markers

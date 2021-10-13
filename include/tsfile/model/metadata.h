@@ -30,17 +30,33 @@
 
 namespace tsfile {
 
+
+
+///
+/// @brief MetadataIndexEntry is an entry of the metadata index.
 typedef std::tuple<std::string, int64_t> MetadataIndexEntry;
 
+///
+/// @brief MetadataIndexNodeType specifies the type of the nodes in the current metadata tree, we have 
+/// four types of nodes
+///  LEAF_DEVICE            leaf nodes of the index tree's device level
+///  INTERNAL_MEASUREMENT   internal nodes of the index tree's measurement level
+///  LEAF_MEASUREMENT       leaf nodes of the index tree's device level, points to TimeseriesMetadata  
+///
 enum class MetadataIndexNodeType {
     INTERNAL_DEVICE = 0,
     LEAF_DEVICE = 1,
     INTERNAL_MEASUREMENT = 2,
     LEAF_MEASUREMENT = 3
 };
+class TimeSeriesMetadataComponent {
+
+};
+
 class TimeRange {};
-class ChunkMetadataComponent {
-    virtual ~ChunkMetadataComponent() noexcept = 0;
+class IChunkMetadata {
+   public:
+    virtual ~IChunkMetadata() noexcept = 0;
     virtual std::shared_ptr<StatisticsMap> Statistics() const = 0;
 
     virtual bool IsModified() const = 0;
@@ -53,28 +69,29 @@ class ChunkMetadataComponent {
 
     virtual long GetVersion() const = 0;
 
-    virtual void SetVersion(long version) = 0;
+    virtual void SetVersion(int64_t version) = 0;
 
-    virtual void long GetOffsetOfChunkHeader() = 0;
+    virtual int64_t GetOffsetOfChunkHeader() const = 0;
 
     virtual int64_t GetStartTime() const = 0;
 
-    virtual int64_t long GetEndTime() const = 0;
+    virtual int64_t GetEndTime() const = 0;
 
-    virtual TSDataType GetDataType() const = 0;
+    virtual TsDataType GetDataType() const = 0;
 
-    virtual std::string GetMeasurementUid() = 0;
+    virtual std::string GetMeasurementUid() const = 0;
 
-    virtual std::vector<TimeRange> GetDeleteIntervalList() = 0;
+    virtual std::vector<TimeRange> GetDeleteIntervalList() const = 0;
 
-    virtual std::byte GetMask() = 0;
+    virtual Byte GetMask() const = 0;
 
-    virtual bool IsTimeColumn() = 0;
+    virtual bool IsTimeColumn() const = 0;
 
-    virtual bool IsValueColumn() = 0;
+    virtual bool IsValueColumn() const = 0;
 };
-class ChunkMetadata : public ChunkMetadataComponent {
-    ~ChunkMetadata() noexcept override{};
+class ChunkMetadata : public IChunkMetadata {
+   public:
+    ~ChunkMetadata() = default;
     std::shared_ptr<StatisticsMap> Statistics() const override;
     bool IsModified() const override;
 
@@ -86,21 +103,21 @@ class ChunkMetadata : public ChunkMetadataComponent {
 
     long GetVersion() const override;
 
-    void SetVersion(long version) const override;
+    void SetVersion(int64_t version) override;
 
-    long GetOffsetOfChunkHeader() const override;
+    int64_t GetOffsetOfChunkHeader() const override;
 
     int64_t GetStartTime() const override;
 
     int64_t GetEndTime() const override;
 
-    TSDataType GetDataType() const override;
+    TsDataType GetDataType() const override;
 
     std::string GetMeasurementUid() const override;
 
     std::vector<TimeRange> GetDeleteIntervalList() const override;
 
-    std::byte GetMask() const override;
+    Byte GetMask() const override;
 
     bool IsTimeColumn() const override;
 
@@ -115,13 +132,13 @@ class ChunkMetadata : public ChunkMetadataComponent {
      */
 
     int64_t _offset_of_chunk_header;
-    TSDataType _ts_data_types;
+    TsDataType _ts_data_types;
 
     /**
      * version is used to define the order of operations(insertion, deletion, update). version is
      * set according to its belonging ChunkGroup only when being queried, so it is not persisted.
      */
-    long version;
+    int64_t _version;
 
     /** A list of deleted intervals. */
     std::vector<TimeRange> _delete_interval_list;
@@ -135,7 +152,7 @@ class ChunkMetadata : public ChunkMetadataComponent {
 
     bool _is_from_old_file{false};
 
-    long _ram_size;
+    int64_t _ram_size;
     static constexpr int CHUNK_METADATA_FIXED_RAM_SIZE = 80;
 
     // used for SeriesReader to indicate whether it is a seq/unseq timeseries metadata
@@ -144,28 +161,33 @@ class ChunkMetadata : public ChunkMetadataComponent {
     std::string _file_path;
     Byte _mask;
 };
-class ChunkMetadataComposite : public ChunkMetadataComponent {
+class ChunkMetadataArray : public IChunkMetadata {
    public:
-    ChunkMetadataComposite(std::unique_ptr<IChunkMetadata>&& chunk_metadata,
-                           std::vector << IChunkMetadata >> &&chunk_metadatas) {
-        time_chunk_metadata_ = chunk_metadata;
-        value_chunk_metadata_list_ = valueChunkMetadataList;
+    ChunkMetadataArray(std::unique_ptr<IChunkMetadata>&& chunk_metadata,
+                           std::vector<IChunkMetadata>&& chunk_array) {
+        time_chunk_metadata_ = std::move(chunk_metadata);
+        value_chunk_metadata_list_ = std::move(chunk_array);
     }
+    ~ChunkMetadataArray() = default;
 
    private:
     // ChunkMetadata for time column
-    std::unique_ptr<IChunkMetadata> time_chunk_metadata_;
+    std::unique_ptr<ChunkMetadata> time_chunk_metadata_;
     // ChunkMetadata for all subSensors in the vector
     std::vector<std::unique_ptr<IChunkMetadata>> value_chunk_metadata_list_;
 };
+///
+/// @brief MetadataIndexNode forms an index tree (secondary index) like a B+ tree, which consists of two levels: 
+/// entity index level and measurement index level. 
+/// The IndexNodeType has four enums: INTERNAL_DEVICE, LEAF_DEVICE, INTERNAL_MEASUREMENT, LEAF_MEASUREMENT, 
+/// which indicates the internal or leaf node of entity index level and measurement index level respectively. 
+/// Only the LEAF_MEASUREMENT nodes point to TimeseriesMetadata.
+///
 
 class MetadataIndexNode {
    public:
     MetadataIndexNode(std::vector<std::unique_ptr<MetadataIndexEntry>>&& children, int64_t offset,
                       MetadataIndexNodeType node_type)
-        : children_(std::move(children)), end_offset_(offset), node_type_(node_type) {}
-    MetadataIndexNode(const std::vector<std::unique_ptr<MetadataIndexEntry>>& children,
-                      int64_t offset, MetadataIndexNodeType node_type)
         : children_(std::move(children)), end_offset_(offset), node_type_(node_type) {}
     MetadataIndexNode(const MetadataIndexNodeType& node_type) : node_type_(node_type) {}
 
