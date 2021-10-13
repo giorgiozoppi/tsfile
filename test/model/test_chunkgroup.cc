@@ -9,11 +9,11 @@
 #include "tsfile/model/utility.h"
 namespace tsfile {
 SCENARIO("We can work correctly with a chunkgroup", "[model]") {
-    GIVEN("A chunk group") {
+    GIVEN("a chunk group") {
         ChunkGroupFooter footer{"ShipThermometer", 1000, 10};
         auto group = std::make_unique<tsfile::ChunkGroup>(footer, kChunkGroupFooter);
         std::vector<Chunk> local_chunks;
-        THEN("You can add chunks") {
+        THEN("you can add chunks") {
             
             for (auto k = 0; k < 10; ++k) {
                 const int kNumPages = 10;
@@ -36,14 +36,14 @@ SCENARIO("We can work correctly with a chunkgroup", "[model]") {
             }
             REQUIRE(group->Size() == 10);
         }
-        THEN("You can remove chunks") {
+        THEN("you can remove chunks") {
            group->RemoveChunk(local_chunks[0]);
            auto result = group->RemoveChunk(0);
            REQUIRE(result.HasValue() == true);
            REQUIRE(group->Size() == 8);            
         }
-        THEN("You can list all chunks both forward and backward") {}
-        THEN("You can retrieve his footer") {}
+        THEN("you can list all chunks both forward and backward") {}
+        THEN("you can retrieve his footer") {}
     }
 }
 }  // namespace tsfile
