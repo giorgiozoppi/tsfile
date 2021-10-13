@@ -90,7 +90,7 @@ class ChunkMetadata : public IChunkMetadata {
     std::shared_ptr<StatisticsMap> Statistics() const override;
     bool IsModified() const override;
 
-    void SetModified(bool modified);
+    void SetModified(bool modified) override;
 
     bool IsSeq() const override;
 
@@ -185,24 +185,25 @@ class MetadataIndexNode {
                       MetadataIndexNodeType node_type)
         : children_(std::move(children)), end_offset_(offset), node_type_(node_type) {}
     MetadataIndexNode(const MetadataIndexNodeType& node_type) : node_type_(node_type) {}
+    MetadataIndexNodeType Type() const { return node_type_; }
+    int64_t MaxOffset() const { return end_offset_; }
 
    private:
     std::vector<std::unique_ptr<MetadataIndexEntry>> children_;
     int64_t end_offset_;
-    MetadataIndexNodeType node_type_;
+    MetadataIndexNodeType node_type_{};
 };
 
 ///
 /// @brief TSFileMetaData collects all metadata info and saves in its data structure.
 ///
-class TsFileMetadata {
-   private:
+struct TsFileMetadata {
     // bloom filter
     std::unique_ptr<BloomFilter> bloom_filter_;
     // List of <name, offset, childMetadataIndexType>
     std::unique_ptr<MetadataIndexNode> metadata_index_;
     // offset of MetaMarker.SEPARATOR
-    uint64_t meta_offset_;
+    uint64_t meta_offset_{0};
 };
 }  // namespace tsfile
 #endif
