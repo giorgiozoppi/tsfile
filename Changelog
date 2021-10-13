@@ -41,3 +41,5 @@
 - Oct 13 2021 10:45:02	Giorgio Zoppi <giorgio.zoppi@gmail.com>
 	* Adding test skeleton
 	* Adding metadata structure
+	* Added test for Expected
+	* Added test for algorithm
