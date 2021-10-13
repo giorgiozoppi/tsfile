@@ -62,7 +62,11 @@ class Expected {
         _value = std::make_optional(value);
         _error = result;
     }
-    Expected(const Expected& source) : _value(source._value), _error(source._value) {}
+    Expected(const T& result, const std::optional<V>& value) {
+        _value = value;
+        _error = result;
+    }
+    Expected(const Expected& source) : _value(source._value), _error(source._error) {}
     Expected& operator=(const Expected& source) {
         if (this != &source) {
             _value = source._value;
