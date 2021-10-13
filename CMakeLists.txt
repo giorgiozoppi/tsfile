@@ -6,6 +6,12 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(Boost_USE_STATIC_LIBS ON) 
+set(Boost_USE_MULTITHREADED ON)  
+set(Boost_USE_STATIC_RUNTIME OFF) 
+find_package(Boost 1.71.0 COMPONENTS system wave) 
+
+
 set(CMAKE_VERBOSE_MAKEFILE 0)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
@@ -31,6 +37,9 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
 include(${CMAKE_SOURCE_DIR}/cmake/doxygen.cmake)
 endif()
 
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS}) 
+endif()
 
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -41,7 +50,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   else()
     target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -std=c++20 -stdlib=libc++ -v)
   endif()
-  elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # using GCC
   if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -std=c++20  -fconcepts -fmodules-ts -g -O0 -fprofile-arcs -ftest-coverage)
@@ -50,4 +59,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   target_compile_options(tsfile PRIVATE -Wall -Wextra -Werror -std=c++20  -fconcepts -fmodules-ts)
   endif()
 endif()
+target_link_libraries(tsfile ${Boost_LIBRARIES} Boost::headers)
+
 # TODO: Run -Werror in CI.
