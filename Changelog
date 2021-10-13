@@ -10,7 +10,7 @@
 	* Adding chunk and chunkheader unittest
 
 - Sep 24 2021 10:04:44	Giorgio Zoppi <giorgio.zoppi@gmail.com>
-	* C++20 Concepts with static polimorphism in statistics
+	* C++20 Concepts with static polymorphism in statistics
 	* Statistics now is container indipendent from the value types.
 
 - Sep 25 2021 19:45:55	Giorgio Zoppi <giorgio.zoppi@gmail.com>
