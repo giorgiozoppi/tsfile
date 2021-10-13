@@ -9,8 +9,17 @@
 #include <vector>
 /// Endianess
 namespace tsfile {
-// here we handle endianess.
-enum class Endianess { LittleEndian = 0, BigEndian };
+///
+/// @brief Enum that indicates the architecture endian
+///  Byte Index:      0  1
+//    ---------------------
+//    Big-Endian:     12 34   
+//    Little-Endian:  34 12
+//
+enum class Endianess { 
+    LittleEndian = 0, ///< Indicate a Little-Endian architecture,    i.e 13330 = 0x12 0x34
+    BigEndian        ///< Indicate a little Big-Endian architecture, i.e 13330 = 0x34 0x12
+};
 
 typedef union byte4 {
     uint8_t byte[4];
@@ -41,8 +50,15 @@ constexpr uint64_t to_big_endian(uint64_t n) { return n; }
 
 #else
 #define IOTDB_BIG_ENDIAN 0
+///
+/// @brief Indicate the real endianess of the architecture at compile time.
+///
 constexpr Endianess ByteOrder = Endianess::LittleEndian;
 #endif
+///
+/// @brief Exception that can occur when we pack/unpack bytes giving the wrong datatype dimension.
+/// It might happen for example when the user provides 3 bytes for packing/unpacking a short int.
+///
 class PackException : public std::logic_error {
    public:
     explicit PackException(const std::string& message, size_t args, size_t required_args)

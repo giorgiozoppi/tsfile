@@ -18,6 +18,7 @@
 
 #ifndef IOTDB_NATIVE_CHUNK_GROUP_H
 #define IOTDB_NATIVE_CHUNK_GROUP_H
+
 #include <tsfile/common/common.h>
 #include <tsfile/model/chunk.h>
 #include <tsfile/model/chunk_group_footer.h>
@@ -26,7 +27,6 @@
 #include <memory>
 #include <vector>
 namespace tsfile {
-
 ///
 /// @brief A ChunkGroup stores the data of an entity for a period of time.
 //  It consists of several Chunk, a byte delimiter 0x00 and a ChunkFooter.
@@ -59,7 +59,10 @@ class ChunkGroup {
     ///
     /// @return true if it's removed.
     bool RemoveChunk(const Chunk& chunk);
-
+    ///
+    /// @brief Remove a chunk by index and returns the chunk removed or an error
+    /// @param pos Position in the chunk
+    Expected<ErrorChunk, Chunk> RemoveChunk(size_t pos);
     ///
     /// @brief Return the size
     /// @return the return the number of items.

@@ -28,26 +28,26 @@
 namespace tsfile {
 
 SCENARIO("MetadataIndex should behave like a real index", "[model]") {
-    GIVEN("A metadata index") {
+    GIVEN("a metadata index") {
         auto index = std::make_unique<MetadataIndexNode>(MetadataIndexNodeType::INTERNAL_DEVICE);
 
-        WHEN("Add 5 entities with 5 measurements each") {
+        WHEN("you add 5 entities with 5 measurements each") {
             THEN("We should be able to search for an element") {}
         }
-        WHEN("Add 1 entity with 150 measurements") {
+        WHEN("you add 1 entity with 150 measurements") {
             THEN("We should be able to search for an element") {}
         }
-        WHEN("Add 150 entities with 10 measurement each") {
+        WHEN("you add 150 entities with 10 measurement each") {
             THEN("We should be able to search for an element") {}
         }
-        WHEN("Add 150 entities with 150 measurements each") {
+        WHEN("you add 150 entities with 150 measurements each") {
             THEN("We should be able to search for an element") {}
         }
-        WHEN("Add 1 entities with 2 vectors, 9 measurements for each vector") {
+        WHEN("you add 1 entities with 2 vectors, 9 measurements for each vector") {
             THEN("We should be able to search for an element") {}
             THEN("We should update add another vector and find the added value") {}
         }
-        WHEN("Add 1 entities with 10 vectors, 9 measurements for each vector") {
+        WHEN("you add 1 entities with 10 vectors, 9 measurements for each vector") {
             THEN("We should be able to search for an element") {}
             THEN("We should clean the index without leaks") {}
             THEN("Only one INTERNAL_IDENTITY should be present") {}

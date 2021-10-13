@@ -29,17 +29,18 @@ SCENARIO("We can work correctly with a chunkgroup", "[model]") {
                 auto sample_page = tsfile::make_page(4096, 1024, tsfile::TsDataType::INT32);
                 for (int i = 0; i < kNumPages; ++i) {
                     chunk.AddPage(make_page(4096, 1024, TsDataType::INT32));
+                    auto copy = chunk;
                     local_chunks.emplace_back(chunk);
                 }
                 group->AddChunk(std::move(chunk));
             }
-            //REQUIRE(group->Size() == 10);
+            REQUIRE(group->Size() == 10);
         }
         THEN("You can remove chunks") {
-           //group->RemoveChunk(local_chunks[0]);
-           // group->RemoveChunk(local_chunks[1]);
-            //REQUIRE(group->Size() == 8);
-            
+           group->RemoveChunk(local_chunks[0]);
+           auto result = group->RemoveChunk(0);
+           REQUIRE(result.HasValue() == true);
+           REQUIRE(group->Size() == 8);            
         }
         THEN("You can list all chunks both forward and backward") {}
         THEN("You can retrieve his footer") {}

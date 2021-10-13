@@ -30,6 +30,13 @@
 
 namespace tsfile {
 
+/// @brief An errorchunk indicates the operation related to a chunk/chunkgroup
+enum class ErrorChunk {
+    OK,               ///< The operation on a chuck has been successfully.
+    CHUNK_NOT_FOUND,  ///< The search on a chunk group failed.
+    PAGE_NOT_FOUND,   ///<  The page has not been found in a chunk.
+    HEADER_INVALID    ///<  The header is invalid.
+};
 /// @brief Class that holds the responsibility to model a chunk
 ///
 class Chunk {

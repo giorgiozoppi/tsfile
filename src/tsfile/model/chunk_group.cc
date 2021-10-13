@@ -15,7 +15,7 @@
 * limitations under the License.
 *
 */
-
+#include <tsfile/common/common.h>
 #include <tsfile/common/algorithm.h>
 #include <tsfile/model/chunk_group.h>
 #include <tsfile/model/chunk_group_footer.h>
@@ -34,6 +34,14 @@ ChunkGroup::reverse_iterator ChunkGroup::rend() { return chunks_.rend(); }
 ChunkGroup::const_iterator ChunkGroup::cbegin() const { return chunks_.cbegin(); }
 ChunkGroup::const_iterator ChunkGroup::cend() const { return chunks_.cend(); }
 void ChunkGroup::AddChunk(Chunk&& chunk) { chunks_.push_back(std::move(chunk)); }
+Expected<ErrorChunk, Chunk>  ChunkGroup::RemoveChunk(size_t pos) {
+    if (pos >= chunks_.size()) {
+        return Expected<ErrorChunk, Chunk>(ErrorChunk::CHUNK_NOT_FOUND);
+    }
+    auto v = chunks_[pos];
+    chunks_.erase(chunks_.begin()+pos);
+    return Expected<ErrorChunk, Chunk>(ErrorChunk::OK, v);
+} 
 bool ChunkGroup::RemoveChunk(const Chunk& input) { return EraseUsingHash(chunks_, input); }
 Byte ChunkGroup::Delimiter() const { return byte_delimiter_; }
 ChunkGroup::const_reverse_iterator ChunkGroup::crbegin() const { return chunks_.crbegin(); }

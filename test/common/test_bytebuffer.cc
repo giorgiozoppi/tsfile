@@ -85,7 +85,7 @@ SCENARIO("Reverse iterating a bytebuffer should work", "[bytebuffer]") {
 }
 
 SCENARIO("We should always store primitive data in big endian") {
-    GIVEN("an empty bytbuffer") {
+    GIVEN("an empty bytebuffer") {
         ByteBuffer buffer;
 
         WHEN("We append a short") {
