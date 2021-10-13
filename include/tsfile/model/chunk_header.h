@@ -28,6 +28,9 @@ namespace tsfile {
 ///
 class ChunkHeader {
    public:
+    ChunkHeader() = default;
+    ~ChunkHeader() = default;
+
     ///
     /// @brief Construct a chunk header
     /// @param measurementID     id of measurement

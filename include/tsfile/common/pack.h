@@ -13,12 +13,12 @@ namespace tsfile {
 /// @brief Enum that indicates the architecture endian
 ///  Byte Index:      0  1
 //    ---------------------
-//    Big-Endian:     12 34   
+//    Big-Endian:     12 34
 //    Little-Endian:  34 12
 //
-enum class Endianess { 
-    LittleEndian = 0, ///< Indicate a Little-Endian architecture,    i.e 13330 = 0x12 0x34
-    BigEndian        ///< Indicate a little Big-Endian architecture, i.e 13330 = 0x34 0x12
+enum class Endianess {
+    LittleEndian = 0,  ///< Indicate a Little-Endian architecture,    i.e 13330 = 0x12 0x34
+    BigEndian          ///< Indicate a little Big-Endian architecture, i.e 13330 = 0x34 0x12
 };
 
 typedef union byte4 {
@@ -121,6 +121,18 @@ int PackInt(const std::tuple<Args...>& t, Endianess order) {
         t);
     return v.ivalue;
 }
+/*
+int PackInt(const unsigned char* data, size_t size, Endianess order) {
+    pack_byte4 v;
+    for (size_t pos = 0; pos < size; pos++) {
+        if (order != Endianess::BigEndian) {
+            v.byte[size - pos++] = data[pos];
+        } else {
+            v.byte[pos++] = data[pos];
+        }
+    }
+    return v.ivalue;
+}*/
 template <typename... Args>
 float PackFloat(const std::tuple<Args...>& t, Endianess order) {
     size_t n = sizeof...(Args);

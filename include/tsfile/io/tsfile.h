@@ -18,29 +18,38 @@
 
 #ifndef IOTDB_NATIVE_TSFILE_H
 #define IOTDB_NATIVE_TSFILE_H
-#if 0
+#include <tsfile/common/common.h>
+#include <tsfile/model/chunk_group.h>
+#include <tsfile/model/metadata.h>
+
 #include <array>
 #include <cstddef>
 #include <memory>
 #include <string>
 
-#include "model/chunk_group.h"
-#include "model/ts_index.h"
-
-namespace iotdb::tsfile {
-class tsfile {
-    std::string _magic_string;
-    std::byte _version_number[6];
-    std::unique_ptr<iotdb::tsfile::chunk_group> _chunks;
-    std::unique_ptr<iotdb::tsfile::chunk_index> _chunk_index;
-    std::unique_ptr<iotdb::tsfile::time_series_index> _ts_index;
-    std::unique_ptr<iotdb::tsfile::secondary_index> _secondary_index;
-
+namespace tsfile {
+///
+/// @brief Represent the structure of a IOTDB TSFile in memory.
+///
+class TsFile {
    public:
-    const std::array<std::byte, 6> version() const { return _version_number; }
-    const std::string magic_string() const { return _magic_string; }
+    static constexpr unsigned short kVersionSize = 6;
+
+    ///
+    /// @brief Supported version for the IOTDB TSFile.
+    ///
+    const std::array<Byte, kVersionSize> Version() const { return version_number_; }
+    ///
+    /// @brief MagicString for the IOTDB TSFile
+    ///
+    const std::string MagicString() const { return magic_string_; }
+
+   private:
+    std::array<Byte, kVersionSize> version_number_;
+    std::string magic_string_;
+    std::unique_ptr<ChunkGroup> chunks_;
+    std::unique_ptr<TsFileMetadata> metadata_;
 };
-}  // namespace iotdb::tsfile
-#endif
+}  // namespace tsfile
 
 #endif  // TSFILE_TSFILE_H

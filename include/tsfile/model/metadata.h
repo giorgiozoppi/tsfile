@@ -20,6 +20,7 @@
 #define IOTDB_MODEL_METADATA
 #include <tsfile/common/bloomfilter.h>
 #include <tsfile/common/common.h>
+#include <tsfile/common/timerange.h>
 #include <tsfile/model/datatypes.h>
 #include <tsfile/model/statistics.h>
 
@@ -47,8 +48,7 @@ enum class MetadataIndexNodeType {
     INTERNAL_MEASUREMENT = 2,
     LEAF_MEASUREMENT = 3
 };
-class TimeSeriesMetadataComponent {};
-class TimeRange {};
+class ITimeSeriesMetadata {};
 class IChunkMetadata {
    public:
     virtual ~IChunkMetadata() noexcept = 0;

@@ -20,8 +20,6 @@
 
 namespace tsfile {
 
-PageHeader::PageHeader() = default;
-
 PageHeader::PageHeader(int uncompressed_size, int compressed_size, TsDataType page_type)
     : uncompressed_size_(uncompressed_size),
       compressed_size_(compressed_size),

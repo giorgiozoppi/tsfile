@@ -35,7 +35,7 @@ class PageHeader {
     ///
     /// @brief Constructor
     ///
-    PageHeader();
+    PageHeader() = default;
 
     /// @brief Constructor
     /// @param uncompressed_size  Header uncompressed size
@@ -48,16 +48,20 @@ class PageHeader {
     PageHeader(const PageHeader& header);
     ///
     /// @brief Move assignement operator
+    /// @param header Source page to copy
     ///
     PageHeader& operator=(const PageHeader& header);
 
     ///
     /// @brief Move assignment constructor
+    /// @param header Source page to move
     ///
     PageHeader(PageHeader&& header) noexcept;
     ///
     /// @brief Move assignment operator
+    /// @param header Source page to move
     ///
+
     PageHeader& operator=(PageHeader&& header) noexcept;
     ///
     /// @brief Destructor
@@ -73,7 +77,7 @@ class PageHeader {
     int CompressedSize() const;
     ///
     /// @brief Set the statistics
-    /// @param Pointer to the statistics
+    /// @param statistics Pointer to the statistics
     ///
     void SetStatistics(unique_statistics_ptr&& statistics) noexcept;
     ///

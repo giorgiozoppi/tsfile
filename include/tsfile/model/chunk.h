@@ -24,6 +24,7 @@
 #include <tsfile/model/page.h>
 
 #include <cstddef>
+#include <iostream>
 #include <memory>
 #include <numeric>
 #include <vector>
@@ -46,7 +47,42 @@ class Chunk {
     using reverse_iterator = std::vector<Page>::reverse_iterator;
     using const_reverse_iterator = std::vector<Page>::const_reverse_iterator;
     using unique_page_ptr = std::unique_ptr<Page>;
-
+    /*
+        Chunk(const Chunk& source) {
+            header_ = source.header_;
+            marker_ = source.marker_;
+            pages_ = source.pages_;
+            hash_code_ = source.hash_code_;
+            std::cout << "Copy" << std::endl;
+        }
+        Chunk& operator=(const Chunk& source) {
+            if (this != &source) {
+                header_ = source.header_;
+                marker_ = source.marker_;
+                pages_ = source.pages_;
+                hash_code_ = source.hash_code_;
+                std::cout << "Copy Assign" << std::endl;
+            }
+            return *this;
+        }
+        Chunk(Chunk&& source) {
+            header_ = std::move(source.header_);
+            marker_ = std::move(source.marker_);
+            pages_ = std::move(source.pages_);
+            hash_code_ = std::move(source.hash_code_);
+            std::cout << "Move" << std::endl;
+        }
+        Chunk& operator=(Chunk&& source) {
+            if (this != &source) {
+                header_ = std::move(source.header_);
+                marker_ = std::move(source.marker_);
+                pages_ = std::move(source.pages_);
+                hash_code_ = std::move(source.hash_code_);
+                std::cout << "Copy Assign" << std::endl;
+            }
+            return *this;
+        } */
+    ~Chunk() = default;
     /// nsructor
     ///  @paramth chunk
     ///
@@ -119,10 +155,11 @@ class Chunk {
     EXPOSE_MEMBERS(header_, marker_, pages_);
 
    private:
+    void ComputeHash();
     ChunkHeader header_;
     Byte marker_{0};
     std::vector<Page> pages_;
-    uint64_t hash_code_;
+    uint64_t hash_code_{0};
 };
 
 }  // namespace tsfile

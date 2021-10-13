@@ -21,7 +21,16 @@ namespace tsfile {
 template <typename T>
 class TsStream {
    public:
-    enum class ByteOrder { BigEndian, LittleEndian };
+    ///
+    /// @brief the byteOder to write into the stream
+    ///
+    enum class ByteOrder {
+        BigEndian,    /// < read/write in a big endian way
+        LittleEndian  /// < reead/write in a little endian.
+    };
+    ///
+    /// @brief Operation on a file.
+    ///
     enum class Status { Ok, ReadPastEnd, ReadCorruptData, WriteFailed };
 };
 }  // namespace tsfile
