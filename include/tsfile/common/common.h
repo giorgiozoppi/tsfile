@@ -16,12 +16,12 @@
 // include file zone.
 
 #include <boost/preprocessor.hpp>
-#include <type_traits>
 #include <optional>
 #include <string>
 #include <string_view>
-#include <vector>
 #include <tuple>
+#include <type_traits>
+#include <vector>
 
 namespace tsfile {
 typedef uint8_t Byte;
@@ -96,7 +96,6 @@ class Expected {
 template <typename T>
 using StatusResult = Expected<T, std::byte>;
 
-
 #if defined(__GNUC__)
 #define PP_FUNCTION __PRETTY_FUNCTION__
 #elif defined(_MSC_VER)
@@ -109,10 +108,9 @@ using StatusResult = Expected<T, std::byte>;
 #define PP_STRINGIZE(x) PP_QUOTE(x)
 #define PP_WHERE __FILE__ ":" PP_STRINGIZE(__LINE__)
 
-#define EXPOSE_MEMBERS(...)                                                 \
-    auto Members() { return std::forward_as_tuple(__VA_ARGS__); }           \
-    auto Members() const { return std::forward_as_tuple(__VA_ARGS__); }     \
-  
+#define EXPOSE_MEMBERS(...)                                       \
+    auto Members() { return std::forward_as_tuple(__VA_ARGS__); } \
+    auto Members() const { return std::forward_as_tuple(__VA_ARGS__); }
 
 ///
 /// @brief Function used to extract a value and use in stuctured binding.

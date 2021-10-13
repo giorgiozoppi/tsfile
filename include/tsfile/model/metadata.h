@@ -29,19 +29,17 @@
 #include <vector>
 
 namespace tsfile {
-
-
-
 ///
 /// @brief MetadataIndexEntry is an entry of the metadata index.
 typedef std::tuple<std::string, int64_t> MetadataIndexEntry;
 
 ///
-/// @brief MetadataIndexNodeType specifies the type of the nodes in the current metadata tree, we have 
-/// four types of nodes
+/// @brief MetadataIndexNodeType specifies the type of the nodes in the current metadata tree, we
+/// have four types of nodes
 ///  LEAF_DEVICE            leaf nodes of the index tree's device level
 ///  INTERNAL_MEASUREMENT   internal nodes of the index tree's measurement level
-///  LEAF_MEASUREMENT       leaf nodes of the index tree's device level, points to TimeseriesMetadata  
+///  LEAF_MEASUREMENT       leaf nodes of the index tree's device level, points to
+///  TimeseriesMetadata
 ///
 enum class MetadataIndexNodeType {
     INTERNAL_DEVICE = 0,
@@ -49,10 +47,7 @@ enum class MetadataIndexNodeType {
     INTERNAL_MEASUREMENT = 2,
     LEAF_MEASUREMENT = 3
 };
-class TimeSeriesMetadataComponent {
-
-};
-
+class TimeSeriesMetadataComponent {};
 class TimeRange {};
 class IChunkMetadata {
    public:
@@ -164,7 +159,7 @@ class ChunkMetadata : public IChunkMetadata {
 class ChunkMetadataArray : public IChunkMetadata {
    public:
     ChunkMetadataArray(std::unique_ptr<IChunkMetadata>&& chunk_metadata,
-                           std::vector<IChunkMetadata>&& chunk_array) {
+                       std::vector<std::unique_ptr<IChunkMetadata>>&& chunk_array) {
         time_chunk_metadata_ = std::move(chunk_metadata);
         value_chunk_metadata_list_ = std::move(chunk_array);
     }
@@ -172,16 +167,16 @@ class ChunkMetadataArray : public IChunkMetadata {
 
    private:
     // ChunkMetadata for time column
-    std::unique_ptr<ChunkMetadata> time_chunk_metadata_;
+    std::unique_ptr<IChunkMetadata> time_chunk_metadata_;
     // ChunkMetadata for all subSensors in the vector
     std::vector<std::unique_ptr<IChunkMetadata>> value_chunk_metadata_list_;
 };
 ///
-/// @brief MetadataIndexNode forms an index tree (secondary index) like a B+ tree, which consists of two levels: 
-/// entity index level and measurement index level. 
-/// The IndexNodeType has four enums: INTERNAL_DEVICE, LEAF_DEVICE, INTERNAL_MEASUREMENT, LEAF_MEASUREMENT, 
-/// which indicates the internal or leaf node of entity index level and measurement index level respectively. 
-/// Only the LEAF_MEASUREMENT nodes point to TimeseriesMetadata.
+/// @brief MetadataIndexNode forms an index tree (secondary index) like a B+ tree, which consists of
+/// two levels: entity index level and measurement index level. The IndexNodeType has four enums:
+/// INTERNAL_DEVICE, LEAF_DEVICE, INTERNAL_MEASUREMENT, LEAF_MEASUREMENT, which indicates the
+/// internal or leaf node of entity index level and measurement index level respectively. Only the
+/// LEAF_MEASUREMENT nodes point to TimeseriesMetadata.
 ///
 
 class MetadataIndexNode {

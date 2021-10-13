@@ -17,7 +17,9 @@
  */
 #ifndef IOTDB_COMMON_BLOOMFILTER
 #define IOTDB_COMMON_BLOOMFILTER
+#include <tsfile/common/bitmap.h>
 #include <tsfile/common/common.h>
+#include <tsfile/common/hash.h>
 
 #include <array>
 #include <bitset>
@@ -27,50 +29,20 @@
 namespace tsfile {
 // @todo
 // Adapt from Cache Efficent Bloom filter implementation
-class BloomFilter {
+template <typename HashFunction>
+class GenericBloomFilter {
    public:
     static constexpr int kMinimalSize = 256;
     static constexpr int kMaximalHashFunctionSize = 8;
     static constexpr std::array<int, kMaximalHashFunctionSize> SEEDS = {5,  7,  11, 19,
                                                                         31, 37, 43, 59};
-};
-}  // namespace tsfile
-#ifdef 0
+    GenericBloomFilter(std::vector<Byte>, size_t size, size_t hashFunctionSize) {}
+    IOTDB_NATIVE_DISALLOW_COPY_AND_ASSIGN(GenericBloomFilter);
 
-class HashFunction {};
-class BloomFilter {
-    static constexpr int kMinimalSize = 256;
-    static constexpr int kMaximalHashFunctionSize = 8;
-    static constexpr std::array<int, kMaximalHashFunctionSize> SEEDS = {5,  7,  11, 19,
-                                                                        31, 37, 43, 59};
-    int size_;
-    int hash_function_size_;
-    bits;
-    HashFunction[] func;
-
-    // do not try to initialize the filter by construction method
    private:
-    BloomFilter(std::byte[] bytes, int size, int hashFunctionSize) {
-        this.size_ = size;
-        this.hash_function_size_ = hashFunctionSize;
-        func = new HashFunction[hashFunctionSize];
-        for (int i = 0; i < hashFunctionSize; i++) {
-            func[i] = new HashFunction(size, SEEDS[i]);
-        }
-
-        bits = BitSet.valueOf(bytes);
-    }
-    BloomFilter(int size, int hashFunctionSize) {
-        this.size = size;
-        this.hashFunctionSize = hashFunctionSize;
-        func = new HashFunction[hashFunctionSize];
-        for (int i = 0; i < hashFunctionSize; i++) {
-            func[i] = new HashFunction(size, SEEDS[i]);
-        }
-
-        bits = new BitSet(size);
-    }
+    BitMap _bits;
+    std::vector<HashFunction> _function;
 };
-#endif
-
+using BloomFilter = GenericBloomFilter<MurmurHash3<ByteBuffer, ByteBuffer>>;
+}  // namespace tsfile
 #endif
