@@ -46,11 +46,11 @@ class ChunkHeader {
     /// @brief Get measurement identifier
     /// @return the measurement id
     ///
-    std::string MeasurementId() const noexcept;
+    std::string GetMeasurementId() const noexcept;
     ///
     /// @brief Get the data size.
     ///
-    size_t DataSize() const noexcept;
+    size_t GetDataSize() const noexcept;
 
     ///
     /// @brief Mark measurement identifier
@@ -62,7 +62,7 @@ class ChunkHeader {
     /// @brief Get the compression type.
     /// @return compression type
     ///
-    TsCompressionType CompressionType() const noexcept;
+    TsCompressionType GetCompressionType() const noexcept;
 
     ///
     /// Mark the compression type
@@ -74,7 +74,7 @@ class ChunkHeader {
     /// @brief Get the time series data type
     /// @return time series data type
     ///
-    TsDataType DataType() const noexcept;
+    TsDataType GetDataType() const noexcept;
 
     ///
     /// @brief Mark the time series data type
@@ -86,7 +86,7 @@ class ChunkHeader {
     /// @brief Get the time series data type
     /// @return Time series encoding.
     ///
-    TsEncoding Encoding() const noexcept;
+    TsEncoding GetEncoding() const noexcept;
 
     ///
     /// @brief Mark the time series encoding
@@ -98,7 +98,7 @@ class ChunkHeader {
     /// @brief Get number of pages
     /// @return Current number of pages.
     ///
-    int NumOfPages() const noexcept;
+    int GetNumOfPages() const noexcept;
 
     ///
     /// Mark the number of paging
@@ -108,7 +108,7 @@ class ChunkHeader {
 
     /// Return object hashcode
     ///
-    uint64_t HashCode() const;
+    uint64_t GetHashCode() const;
 
     EXPOSE_MEMBERS(measurement_id_, data_size_, compression_type_, encoding_type_, num_of_pages_)
 

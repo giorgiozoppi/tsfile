@@ -18,7 +18,7 @@
 #include "tsfile/model/chunk_group_footer.h"
 
 namespace tsfile {
-std::string ChunkGroupFooter::DeviceId() const { return device_id_; }
-size_t ChunkGroupFooter::DataSize() const { return data_size_; }
-int ChunkGroupFooter::NumberOfChunks() const { return number_of_chunks_; }
+std::string ChunkGroupFooter::GetDeviceId() const { return device_id_; }
+size_t ChunkGroupFooter::GetDataSize() const { return data_size_; }
+int ChunkGroupFooter::GetNumberOfChunks() const { return number_of_chunks_; }
 }  // namespace tsfile

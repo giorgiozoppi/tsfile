@@ -222,7 +222,7 @@ class BasicByteBuffer {
     /// @brief Supprot for the Hashable concept;
     /// @return hexdecimal string of the bytebuffer
     ///
-    std::string HashCode() const noexcept { return Hex(); }
+    std::string GetHashCode() const noexcept { return Hex(); }
     ///
     /// @brief Support for the Hashable concept
     /// @return bytebuffer of the hash.

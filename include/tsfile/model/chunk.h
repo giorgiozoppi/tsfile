@@ -100,11 +100,11 @@ class Chunk {
     ///
     ///  @brief Return the header.
     ///  @return the header of chunk
-    ChunkHeader Header() const noexcept;
+    ChunkHeader GetHeader() const noexcept;
     ///
     /// @brief Return the file marker
     /// @return marker of the chunk
-    Byte Marker() const noexcept;
+    Byte GetMarker() const noexcept;
     ///
     /// @brief Add a page to the chunk.
     /// @param page to add.
@@ -146,11 +146,11 @@ class Chunk {
     const_reverse_iterator crend() const;
     /// @brief Object hash
     ///
-    uint64_t HashCode() const;
+    uint64_t GetHashCode() const;
     /// @brief Get the number of pages
     /// @return the number of pages
     ///
-    size_t NumOfPages() const;
+    size_t GetNumOfPages() const;
 
     EXPOSE_MEMBERS(header_, marker_, pages_);
 

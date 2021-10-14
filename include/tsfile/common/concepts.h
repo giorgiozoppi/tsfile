@@ -31,7 +31,7 @@ concept HexConvertible = requires(T a) {
 };
 template <typename T>
 concept Hashable = requires(T a) {
-    std::declval<T>().HashCode();
+    std::declval<T>().GetHashCode();
     std::declval<T>().ByteHash();
 };
 template <typename T>
@@ -48,23 +48,23 @@ struct is_string<T, std::basic_string<T, Traits, Alloc>> {
 
 template <Hashable>
 bool operator==(const Hashable auto& lhs, const Hashable auto& rhs) {
-    return lhs.HashCode() == rhs.HashCode();
+    return lhs.GetHashCode() == rhs.GetHashCode();
 }
 template <Hashable>
 bool operator<=(const Hashable auto& lhs, const Hashable auto& rhs) {
-    return lhs.HashCode() <= rhs.HashCode();
+    return lhs.GetHashCode() <= rhs.GetHashCode();
 }
 template <Hashable>
 bool operator>=(const Hashable auto& lhs, const Hashable auto& rhs) {
-    return lhs.HashCode() >= rhs.HashCode();
+    return lhs.GetHashCode() >= rhs.GetHashCode();
 }
 template <Hashable>
 bool operator>(const Hashable auto& lhs, const Hashable auto& rhs) {
-    return lhs.HashCode() > rhs.HashCode();
+    return lhs.GetHashCode() > rhs.GetHashCode();
 }
 template <Hashable>
 bool operator<(const Hashable auto& lhs, const Hashable auto& rhs) {
-    return lhs.HashCode() < rhs.HashCode();
+    return lhs.GetHashCode() < rhs.GetHashCode();
 }
 
 #endif

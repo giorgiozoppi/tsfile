@@ -37,10 +37,10 @@ SCENARIO("Chunk should be initialized correctly", "[model]]") {
         std::string measure{"Temperature"};
         ChunkContext ctx{measure, 10, TsDataType::INT32, TsCompressionType::GZIP, 
         TsEncoding::GORILLA, 0, kOnlyOnePageChunkHeader};
-        auto chunk = make_unique_chunk(ctx);
-        auto sample_page = make_page(4096, 1024, TsDataType::INT32);
+        auto chunk = MakeUniqueChunk(ctx);
+        auto sample_page = MakePage(4096, 1024, TsDataType::INT32);
         for (int i = 0; i < kNumPages; ++i) {
-            chunk->AddPage(make_page(4096, 1024, TsDataType::INT32));
+            chunk->AddPage(MakePage(4096, 1024, TsDataType::INT32));
         }
 
         WHEN("we remove a page") {
@@ -48,14 +48,14 @@ SCENARIO("Chunk should be initialized correctly", "[model]]") {
             chunk->RemovePage(*chunk->begin());
             THEN("the page array size is correct") {
                 // @todo implement the hash
-                REQUIRE(chunk->NumOfPages() == 0);
+                REQUIRE(chunk->GetNumOfPages() == 0);
             }
         }
         WHEN("we access to the chunk") {
             THEN("all pages are correctly set") {
                 int items{0};
                 for (auto& page : *chunk) {
-                    auto page_header = page.Header(); 
+                    auto page_header = page.GetHeader(); 
                     REQUIRE(1024 == page_header.CompressedSize());
                     REQUIRE(4096 == page_header.UncompressedSize());
                     items++;
@@ -64,11 +64,11 @@ SCENARIO("Chunk should be initialized correctly", "[model]]") {
                 REQUIRE(kNumPages == items);
             }
             THEN("the chunk header values are correct") {
-                ChunkHeader header = chunk->Header();
-                REQUIRE(TsCompressionType::GZIP == header.CompressionType());
-                REQUIRE(TsDataType::INT32 == header.DataType());
-                REQUIRE(TsEncoding::GORILLA == header.Encoding());
-                REQUIRE(kNumPages == header.NumOfPages());
+                ChunkHeader header = chunk->GetHeader();
+                REQUIRE(TsCompressionType::GZIP == header.GetCompressionType());
+                REQUIRE(TsDataType::INT32 == header.GetDataType());
+                REQUIRE(TsEncoding::GORILLA == header.GetEncoding());
+                REQUIRE(kNumPages == header.GetNumOfPages());
             }
         }
     }

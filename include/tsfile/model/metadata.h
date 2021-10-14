@@ -48,10 +48,14 @@ enum class MetadataIndexNodeType {
     INTERNAL_MEASUREMENT = 2,
     LEAF_MEASUREMENT = 3
 };
-class ITimeSeriesMetadata {};
-class IChunkMetadata {
+class TimeSeriesMetadata {};
+
+class SingleTimeSeriesMetadata : public TimeSeriesMetadata {};
+class TimeSeriesMetadaArray : public TimeSeriesMetadata {};
+
+class ChunkMetadata {
    public:
-    virtual ~IChunkMetadata() noexcept = 0;
+    virtual ~ChunkMetadata() noexcept = 0;
     virtual std::shared_ptr<StatisticsMap> Statistics() const = 0;
 
     virtual bool IsModified() const = 0;
@@ -84,9 +88,9 @@ class IChunkMetadata {
 
     virtual bool IsValueColumn() const = 0;
 };
-class ChunkMetadata : public IChunkMetadata {
+class SingleChunkMetadata : public ChunkMetadata {
    public:
-    ~ChunkMetadata() = default;
+    ~SingleChunkMetadata() = default;
     std::shared_ptr<StatisticsMap> Statistics() const override;
     bool IsModified() const override;
 
@@ -156,10 +160,10 @@ class ChunkMetadata : public IChunkMetadata {
     std::string _file_path;
     Byte _mask;
 };
-class ChunkMetadataArray : public IChunkMetadata {
+class ChunkMetadataArray : public ChunkMetadata {
    public:
-    ChunkMetadataArray(std::unique_ptr<IChunkMetadata>&& chunk_metadata,
-                       std::vector<std::unique_ptr<IChunkMetadata>>&& chunk_array) {
+    ChunkMetadataArray(std::unique_ptr<ChunkMetadata>&& chunk_metadata,
+                       std::vector<std::unique_ptr<ChunkMetadata>>&& chunk_array) {
         time_chunk_metadata_ = std::move(chunk_metadata);
         value_chunk_metadata_list_ = std::move(chunk_array);
     }
@@ -167,9 +171,9 @@ class ChunkMetadataArray : public IChunkMetadata {
 
    private:
     // ChunkMetadata for time column
-    std::unique_ptr<IChunkMetadata> time_chunk_metadata_;
+    std::unique_ptr<ChunkMetadata> time_chunk_metadata_;
     // ChunkMetadata for all subSensors in the vector
-    std::vector<std::unique_ptr<IChunkMetadata>> value_chunk_metadata_list_;
+    std::vector<std::unique_ptr<ChunkMetadata>> value_chunk_metadata_list_;
 };
 ///
 /// @brief MetadataIndexNode forms an index tree (secondary index) like a B+ tree, which consists of

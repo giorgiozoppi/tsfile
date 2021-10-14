@@ -48,7 +48,7 @@ class ChunkGroup {
     /// @brief  Return the chunk delimiter
     ///
     /// @return Chunk delimiter
-    Byte Delimiter() const;
+    Byte GetDelimiter() const;
     ///
     /// @brief  Add a new chunk to the chunkgroup, transfer ownership
     ///
@@ -67,12 +67,12 @@ class ChunkGroup {
     /// @brief Return the size
     /// @return the return the number of items.
     ///
-    size_t Size() const;
+    size_t GetSize() const;
     ///
     /// @brief Get the chunk group footer
     ///
     /// @return Chunk group footer.
-    ChunkGroupFooter Footer() const;
+    ChunkGroupFooter GetFooter() const;
     ///
     /// @brief Iterator
 

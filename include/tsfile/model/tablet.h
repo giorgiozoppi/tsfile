@@ -16,6 +16,13 @@
 */
 #ifndef IOTDB_NATIVE_TABLET_H
 #define IOTDB_NATIVE_TABLET_H
+
+#include "tsfile/common/common.h"
+namespace tsfile {
+class Tablet {
+    using IntArray = std::vector private : std::variant < Byte,
+};
+}  // namespace tsfile
 #if 0
 #include "tsfile/common/bitmap.h"
 #include "tsfile/common/tsconcepts.h"

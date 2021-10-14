@@ -29,30 +29,30 @@ ChunkHeader::ChunkHeader(const std::string& measurementID, int dataSize, TsDataT
       encoding_type_(encoding),
       num_of_pages_(numOfPages) {}
 
-std::string ChunkHeader::MeasurementId() const noexcept { return measurement_id_; }
+std::string ChunkHeader::GetMeasurementId() const noexcept { return measurement_id_; }
 
-size_t ChunkHeader::DataSize() const noexcept { return data_size_; }
+size_t ChunkHeader::GetDataSize() const noexcept { return data_size_; }
 
 void ChunkHeader::SetMeasurementId(const std::string& id) noexcept { measurement_id_ = id; }
 
-TsCompressionType ChunkHeader::CompressionType() const noexcept { return compression_type_; }
+TsCompressionType ChunkHeader::GetCompressionType() const noexcept { return compression_type_; }
 
 void ChunkHeader::SetCompressionType(const TsCompressionType& type) noexcept {
     compression_type_ = type;
 }
 
-TsDataType ChunkHeader::DataType() const noexcept { return datatype_; }
+TsDataType ChunkHeader::GetDataType() const noexcept { return datatype_; }
 
 void ChunkHeader::SetDataType(const TsDataType& type) noexcept { datatype_ = type; }
 
-TsEncoding ChunkHeader::Encoding() const noexcept { return encoding_type_; }
+TsEncoding ChunkHeader::GetEncoding() const noexcept { return encoding_type_; }
 
 void ChunkHeader::SetEncoding(const TsEncoding& type) noexcept { encoding_type_ = type; }
 
-int ChunkHeader::NumOfPages() const noexcept { return num_of_pages_; }
+int ChunkHeader::GetNumOfPages() const noexcept { return num_of_pages_; }
 
 void ChunkHeader::SetNumOfPages(const int& num_of_pages) noexcept { num_of_pages_ = num_of_pages; }
 
-uint64_t ChunkHeader::HashCode() const { return hashcode_; }
+uint64_t ChunkHeader::GetHashCode() const { return hashcode_; }
 
 }  // namespace tsfile

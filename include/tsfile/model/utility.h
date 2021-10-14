@@ -8,8 +8,8 @@
 
 namespace tsfile {
 
-inline std::unique_ptr<ChunkGroup> make_unique_chunk_group(const std::string_view& device_id,
-                                                           long data_size) {
+inline std::unique_ptr<ChunkGroup> MakeUniqueChunkGroup(const std::string_view& device_id,
+                                                        long data_size) {
     auto footer = ChunkGroupFooter(device_id, data_size, 0);
     return std::make_unique<ChunkGroup>(std::move(footer), kChunkGroupFooter);
 }
@@ -30,7 +30,7 @@ struct ChunkContext {
 ///
 /// @brief Factory method for the chunk
 ///
-inline Chunk make_chunk(const ChunkContext& context) {
+inline Chunk MakeChunk(const ChunkContext& context) {
     ChunkHeader temp_chunk_header{context.MeasurementID,   context.DataSize, context.DataType,
                                   context.CompressionType, context.Encoding, context.NumberOfPages};
 
@@ -40,13 +40,13 @@ inline Chunk make_chunk(const ChunkContext& context) {
 ///
 /// @brief Factory method for an exclusive ownership Chunk
 ///
-inline std::unique_ptr<Chunk> make_unique_chunk(const ChunkContext& context) {
-    return std::make_unique<Chunk>(make_chunk(context));
+inline std::unique_ptr<Chunk> MakeUniqueChunk(const ChunkContext& context) {
+    return std::make_unique<Chunk>(MakeChunk(context));
 }
 
 /// @brief Factory method for the page
 ///
-inline Page make_page(int uncompressed_size, int compressed_size, TsDataType statistics_type) {
+inline Page MakePage(int uncompressed_size, int compressed_size, TsDataType statistics_type) {
     PageHeader header{uncompressed_size, compressed_size, statistics_type};
     header.SetStatistics(std::make_unique<StatisticsMap>(statistics_type));
     Page tmp(std::move(header));
@@ -55,8 +55,8 @@ inline Page make_page(int uncompressed_size, int compressed_size, TsDataType sta
 }
 
 /// @brief Factory method for  an exclusive ownership Page
-inline std::unique_ptr<Page> make_unique_page(int uncompressed_size, int compressed_size,
-                                              TsDataType statistics_type) {
+inline std::unique_ptr<Page> MakeUniquePage(int uncompressed_size, int compressed_size,
+                                            TsDataType statistics_type) {
     PageHeader header{uncompressed_size, compressed_size, statistics_type};
     header.SetStatistics(std::make_unique<StatisticsMap>(statistics_type));
     Page tmp(std::move(header));

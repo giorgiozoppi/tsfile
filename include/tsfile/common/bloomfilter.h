@@ -36,13 +36,12 @@ class GenericBloomFilter {
     static constexpr int kMaximalHashFunctionSize = 8;
     static constexpr std::array<int, kMaximalHashFunctionSize> SEEDS = {5,  7,  11, 19,
                                                                         31, 37, 43, 59};
-    GenericBloomFilter(const std::vector<Byte>& array,
-                       size_t hashFunctionSize) {
-                           for(auto& b: array) {
-                               _bits.Mark(b);
-                           }
-                           size_=hashFunctionSize;
-                       }
+    GenericBloomFilter(const std::vector<Byte>& array, size_t hashFunctionSize) {
+        for (auto& b : array) {
+            _bits.Mark(b);
+        }
+        size_ = hashFunctionSize;
+    }
     IOTDB_NATIVE_DISALLOW_COPY_AND_ASSIGN(GenericBloomFilter);
 
    private:

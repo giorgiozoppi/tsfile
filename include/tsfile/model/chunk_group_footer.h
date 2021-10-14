@@ -41,19 +41,19 @@ class ChunkGroupFooter {
     ///
     /// @return std::string
     ///
-    std::string DeviceId() const;
+    std::string GetDeviceId() const;
     ///
     /// @brief Get the data size object
     ///
     /// @return Data dimension
     ///
-    size_t DataSize() const;
+    size_t GetDataSize() const;
     ///
     /// @brief Get the number of chunks object
     ///
     /// @return number of chunks
     ///
-    int NumberOfChunks() const;
+    int GetNumberOfChunks() const;
 
    private:
     std::string device_id_;

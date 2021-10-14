@@ -1,3 +1,4 @@
+PROJECT_NAME		= "IOTDB TsFile Native"
 OUTPUT_DIRECTORY       = @CMAKE_CURRENT_BINARY_DIR@/docs/
 INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/include/tsfile/
 RECURSIVE              = YES

@@ -25,10 +25,10 @@ ChunkGroup::ChunkGroup(ChunkGroupFooter&& group, Byte delim)
     : footer_(std::move(group)), byte_delimiter_(delim) {}
 ChunkGroup::ChunkGroup(const ChunkGroupFooter& group, Byte delim)
     : footer_(group), byte_delimiter_(delim) {}
-ChunkGroupFooter ChunkGroup::Footer() const { return footer_; }
+ChunkGroupFooter ChunkGroup::GetFooter() const { return footer_; }
 ChunkGroup::iterator ChunkGroup::begin() { return chunks_.begin(); }
 ChunkGroup::iterator ChunkGroup::end() { return chunks_.end(); }
-size_t ChunkGroup::Size() const { return chunks_.size(); }
+size_t ChunkGroup::GetSize() const { return chunks_.size(); }
 ChunkGroup::reverse_iterator ChunkGroup::rbegin() { return chunks_.rbegin(); }
 ChunkGroup::reverse_iterator ChunkGroup::rend() { return chunks_.rend(); }
 ChunkGroup::const_iterator ChunkGroup::cbegin() const { return chunks_.cbegin(); }
@@ -42,8 +42,8 @@ Expected<ErrorChunk, Chunk>  ChunkGroup::RemoveChunk(size_t pos) {
     chunks_.erase(chunks_.begin()+pos);
     return Expected<ErrorChunk, Chunk>(ErrorChunk::OK, v);
 } 
-bool ChunkGroup::RemoveChunk(const Chunk& input) { return EraseUsingHash(chunks_, input); }
-Byte ChunkGroup::Delimiter() const { return byte_delimiter_; }
+bool ChunkGroup::RemoveChunk(const Chunk& input) { return HasErasedValue(chunks_, input); }
+Byte ChunkGroup::GetDelimiter() const { return byte_delimiter_; }
 ChunkGroup::const_reverse_iterator ChunkGroup::crbegin() const { return chunks_.crbegin(); }
 ChunkGroup::const_reverse_iterator ChunkGroup::crend() const { return chunks_.crend(); }
 }  // namespace tsfile

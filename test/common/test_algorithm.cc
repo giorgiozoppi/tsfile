@@ -11,7 +11,7 @@ struct Person {
     std::string first_name;
     std::string last_name;
     mutable std::size_t hash_code_;
-    uint64_t HashCode() const {
+    uint64_t GetHashCode() const {
         std::size_t h1 = std::hash<std::string>{}(first_name);
         std::size_t h2 = std::hash<std::string>{}(last_name);
         hash_code_ = h1 ^ (h2 << 1);
@@ -25,7 +25,7 @@ SCENARIO("We remove hashable datatype from a vectro", "[algorithm]") {
         std::vector<Person> person(kHashable);
         std::generate(begin(person), end(person), [] {
             Person p{"Gina", "Zanetakos", 0};
-            //REQUIRE(10368218723229057486 == p.HashCode());
+            //REQUIRE(10368218723229057486 == p.GetHashCode());
             return p;
         });
         REQUIRE(person.size() == kHashable);
@@ -34,14 +34,14 @@ SCENARIO("We remove hashable datatype from a vectro", "[algorithm]") {
             THEN("we hava a vector with an element less") {
                 REQUIRE(killer.first_name == "Gina");
                 REQUIRE(killer.last_name == "Zanetakos");
-                REQUIRE(true == EraseUsingHash(person, killer));
+                REQUIRE(true == HasErasedValue(person, killer));
                 REQUIRE(person.size() == 0);
             }
         }
         WHEN("we clear and remove an element") {
             person.clear();
             auto killer = Person{"Gina", "Zanetakos", 0};
-            THEN("we have a failure") { REQUIRE(false == EraseUsingHash(person, killer)); }
+            THEN("we have a failure") { REQUIRE(false == HasErasedValue(person, killer)); }
         }
     }
 }

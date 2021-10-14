@@ -25,16 +25,16 @@ SCENARIO("We can work correctly with a chunkgroup", "[model]") {
                                          tsfile::TsEncoding::GORILLA,
                                          0,
                                          tsfile::kOnlyOnePageChunkHeader};
-                auto chunk = tsfile::make_chunk(ctx);
-                auto sample_page = tsfile::make_page(4096, 1024, tsfile::TsDataType::INT32);
+                auto chunk = tsfile::MakeChunk(ctx);
+                auto sample_page = tsfile::MakePage(4096, 1024, tsfile::TsDataType::INT32);
                 for (int i = 0; i < kNumPages; ++i) {
-                    chunk.AddPage(make_page(4096, 1024, TsDataType::INT32));
+                    chunk.AddPage(MakePage(4096, 1024, TsDataType::INT32));
                     auto copy = chunk;
                     local_chunks.emplace_back(chunk);
                 }
                 group->AddChunk(std::move(chunk));
             }
-            REQUIRE(group->Size() == 10);
+            REQUIRE(group->GetSize() == 10);
         }
         THEN("you can remove chunks") {
         /*   group->RemoveChunk(local_chunks[0]);

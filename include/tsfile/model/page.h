@@ -40,11 +40,11 @@ class Page {
     ///
     /// @brief Page Header
     ///
-    PageHeader Header() const { return std::move(page_header_); }
+    PageHeader GetHeader() const { return std::move(page_header_); }
     ///
-    /// @brief HashCode of the page
+    /// @brief GetHashCode of the page
     ///
-    uint64_t HashCode() const { return hash_code_; }
+    uint64_t GetHashCode() const { return hash_code_; }
 
    private:
     long hash_code_{0};

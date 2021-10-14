@@ -29,11 +29,11 @@ Chunk::Chunk(ChunkHeader&& header, const Byte& marker)
         ComputeHash();
     }
 
-ChunkHeader Chunk::Header() const noexcept { return header_; }
-Byte Chunk::Marker() const noexcept { return marker_; }
+ChunkHeader Chunk::GetHeader() const noexcept { return header_; }
+Byte Chunk::GetMarker() const noexcept { return marker_; }
 void Chunk::AddPage(Page&& source) {
     pages_.push_back(std::move(source));
-    header_.SetNumOfPages(header_.NumOfPages() + 1);
+    header_.SetNumOfPages(header_.GetNumOfPages() + 1);
     hash_code_ = 10219219280182L;
 }
 void Chunk::ComputeHash() {
@@ -43,8 +43,8 @@ void Chunk::ComputeHash() {
         uint64_t seed = dist(e);
         hash_code_ = seed;
 }
-bool Chunk::RemovePage(const Page& page) { return EraseUsingHash(pages_, page); }
-size_t Chunk::NumOfPages() const { return pages_.size(); }
+bool Chunk::RemovePage(const Page& page) { return HasErasedValue(pages_, page); }
+size_t Chunk::GetNumOfPages() const { return pages_.size(); }
 Chunk::iterator Chunk::begin() { return pages_.begin(); }
 Chunk::iterator Chunk::end() { return pages_.end(); }
 Chunk::const_iterator Chunk::cbegin() const { return pages_.cbegin(); }
@@ -53,5 +53,5 @@ Chunk::reverse_iterator Chunk::rbegin() { return pages_.rbegin(); }
 Chunk::reverse_iterator Chunk::rend() { return pages_.rend(); }
 Chunk::const_reverse_iterator Chunk::crbegin() const { return pages_.crbegin(); }
 Chunk::const_reverse_iterator Chunk::crend() const { return pages_.crend(); }
-uint64_t Chunk::HashCode() const {return hash_code_;}
+uint64_t Chunk::GetHashCode() const {return hash_code_;}
 };  // namespace tsfile

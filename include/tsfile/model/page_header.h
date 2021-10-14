@@ -38,9 +38,9 @@ class PageHeader {
     PageHeader() = default;
 
     /// @brief Constructor
-    /// @param uncompressed_size  Header uncompressed size
-    /// @param compressed_size    Header compressed size
-    /// @param page_type          DataType of the header
+    /// @param uncompressed_size  GetHeader uncompressed size
+    /// @param compressed_size    GetHeader compressed size
+    /// @param page_type          GetDataType of the header
     PageHeader(int uncompressed_size, int compressed_size, TsDataType page_type);
     ///
     /// @brief Move constructor

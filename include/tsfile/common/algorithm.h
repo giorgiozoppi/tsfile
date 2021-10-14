@@ -7,13 +7,13 @@
 
 namespace tsfile {
 template <typename Hashable>
-inline bool EraseUsingHash(std::vector<Hashable>& container, const Hashable& value) {
+inline bool HasErasedValue(std::vector<Hashable>& container, const Hashable& value) {
     if (container.size() == 0) {
         return false;
     }
-    auto hash_value = value.HashCode();
+    auto hash_value = value.GetHashCode();
     auto res = std::erase_if(
-        container, [hash_value](auto current) { return current.HashCode() == hash_value; });
+        container, [hash_value](auto current) { return current.GetHashCode() == hash_value; });
     return res;
 }
 }  // namespace tsfile
