@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 import os
 import os.path
+import argparse
 from autolib.gradle import Gradle
+
+parser = argparse.ArgumentParser()
+parser.parse_args()
 def test_file_executor():
     print("Execute Java Files Creation")
     current = os.getcwd()

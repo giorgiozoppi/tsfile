@@ -26,6 +26,11 @@ concept Serializable = requires {
     std::declval<T>().Members();
 };
 template <typename T>
+concept SliceAble = requires {
+    std::declval<T>().IsSliceAble();
+};
+
+template <typename T>
 concept HexConvertible = requires(T a) {
     std::declval<T>().Hex();
 };

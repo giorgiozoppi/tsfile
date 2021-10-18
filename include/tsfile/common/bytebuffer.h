@@ -254,7 +254,11 @@ class BasicByteBuffer {
     /// @return value of the byte
     ///
     T* Data() { return bytes_.data(); }
-
+    ///
+    /// @brief Useful to support the sliceAble operator.
+    /// @retuen return always true
+    ///
+    bool IsSliceAble() { return true; }
    private:
     std::vector<T> bytes_;
     template <typename V>
@@ -265,6 +269,7 @@ bool operator==(const BasicByteBuffer<T>& lhs, const BasicByteBuffer<T>& rhs) {
     return lhs.Hex().compare(rhs.Hex()) == 0;
 }
 typedef BasicByteBuffer<Byte> ByteBuffer;
+template <typename T> to_bytebuffer(T)
 
 }  // namespace tsfile
 

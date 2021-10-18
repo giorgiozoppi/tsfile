@@ -16,5 +16,15 @@ inline bool HasErasedValue(std::vector<Hashable>& container, const Hashable& val
         container, [hash_value](auto current) { return current.GetHashCode() == hash_value; });
     return res;
 }
+/*
+template <typename SliceAble>
+inline SliceAble Slice(SliceAble container, size_t startpos, size_t endpos) {
+    SliceAble v;
+    for (int i=0; i< pos; i++) {
+        v.pushcontainer[i]
+    }
+    return v;
+} */
+
 }  // namespace tsfile
 #endif

@@ -7,6 +7,7 @@
 #include <string>
 #include <tuple>
 #include <vector>
+#include <tsfile/common/uint128_t.h>
 /// Endianess
 namespace tsfile {
 ///
@@ -27,6 +28,7 @@ typedef union byte4 {
     float fvalue;
     long lvalue;
 } pack_byte4;
+
 typedef union byte2 {
     uint8_t byte[2];
     short svalue;
@@ -37,6 +39,12 @@ typedef union byte8 {
     long long lvalue;
     unsigned long long llvalue;
 } pack_byte8;
+
+typedef union byte16 {
+    uint8_t byte[16];
+    uint128_t bvalue;
+} pack_byte16;
+
 
 #if defined(__BYTE_ORDER) && __BYTE_ORDER == __BIG_ENDIAN || defined(__BIG_ENDIAN__) ||         \
     defined(__ARMEB__) || defined(__THUMBEB__) || defined(__AARCH64EB__) || defined(_MIBSEB) || \
@@ -281,7 +289,7 @@ inline std::vector<uint8_t> Unpack(int value) {
     return data;
 }
 template <>
-inline std::vector<uint8_t> Unpack(unsigned int value) {
+inline std::vector<uint8_t> Unpack(unsigned long value) {
     std::vector<uint8_t> data;
     pack_byte4 v = EndianBytes4(value);
     for (int i = 0; i < 4; i++) {

@@ -53,5 +53,5 @@ Chunk::reverse_iterator Chunk::rbegin() { return pages_.rbegin(); }
 Chunk::reverse_iterator Chunk::rend() { return pages_.rend(); }
 Chunk::const_reverse_iterator Chunk::crbegin() const { return pages_.crbegin(); }
 Chunk::const_reverse_iterator Chunk::crend() const { return pages_.crend(); }
-uint64_t Chunk::GetHashCode() const {return hash_code_;}
+size_t Chunk::GetHashCode() const {return hash_code_;}
 };  // namespace tsfile

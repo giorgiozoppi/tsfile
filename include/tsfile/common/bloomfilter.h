@@ -27,28 +27,60 @@
 #include <memory>
 
 namespace tsfile {
-// @todo
-// Adapt from Cache Efficent Bloom filter implementation
-template <typename HashFunction>
+/*
+A Bloom filter for representing a set S = {x1, x2,...,xn} of n elements is described by an array
+of m bits, initially all set to 0. A Bloom filter uses k independent hash functions
+h1,...,hk with range {1,...,m}. 
+*/
+template <typename HashFunction, int Size>
 class GenericBloomFilter {
    public:
     static constexpr int kMinimalSize = 256;
     static constexpr int kMaximalHashFunctionSize = 8;
-    static constexpr std::array<int, kMaximalHashFunctionSize> SEEDS = {5,  7,  11, 19,
-                                                                        31, 37, 43, 59};
-    GenericBloomFilter(const std::vector<Byte>& array, size_t hashFunctionSize) {
-        for (auto& b : array) {
-            _bits.Mark(b);
+    static constexpr std::array<int, kMaximalHashFunctionSize> kSeeds = {5,  7,  11, 19,
+                                                                         31, 37, 43, 59};
+    GenericBloomFilter(size_t hash_function_size) {
+        hash_size_ = hash_function_size;
+        for (size_t i = 0; i < hash_size_; i++) {
+            _function.emplace_back(std::move(HashFunction(Size, kSeeds[i])));
         }
-        size_ = hashFunctionSize;
+        bits_ = std::bitset<Size>;
     }
+    void Add(const std::string& value) {
+        for (const auto& f : _function) {
+            bits_.set(f.hash(value), true);
+        }
+    }
+    bool Contains(const std::string& value) {
+        if (value.size() == 0) {
+          return false;
+        }
+        bool ret{false};
+        size_t index{0};
+        while(ret && index < hash_size_) {
+          ret = bits_.test(_function.at(index++).hash(value));
+        }
+    } 
+    
+    size_t GetBitCount() const {
+        size_t res = 0;
+        for (size_t i = 0; i < Size; i++) {
+            res += _bits.test(i) ? 1 : 0;
+        }
+
+        return res;
+    }
+    std::string ToString() const { return bits_.to_string(); }
+
     IOTDB_NATIVE_DISALLOW_COPY_AND_ASSIGN(GenericBloomFilter);
 
    private:
-    BitMap _bits;
+    std::bitset<Size> _bits;
     std::vector<HashFunction> _function;
-    size_t size_;
+    size_t hash_size_;
 };
-using BloomFilter = GenericBloomFilter<MurmurHash3<ByteBuffer, ByteBuffer>>;
+template <typename Size> using BloomFilter = GenericBloomFilter<MurmurHash3<ByteBuffer, uint64_t>, size_t Size>;  
+
 }  // namespace tsfile
+
 #endif

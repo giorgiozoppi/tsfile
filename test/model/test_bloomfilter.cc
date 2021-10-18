@@ -1,24 +1,67 @@
+
+/**
+ * Copyright (c) 2021 Giorgio Zoppi <giorgio.zoppi@iotdbe.com>
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+*/
+
+#include "catch2/catch.hpp"
 #include <tsfile/common/hash.h>
+#include <tsfile/common/bloomfilter.h>
+
+
 namespace tsfile {
 
-}  // namespace iotdb::tsfile::test
+SCENARIO("Chunk bloomfilters are useful to find data", "[bloomfilter]") {
+    GIVEN("A bloom filter for K devices") {
+       GenericBloomFilter<MurmurHash3<ByteBuffer, uint64_t>, 4> filter(4); 
+        WHEN("you add k devices") {
+          for (size_t i = 0; i < 4; ++i) {
+            filter.Add("device"+ i);
+          }
+          THEN("A tested device 1<j<k shall be present") {
+          }
+        }
+    }
+}
+}  // namespace tsfile
 #if 0
+namespace tsfile {
+  
+SCENARIO("Chunk should be initialized correctly", "[model]") {
+    GIVEN("A bytebufer with a well know bitset") {
+    }  
+};
 
 namespace iotdb::tsfile::test {
 using iotdb::tsfile::common::MurmurHash3;
 using iotdb::tsfile::common::Hash;
 
-
 SCENARIO("Compute Murmur3Hash", "[bloomfilter]") {
     GIVEN("A bytebufer with a well know bitset") {
         ByteBuffer buffer{0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7};
         WHEN("Ask to hash using the murmur function") {
-            Hash<ByteBuffer,MurmurHash3> murmur;
+            std::string uint64_t hash_value =
+                MurmurHash3<ByteBuffer, uint64_t>{}(std::move(data), N);
+
             auto result = murmur.Compute(buffer);
-            THEN("we get the expected result") { REQUIRE(UINT64_C(913737700387071329)== result.Result()); }
+            THEN("we get the expected result") {
+                REQUIRE(UINT64_C(913737700387071329) == result.Result());
+            }
         }
     }
-}
 }
 namespace iotdb::tsfile::test {
 

@@ -146,7 +146,7 @@ class Chunk {
     const_reverse_iterator crend() const;
     /// @brief Object hash
     ///
-    uint64_t GetHashCode() const;
+    size_t GetHashCode() const;
     /// @brief Get the number of pages
     /// @return the number of pages
     ///
@@ -163,4 +163,5 @@ class Chunk {
 };
 
 }  // namespace tsfile
+
 #endif
